@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyGarden</string>
+    <string name="flowerbed_name_hint">Название клумбы</string>
+    <string name="flowerbed_description_hint">Описание клумбы</string>
+    <string name="flowerbed_comment_hint">Комментарий</string>
+    <string name="save_button_text">Сохранить</string>
+    <string name="cancel_button_text">Отменить</string>
+    <string name="tab_flowerbed_description_text">Описание</string>
+    <string name="tab_flowerbed_plants_text">Растения</string>
+</resources>
