@@ -12,7 +12,7 @@ import androidx.room.Query
 import androidx.room.Update
 
 /**
- * Таблицы "Растения"
+ * Таблица "Растения"
  *
  * Created by i.repkina on 02.11.2021.
  */

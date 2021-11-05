@@ -7,4 +7,5 @@
     <string name="cancel_button_text">Отменить</string>
     <string name="tab_flowerbed_description_text">Описание</string>
     <string name="tab_flowerbed_plants_text">Растения</string>
+    <string name="tab_flowerbed_photo_text">Фото</string>
 </resources>

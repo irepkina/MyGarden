@@ -2,12 +2,18 @@ package com.irepka3.mygarden.factory
 
 import android.content.Context
 import com.irepka3.mygarden.data.database.AppRoomDataBase
+import com.irepka3.mygarden.data.repository.FlowerbedPhotoRepositoryImpl
 import com.irepka3.mygarden.data.repository.FlowerbedRepositoryImpl
 import com.irepka3.mygarden.data.repository.PlantRepositoryImpl
 import com.irepka3.mygarden.domain.interactor.FlowerbedInteractor
 import com.irepka3.mygarden.domain.interactor.FlowerbedInteractorImpl
+import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractor
+import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractorImpl
+import com.irepka3.mygarden.domain.interactor.PhotoInteractor
+import com.irepka3.mygarden.domain.interactor.PhotoInteractotImpl
 import com.irepka3.mygarden.domain.interactor.PlantInteractor
 import com.irepka3.mygarden.domain.interactor.PlantInteractorImpl
+import com.irepka3.mygarden.domain.repository.FlowerbedPhotoRepository
 import com.irepka3.mygarden.domain.repository.FlowerbedRepository
 import com.irepka3.mygarden.domain.repository.PlantRepository
 
@@ -24,14 +30,24 @@ class FlowerbedFactory(context: Context) {
         return FlowerbedRepositoryImpl(getDataBase())
     }
 
+    // Создание репозитория растений (доменный слой)
+    fun getPlantRepository(): PlantRepository {
+        return PlantRepositoryImpl(getDataBase())
+    }
+
+    // Создание репозитория фото клумбы (доменный слой)
+    fun getFlowerbedPhotoRepository(): FlowerbedPhotoRepository {
+        return FlowerbedPhotoRepositoryImpl(getDataBase())
+    }
+
     // Создание интерактора клумбы
     fun getFlowerbedInteractor(): FlowerbedInteractor{
         return FlowerbedInteractorImpl(getFlowerbedRepository())
     }
 
-    // Создание репозитория растений (доменный слой)
-    fun getPlantRepository(): PlantRepository {
-        return PlantRepositoryImpl(getDataBase())
+    // Создание интерактора фотографий клумбы
+    fun getFlowerbedPhotoInteractor(): FlowerbedPhotoInteractor {
+        return FlowerbedPhotoInteractorImpl(getFlowerbedPhotoRepository())
     }
 
     // Создание интерактора растений
@@ -42,5 +58,10 @@ class FlowerbedFactory(context: Context) {
     // Создание базы данных
     fun getDataBase(): AppRoomDataBase{
         return AppRoomDataBase.getInstance(context)
+    }
+
+    // Создание интерактора
+    fun getPhotoInteractor(): PhotoInteractor{
+        return PhotoInteractotImpl(context)
     }
 }

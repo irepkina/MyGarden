@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.irepka3.mygarden.ui.flowerbed.description.FlowerbedDescriptionFragment
+import com.irepka3.mygarden.ui.flowerbed.photo.list.FlowerbedPhotoListFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.list.PlantListFragment
 import com.irepka3.mygarden.util.Const
 import com.irepka3.mygarden.util.Const.APP_TAG
@@ -41,10 +42,14 @@ class FlowerbedAdapter(
                 if (flowerbedId == null) throw Exception("FlowerBedId in plant can't be null")
                 PlantListFragment.newInstance(flowerbedId)
             }
+            2 -> {
+                if (flowerbedId == null) throw Exception("FlowerBedId in photo can't be null")
+                FlowerbedPhotoListFragment.newInstance(flowerbedId)
+            }
             else -> Fragment()
         }
     }
 }
 
 private const val TAG ="${APP_TAG}.FlowerbedAdapter"
-private const val PAGE_COUNT = 2
+private const val PAGE_COUNT = 3

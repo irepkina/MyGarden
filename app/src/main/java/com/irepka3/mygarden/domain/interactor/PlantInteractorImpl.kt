@@ -4,7 +4,7 @@ import com.irepka3.mygarden.domain.model.Plant
 import com.irepka3.mygarden.domain.repository.PlantRepository
 
 /**
- * Реализация интеркатора для работы с растениями
+ * Реализация интерактора для работы с растениями
  *
  * Created by i.repkina on 02.11.2021.
  */

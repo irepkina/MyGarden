@@ -41,6 +41,7 @@ class FlowerbedFragment : Fragment() {
             when (position) {
                 0 -> tab.text = getString(R.string.tab_flowerbed_description_text)
                 1 -> tab.text =  getString(R.string.tab_flowerbed_plants_text)
+                2 -> tab.text = getString(R.string.tab_flowerbed_photo_text)
             }
         }.attach()
 

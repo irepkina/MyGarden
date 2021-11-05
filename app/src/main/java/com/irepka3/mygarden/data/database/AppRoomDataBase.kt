@@ -12,10 +12,11 @@ import androidx.room.migration.Migration
  *
  * Created by i.repkina on 31.10.2021.
  */
-@Database(entities = [FlowerbedEntity::class, PlantEntity::class], version = 2)
+@Database(entities = [FlowerbedEntity::class, PlantEntity::class, FlowerbedPhotoEntity::class], version = 2)
 abstract class AppRoomDataBase: RoomDatabase() {
     abstract val flowerbedDao: FlowerbedEntityDao
     abstract val plantDao: PlantEntityDao
+    abstract val flowerbedPhotoDao: FlowerbedPhotoEntityDao
 
     companion object {
         @Volatile
