@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.irepka3.mygarden.R
-import com.irepka3.mygarden.databinding.FragmentFlowerbedPlantsBinding
+import com.irepka3.mygarden.dagger
+import com.irepka3.mygarden.databinding.FragmentPlantlistBinding
 import com.irepka3.mygarden.domain.model.Plant
-import com.irepka3.mygarden.factory.FlowerbedFactory
 import com.irepka3.mygarden.ui.ItemTouchHelperFactory
 import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.list.PlantListViewModel
@@ -29,15 +29,14 @@ import com.irepka3.mygarden.ui.list.PlantListViewModel
  * Created by i.repkina on 31.10.2021.
  */
 class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
-    private lateinit var binding: FragmentFlowerbedPlantsBinding
+    private lateinit var binding: FragmentPlantlistBinding
     private val adapter = PlantListAdapter(this)
     private var flowerbedId: Long = 0L
 
     private val viewModel by viewModels<PlantListViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val flowerbedFactory = FlowerbedFactory(requireContext())
-                return PlantListViewModel(flowerbedId, flowerbedFactory.getPlantInteractor()) as T
+                return PlantListViewModel(flowerbedId, dagger().getPlantInteractor()) as T
             }
         }
     }
@@ -62,7 +61,7 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFlowerbedPlantsBinding.inflate(inflater)
+        binding = FragmentPlantlistBinding.inflate(inflater)
 
         readArguments()
 
@@ -75,15 +74,17 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         }
 
 
+        viewModel.loadData()
+
         val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-        val drawable = resources.getDrawable(R.drawable.recycleview_divider, this.activity?.theme)
+        val drawable = resources.getDrawable(R.drawable.recycleview_divider_transparent, this.activity?.theme)
         itemDecorator.setDrawable(drawable)
         binding.plantRecyclerView.addItemDecoration(itemDecorator)
 
         this.binding.plantRecyclerView.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         binding.plantRecyclerView.adapter = adapter
 
-        binding.floatingButtonPlant.setOnClickListener { (requireActivity() as MainActivityIntf).showPlantFragment(null) }
+        binding.floatingButtonPlant.setOnClickListener { (requireActivity() as MainActivityIntf).showPlantFragment(flowerbedId = flowerbedId, plantId = null) }
 
         val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
             deletePlant(adapter.getItem(adapterPosition))
@@ -98,12 +99,13 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
             throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-        Log.d(TAG, "readArguments() success, id = $id")
+        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
+
     }
 
-    override fun onPlantClick(plantId: Long?) {
-        Log.d(TAG, "onFlowerBedClick() called with: id = $plantId")
-        (this.activity as MainActivityIntf).showPlantFragment(plantId)
+    override fun onPlantClick(flowerbedId:Long, plantId: Long?) {
+        Log.d(TAG, "onPlantClick() called with: id = $plantId")
+        (requireActivity() as MainActivityIntf).showPlantFragment(flowerbedId = flowerbedId, plantId = plantId)
     }
 
     /**
@@ -116,6 +118,3 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
 
 private const val TAG = "PlantsListFragment"
 private const val FLOWERBED_ID = "flowerbedId"
-private const val MODE = "mode"
-private const val MODE_INSERT = "insert"
-private const val MODE_UPDATE = "update"

@@ -18,19 +18,19 @@
         android:indeterminateTint="@color/purple_200"/>
 
     <EditText
-        android:id="@+id/flowerbed_name"
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:hint="@string/flowerbed_name_hint"
         android:inputType="text"
-        android:textAppearance="@style/Text.header"
+        android:textAppearance="@style/Text.strong"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/flowerbed_description"
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
@@ -38,18 +38,18 @@
         android:textAppearance="@style/Text.body"
         android:hint="@string/flowerbed_description_hint"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flowerbed_name"
+        app:layout_constraintTop_toBottomOf="@id/name"
         android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/flowerbed_comment"
+        android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:hint="@string/flowerbed_comment_hint"
         android:textAppearance="@style/Text.body"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flowerbed_description"
+        app:layout_constraintTop_toBottomOf="@id/description"
         android:importantForAutofill="no"
         android:inputType="text" />
 
@@ -60,7 +60,8 @@
         android:layout_marginTop="@dimen/default_margin"
         android:text="@string/save_button_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flowerbed_comment"/>
+        app:layout_constraintTop_toBottomOf="@id/comment"
+        android:foreground="?android:attr/selectableItemBackground"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
  *
  * Created by i.repkina on 01.11.2021.
  */
-class FlowerbedViewModel(private val flowerbedId: Long?, private val interactor: FlowerbedInteractor): ViewModel() {
+class FlowerbedDescriptionViewModel(private val flowerbedId: Long?, private val interactor: FlowerbedInteractor): ViewModel() {
     /**
      * LiveData клумбы
      */
@@ -32,10 +32,7 @@ class FlowerbedViewModel(private val flowerbedId: Long?, private val interactor:
      * LiveData для отображения индикатора загрузки данных
      */
     val progressLiveData = MutableLiveData<Boolean>()
-    /**
-     * LveData для вызова команд
-     */
-    val commandLiveData = MutableLiveData<Command>()
+
     private val compositeDisposable = CompositeDisposable()
 
     /**
@@ -49,7 +46,7 @@ class FlowerbedViewModel(private val flowerbedId: Long?, private val interactor:
      * Загрузка данных во view-модель
      */
     private fun loadData(){
-        progressLiveData.postValue(true)
+        progressLiveData.value = true
         compositeDisposable.add(
             Single.fromCallable {
                 if (flowerbedId == null) {
@@ -59,10 +56,11 @@ class FlowerbedViewModel(private val flowerbedId: Long?, private val interactor:
                 }
             }
                 .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { progressLiveData.value = false }
                 .subscribe(
-                    { flowerbed -> flowerbedLiveData.postValue(flowerbed) },
-                    { error ->  errorsLiveData.postValue(error) }
+                    { flowerbed -> flowerbedLiveData.value = flowerbed },
+                    { error ->  errorsLiveData.value = error }
                 )
         )
     }
@@ -77,34 +75,40 @@ class FlowerbedViewModel(private val flowerbedId: Long?, private val interactor:
     fun onSaveData(flowerbedId: Long?, name: String, description: String, comment: String?){
         Log.d(TAG, "onSaveData() called with: id = $flowerbedId, name = $name, description = $description, comment = $comment")
 
-        progressLiveData.postValue(true)
+        progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
                 if (flowerbedId == null) {
                     Log.d(TAG, "onSaveData(), insert called")
-                    interactor.insertFlowerbed(Flowerbed(null, name, description, comment))
+                    val flowerbed = Flowerbed(null, name, description, comment, null)
+                    val newFlowerbedId = interactor.insertFlowerbed(flowerbed)
+                    flowerbedLiveData.postValue(flowerbed.copy(flowerbedId = newFlowerbedId))
                 } else {
                     Log.d(TAG, "onSaveData(), update called")
                     interactor.updateFlowerbed(Flowerbed(flowerbedId, name, description, comment))
                 }
             }
                 .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { progressLiveData.value = false }
                 .subscribe(
-                    {
-                        // переключаемся на главный поток
-                        // и используем setValue для синхронной работы
-                        commandLiveData.value = Command.SHOW_FLOWERBED_LIST
-                        commandLiveData.value = Command.NO_COMMAND
-                    },
-                    { error -> errorsLiveData.postValue(error) }
+                    {},
+                    { error -> errorsLiveData.value = error }
                 )
         )
     }
-    enum class Command {
-        NO_COMMAND,
-        SHOW_FLOWERBED_LIST
+
+    /**
+     * Сохранение данных клумбы при закрытии фрагмента, если она создана
+     * @param flowerbedId идентификатор клумбы. Если в режиме вставке, то null
+     * @param name имя клумба
+     * @param description описание клумбы
+     * @param comment комментарий к клумбе
+     */
+    fun onClose(flowerbedId: Long?, name: String, description: String, comment: String?){
+        if (flowerbedId != null) {
+            onSaveData(flowerbedId = flowerbedId, name, description, comment)
+        }
     }
 }
 

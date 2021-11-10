@@ -7,9 +7,6 @@ import com.irepka3.mygarden.domain.model.Plant
  * Created by i.repkina on 02.11.2021.
  */
 interface PlantInteractor {
-    // Получение списка растений
-    fun getPlantsAll(): List<Plant>
-
     // Получение списка растений по идентификатору клумбы
     fun getPlantsByFlowerbed(flowerbedId: Long): List<Plant>
 
@@ -17,7 +14,7 @@ interface PlantInteractor {
     fun getPlant(plantId: Long): Plant
 
     // Добавление растения
-    fun insertPlant(plant: Plant)
+    fun insertPlant(plant: Plant): Long
 
     // Обновление данных растения
     fun updatePlant(plant: Plant)

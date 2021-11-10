@@ -1,5 +1,6 @@
 package com.irepka3.mygarden.data.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
@@ -9,31 +10,46 @@ import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Update
 
 /**
  * Таблица "Фотографии клумб"
  *
  * Created by i.repkina on 04.11.2021.
  */
-@Entity(tableName = TABLE_NAME,
+@Entity(tableName = FlowerbedPhotoEntity.TABLE_NAME,
     foreignKeys = arrayOf(
         ForeignKey(
             entity = FlowerbedEntity::class,
             parentColumns = arrayOf("flowerbedId"),
-            childColumns = arrayOf("flowerbedId"),
+            childColumns = arrayOf("ownerFlowerbedId"),
             onDelete = CASCADE
         )
     ),
-    indices = arrayOf(Index("flowerbedId"))
+    indices = arrayOf(Index("ownerFlowerbedId"))
 )
 class FlowerbedPhotoEntity {
     // Идентификатор фото клумбы
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = COLUMN_ID)
     var flowerbedPhotoId: Long = 0
     // Идентификатор клумбы
-    var flowerbedId: Long = 0
+    @ColumnInfo(name = COLUMN_FLOWERBED_ID)
+    var ownerFlowerbedId: Long = 0
     // Uri фото клумбы
+    @ColumnInfo(name = COLUMN_URI)
     var uri: String = ""
+    // Фото клумбы по умолчанию
+    @ColumnInfo(name = COLUMN_SELECTED)
+    var selected: Boolean = false
+
+    companion object{
+        const val TABLE_NAME = "flowerbed_photo"
+        const val COLUMN_ID = "flowerbedPhotoId"
+        const val COLUMN_FLOWERBED_ID = "ownerFlowerbedId"
+        const val COLUMN_URI = "uri"
+        const val COLUMN_SELECTED = "selected"
+    }
 }
 
 /**
@@ -42,12 +58,8 @@ class FlowerbedPhotoEntity {
 @Dao
 interface FlowerbedPhotoEntityDao{
     // Получить список всех фото клумбы
-    @Query("SELECT * FROM $TABLE_NAME WHERE flowerbedId = :flowerbedId")
+    @Query("SELECT * FROM ${FlowerbedPhotoEntity.TABLE_NAME} WHERE ${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} = :flowerbedId")
     fun getAllByFlowerbedId(flowerbedId: Long): List<FlowerbedPhotoEntity>?
-
-    // Получить фото по идентификатору
-    @Query("SELECT * FROM $TABLE_NAME WHERE flowerbedPhotoId = :flowerbedPhotoId")
-    fun getById(flowerbedPhotoId: Long): FlowerbedPhotoEntity
 
     // Добавить фото клумбы
     @Insert
@@ -55,7 +67,13 @@ interface FlowerbedPhotoEntityDao{
 
     // Удалить фото клумбы
     @Delete
-    fun delete(photo: FlowerbedPhotoEntity)
+    fun delete(photo: List<FlowerbedPhotoEntity>)
+
+    // Установить фото по умолчанию для клумбы
+    @Query("UPDATE  ${FlowerbedPhotoEntity.TABLE_NAME} " +
+            "SET selected = case when ${FlowerbedPhotoEntity.COLUMN_ID} = :flowerbedPhotoId then " +
+            "case when ${FlowerbedPhotoEntity.COLUMN_SELECTED} = 1 then 0 else 1 end else 0 end " +
+            "WHERE ${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} = :flowerbedId ")
+    fun updateSelectedPhoto(flowerbedId: Long, flowerbedPhotoId: Long)
 }
 
-private const val TABLE_NAME = "flowerbed_photo"

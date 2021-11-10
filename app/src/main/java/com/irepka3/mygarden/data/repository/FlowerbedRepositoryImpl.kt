@@ -3,9 +3,11 @@ package com.irepka3.mygarden.data.repository
 import android.util.Log
 import com.irepka3.mygarden.data.database.AppRoomDataBase
 import com.irepka3.mygarden.data.database.FlowerbedEntity
+import com.irepka3.mygarden.data.database.FlowerbedWithPhoto
 import com.irepka3.mygarden.domain.model.Flowerbed
 import com.irepka3.mygarden.domain.repository.FlowerbedRepository
 import com.irepka3.mygarden.util.Const.APP_TAG
+import javax.inject.Inject
 
 /**
  * Репозиторий для работы с клумбами
@@ -14,21 +16,29 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  * Created by i.repkina on 31.10.2021.
  */
 
-class FlowerbedRepositoryImpl(private val database: AppRoomDataBase) : FlowerbedRepository {
+class FlowerbedRepositoryImpl
+@Inject constructor(private val database: AppRoomDataBase)
+    : FlowerbedRepository {
+
+    init {
+        Log.d(TAG, "init called")
+    }
 
     override fun getFlowerbedAll(): List<Flowerbed> {
         Log.d(TAG, "getFlowerBedAll() called")
-        return database.flowerbedDao.getAll()?.map { it.toDomain() } ?: emptyList<Flowerbed>()
+        return database.flowerbedDao.getAll()?.map { it.toDomain() } ?: emptyList()
     }
 
     override fun getFlowerbed(flowerbedId: Long): Flowerbed {
         Log.d(TAG, "getFlowerBed() called with: id = $flowerbedId")
-           return database.flowerbedDao.getById(flowerbedId).toDomain()
+        return database.flowerbedDao.getById(flowerbedId).toDomain()
     }
 
-    override fun insertFlowerbed(flowerbed: Flowerbed){
+    override fun insertFlowerbed(flowerbed: Flowerbed): Long {
         Log.d(TAG, "insertFlowerBed() called with: flowerBed = $flowerbed")
-            database.flowerbedDao.insert(flowerbed.toEntity())
+        return database.flowerbedDao.insert(flowerbed.toEntity()).also { flowerbedId ->
+            Log.d(TAG, "insertFlowerBed() return flowerbedId = $flowerbedId")
+        }
     }
     override fun updateFlowerbed(flowerbed: Flowerbed) {
         Log.d(TAG, "updateFlowerBed() called with: flowerBed = $flowerbed")
@@ -57,7 +67,21 @@ class FlowerbedRepositoryImpl(private val database: AppRoomDataBase) : Flowerbed
      * Трансформирует запись таблицы [FlowerbedEntity] в модель доменного слоя[Flowerbed]
      */
     private fun FlowerbedEntity.toDomain(): Flowerbed{
-        return Flowerbed(this.flowerbedId, this.name, this.description, this.comment)
+        return Flowerbed(this.flowerbedId, this.name, this.description, this.comment, null)
+    }
+
+    /**
+     * Трансформирует запись таблицы [FlowerbedWithPhoto] в модель доменного слоя[Flowerbed]
+     */
+    private fun FlowerbedWithPhoto.toDomain(): Flowerbed{
+        Log.d(TAG, "FlowerbedWithPhoto.toDomain() called uri = ${this.photoUri}")
+        return Flowerbed(
+            flowerbedId = this.flowerbed.flowerbedId,
+            name = this.flowerbed.name,
+            description = this.flowerbed.description,
+            comment = this.flowerbed.comment,
+            uri = this.photoUri
+        )
     }
 }
 

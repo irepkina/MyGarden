@@ -13,24 +13,33 @@ import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
  * Адаптер для вьюпейджера клумбы
- * @param flowerbedId идентификатор клумбы
  * @param fragmentManager менеджер фрагментов главной активити [FragmentManager]
  * @param lifecycle жизненный цикл главной активити [Lifecycle]
  *
  * Created by i.repkina on 02.11.2021.
  */
 class FlowerbedAdapter(
-    private val flowerbedId: Long?,
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager,lifecycle) {
+    private var pageCount: Int = 1
+    private var flowerbedId: Long? = null
 
     override fun getItemCount(): Int {
-        return PAGE_COUNT
+        return pageCount
+    }
+
+    fun setFlowerbedId(flowerbedId: Long?){
+        if (this.flowerbedId != flowerbedId) {
+            this.flowerbedId = flowerbedId
+            pageCount = if (flowerbedId != null) PAGE_COUNT else 1
+            notifyDataSetChanged()
+        }
     }
 
     override fun createFragment(position: Int): Fragment {
         Log.d(TAG, "createFragment() called with: position = $position")
+        val flowerbedId = this.flowerbedId
         return when (position) {
             0 -> {
                 if (flowerbedId != null)
@@ -46,7 +55,7 @@ class FlowerbedAdapter(
                 if (flowerbedId == null) throw Exception("FlowerBedId in photo can't be null")
                 FlowerbedPhotoListFragment.newInstance(flowerbedId)
             }
-            else -> Fragment()
+            else -> throw Exception("Invalid position = $position")
         }
     }
 }

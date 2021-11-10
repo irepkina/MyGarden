@@ -11,12 +11,12 @@ interface FlowerbedPhotoRepository {
     // Получение списка фотографий по идентификатору клумбы
     fun getAllByFlowerbedId(flowerbedId: Long): List<FlowerbedPhoto>?
 
-    // Получение фото клумбы по идентификатору фото
-    fun getFlowerbedPhoto(flowerbedPhotoId: Long): FlowerbedPhoto
-
     // Добавление фотографии клумбы
     fun insertFlowerbedPhoto(flowerbedPhoto: FlowerbedPhoto)
 
     // Удаление фотографии клумбы
-    fun deleteFlowerbedPhoto(flowerbedPhoto: FlowerbedPhoto)
+    fun deleteFlowerbedPhoto(flowerbedPhotoList: List<FlowerbedPhoto>)
+
+    // Установить фото по умолчанию для клумбы
+    fun updateSelectedPhoto(flowerbedId: Long, flowerbedPhotoId: Long)
 }

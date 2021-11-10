@@ -3,9 +3,11 @@ package com.irepka3.mygarden.data.repository
 import android.util.Log
 import com.irepka3.mygarden.data.database.AppRoomDataBase
 import com.irepka3.mygarden.data.database.PlantEntity
+import com.irepka3.mygarden.data.database.PlantWithPhoto
 import com.irepka3.mygarden.domain.model.Plant
 import com.irepka3.mygarden.domain.repository.PlantRepository
 import com.irepka3.mygarden.util.Const.APP_TAG
+import javax.inject.Inject
 
 /**
  * Репозиторий для работы с растениями
@@ -13,10 +15,12 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  *
  * Created by i.repkina on 02.11.2021.
  */
-class PlantRepositoryImpl(private val database: AppRoomDataBase): PlantRepository {
-    override fun getPlantsAll(): List<Plant> {
-        Log.d(TAG, "getPlantsAll() called")
-        return database.plantDao.getAll()?.map { it.toDomain() } ?: emptyList()
+class PlantRepositoryImpl
+@Inject constructor(private val database: AppRoomDataBase)
+    : PlantRepository {
+
+    init {
+        Log.d(TAG, "init called")
     }
 
     override fun getPlantsByFlowerbed(flowerbedId: Long): List<Plant> {
@@ -29,7 +33,7 @@ class PlantRepositoryImpl(private val database: AppRoomDataBase): PlantRepositor
         return database.plantDao.getById(plantId).toDomain()
     }
 
-    override fun insertPlant(plant: Plant) {
+    override fun insertPlant(plant: Plant): Long {
         Log.d(TAG, "insertPlant() called with: plant = $plant")
         return database.plantDao.insert(plant.toEntity())
     }
@@ -49,12 +53,12 @@ class PlantRepositoryImpl(private val database: AppRoomDataBase): PlantRepositor
      */
     private fun Plant.toEntity(): PlantEntity {
         val plantEntity = PlantEntity()
-        plantEntity.plantId = this.plantId ?: 0L
         plantEntity.flowerbedId = this.flowerbedId
+        plantEntity.plantId = this.plantId ?: 0L
         plantEntity.name = this.name
         plantEntity.description = this.description
         plantEntity.plant_date = this.datePlant
-        plantEntity.count = this.count
+        plantEntity.plantsCount = this.count
         return plantEntity
     }
 
@@ -62,7 +66,33 @@ class PlantRepositoryImpl(private val database: AppRoomDataBase): PlantRepositor
      * Трансформирует запись таблицы [PlantEntity] в модель доменного слоя[Plant]
      */
     private fun PlantEntity.toDomain(): Plant {
-        return Plant(this.plantId, this.flowerbedId, this.name, this.description, this.count, this.plant_date)
+        Log.d(TAG, "PlantEntity.toDomain() called plantsCount = ${this.plantsCount}")
+        return Plant(
+            flowerbedId = this.flowerbedId,
+            plantId = this.plantId,
+            name = this.name,
+            description = this.description,
+            comment = this.comment,
+            count = this.plantsCount,
+            datePlant = this.plant_date
+        )
+    }
+
+    /**
+     * Трансформирует запись таблицы [PlantWithPhoto] в модель доменного слоя[Plant]
+     */
+    private fun PlantWithPhoto.toDomain(): Plant {
+        Log.d(TAG, "PlantWithPhoto.toDomain() called plantsCount = ${this.plant.plantsCount}")
+        return Plant(
+            flowerbedId = this.plant.flowerbedId,
+            plantId = this.plant.plantId,
+            name = this.plant.name,
+            description = this.plant.description,
+            comment = this.plant.comment,
+            count = this.plant.plantsCount,
+            datePlant = this.plant.plant_date,
+            uri = this.photoUri
+        )
     }
 }
 

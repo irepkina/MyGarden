@@ -12,13 +12,14 @@ import io.reactivex.schedulers.Schedulers
 
 /**
  * View-модель для фрагмента списка растений
- * @param interactor доменного слоя для работы с клумбами [PlantInteractor]
+ * @param flowerbedId идентификатор клумбы
+ * @param interactor доменного слоя для работы с ратениями [PlantInteractor]
  *
  * Created by i.repkina on 01.11.2021.
  */
 class PlantListViewModel(private val flowerbedId: Long, private val interactor: PlantInteractor): ViewModel() {
     /**
-     * LiveData списка клумб
+     * LiveData списка растений
      */
     val plantListLiveData = MutableLiveData<List<Plant>>()
     /**
@@ -32,25 +33,20 @@ class PlantListViewModel(private val flowerbedId: Long, private val interactor: 
 
     private val compositeDisposable = CompositeDisposable()
 
-    /**
-     * Загрузка данных во view-модель при создании
-     */
-    init {
-        loadData()
-    }
 
     /**
      * Загрузка данных во view-модель
      */
-    private fun loadData(){
-        progressLiveData.postValue(true)
+    fun loadData(){
+        progressLiveData.value = true
         compositeDisposable.add(
             Single.fromCallable { interactor.getPlantsByFlowerbed(flowerbedId) }
                 .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { progressLiveData.value = false }
                 .subscribe(
-                    { list -> plantListLiveData.postValue(list) },
-                    { error ->  errorsLiveData.postValue(error) }
+                    { list -> plantListLiveData.value = list },
+                    { error ->  errorsLiveData.value = error }
                 )
         )
     }
@@ -61,19 +57,19 @@ class PlantListViewModel(private val flowerbedId: Long, private val interactor: 
      * @param plant выбранная клумба [Plant]
      */
     fun onDelete(plant: Plant){
-        progressLiveData.postValue(true)
+        progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
                 interactor.deletePlant(plant)
             }
                 .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { progressLiveData.value = false }
                 .subscribe(
                     {
                         loadData()
                     },
-                    { error -> errorsLiveData.postValue(error) }
+                    { error -> errorsLiveData.value = error }
                 )
         )
     }

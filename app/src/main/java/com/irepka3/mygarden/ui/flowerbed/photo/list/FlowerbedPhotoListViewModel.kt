@@ -1,42 +1,27 @@
 package com.irepka3.mygarden.ui.flowerbed.photo.list
 
-import android.net.Uri
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractor
-import com.irepka3.mygarden.domain.interactor.PhotoInteractor
+import com.irepka3.mygarden.domain.interactor.FileInteractor
 import com.irepka3.mygarden.domain.model.FlowerbedPhoto
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
+import com.irepka3.mygarden.ui.photo.model.Photo
+import com.irepka3.mygarden.util.Const.APP_TAG
+import java.io.File
 
 /**
  * View-модель для фрагмента списка фотографий клумбы
  * @param flowerbedId идентификатор клумбы
- * @param photoInteractor интерактор доменного слоя для работы с фотографиями [PhotoInteractor]
+ * @param fileInteractor интерактор доменного слоя для работы с фотографиями [FileInteractor]
  * @param flowerbedPhotoInteractor интерактор доменного слоя для работы с фотографиями клумбы [FlowerbedPhotoInteractor]
  *
  * Created by i.repkina on 04.11.2021.
  */
-class FlowerbedPhotoListViewModel(private val flowerbedId: Long,
-                                  private val photoInteractor: PhotoInteractor,
-                                  private val flowerbedPhotoInteractor: FlowerbedPhotoInteractor): ViewModel() {
-    /**
-     * LiveData списка клумб
-     */
-    val flowerbedPhotoListLiveData = MutableLiveData<List<FlowerbedPhoto>>()
-    /**
-     * LiveData для вывода ошибки
-     */
-    val errorsLiveData = MutableLiveData<Throwable>()
-    /**
-     * LiveData для отображения индикатора загрузки данных
-     */
-    val progressLiveData = MutableLiveData<Boolean>()
-
-    private val compositeDisposable = CompositeDisposable()
+class FlowerbedPhotoListViewModel(
+    private val flowerbedId: Long,
+    fileInteractor: FileInteractor,
+    private val flowerbedPhotoInteractor: FlowerbedPhotoInteractor
+    ): BasePhotoViewModel(fileInteractor) {
 
     /**
      * Загрузка данных во view-модель при создании
@@ -45,69 +30,29 @@ class FlowerbedPhotoListViewModel(private val flowerbedId: Long,
         loadData()
     }
 
-    /**
-     * Загрузка данных во view-модель
-     */
-    private fun loadData(){
-        progressLiveData.postValue(true)
-        compositeDisposable.add(
-            Single.fromCallable { flowerbedPhotoInteractor.getAllByFlowerbedId(flowerbedId) }
-                .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
-                .subscribe(
-                    { list -> flowerbedPhotoListLiveData.postValue(list) },
-                    { error ->  errorsLiveData.postValue(error) }
-                )
-        )
+    override fun doLoadData(): List<Photo> {
+        return flowerbedPhotoInteractor.getAllByFlowerbedId(flowerbedId)
+        ?.map { Photo(photoId = it.flowerbedPhotoId, uri = it.uri, selected = it.selected) } ?: emptyList()
     }
 
-    /**
-     * Удаление выбранной фотографии клумбы
-     * @param flowerbedPhoto выбранная фотография клумбы [FlowerbedPhoto]
-     */
-    fun onDelete(flowerbedPhoto: FlowerbedPhoto){
-        progressLiveData.postValue(true)
-        compositeDisposable.add(
-            Completable.fromCallable {
-                flowerbedPhotoInteractor.deleteFlowerbedPhoto(flowerbedPhoto)
-            }
-                .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        loadData()
-                    },
-                    { error -> errorsLiveData.postValue(error) }
-                )
-        )
+    override fun doInsert(uri: String) {
+        val flowerbedPhoto = FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = null, uri, false)
+        flowerbedPhotoInteractor.insertFlowerbedPhoto(flowerbedPhoto)
     }
 
-    fun onInsert(externalUri: Uri){
-        progressLiveData.postValue(true)
-        compositeDisposable.add(
-            Completable.fromCallable {
-                val uri = photoInteractor.copyFileToLocalStorage(externalUri).toString()
-                val flowerbedPhoto = FlowerbedPhoto(null, flowerbedId, uri)
-                flowerbedPhotoInteractor.insertFlowerbedPhoto(flowerbedPhoto)
-            }
-                .subscribeOn(Schedulers.io())
-                .doFinally { progressLiveData.postValue(false) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        loadData()
-                    },
-                    { error -> errorsLiveData.postValue(error) }
-                )
-        )
+    override fun doDelete(photoList: List<Photo>) {
+        flowerbedPhotoInteractor.deleteFlowerbedPhoto(photoList.map {
+            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = it.photoId, uri = it.uri, selected = it.selected)
+        })
     }
 
-    /**
-     * Очищаем подписки на rx при удалении вью-модели
-     */
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
+    override fun getPhotoDir(): File {
+        return flowerbedPhotoInteractor.getFlowerbedDir(flowerbedId)
+    }
+
+    override fun doSelected(photoId: Long) {
+        Log.d(TAG, "doSelected() called with: photoId = $photoId")
+        flowerbedPhotoInteractor.updateSelectedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = photoId)
     }
 }
+private const val TAG = "{$APP_TAG}.FlowerbedPhotoListViewModel"
