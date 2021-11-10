@@ -15,7 +15,7 @@ interface FlowerbedInteractor {
     fun getFlowerbed(flowerbedId: Long): Flowerbed?
 
     // Добавление клумбы
-    fun insertFlowerbed(flowerbed: Flowerbed)
+    fun insertFlowerbed(flowerbed: Flowerbed): Long
 
     // Обновление данных клумбы
     fun updateFlowerbed(flowerbed: Flowerbed)

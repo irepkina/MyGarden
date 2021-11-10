@@ -11,17 +11,17 @@ import com.irepka3.mygarden.R
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.irepka3.mygarden.databinding.FragmentFlowerbedPageBinding
+import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
  * Фрагмент для отображения информации о клумбе
  */
-class FlowerbedFragment : Fragment() {
+class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
      private lateinit var binding: FragmentFlowerbedPageBinding
      private lateinit var myViewPager2: ViewPager2
      private lateinit var myAdapter: FlowerbedAdapter
      private var flowerbedId: Long? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,10 +29,11 @@ class FlowerbedFragment : Fragment() {
     ): View {
         Log.d(TAG,"onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
         binding = FragmentFlowerbedPageBinding.inflate(inflater)
-        readargument()
+        readArgument()
 
         myViewPager2 = binding.pager
-        myAdapter = FlowerbedAdapter(flowerbedId, requireActivity().supportFragmentManager, requireActivity().lifecycle)
+        myAdapter = FlowerbedAdapter(this.childFragmentManager, this.lifecycle)
+        myAdapter.setFlowerbedId(flowerbedId)
         myViewPager2.orientation  = ViewPager2.ORIENTATION_HORIZONTAL
         myViewPager2.adapter = myAdapter
         myViewPager2.setPageTransformer( MarginPageTransformer(MARGIN))
@@ -41,6 +42,7 @@ class FlowerbedFragment : Fragment() {
             when (position) {
                 0 -> tab.text = getString(R.string.tab_flowerbed_description_text)
                 1 -> tab.text =  getString(R.string.tab_flowerbed_plants_text)
+                2 -> tab.text = getString(R.string.tab_flowerbed_photo_text)
             }
         }.attach()
 
@@ -71,7 +73,7 @@ class FlowerbedFragment : Fragment() {
         }
     }
 
-    private fun readargument() {
+    private fun readArgument() {
         Log.d(TAG, "readArguments() called")
         when (val mode = arguments?.getString(MODE)) {
             MODE_UPDATE -> {
@@ -85,9 +87,21 @@ class FlowerbedFragment : Fragment() {
 
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
+
+    override fun updateFlowerbedId(flowerbedId: Long) {
+        Log.d(TAG, "updateFlowerbedId() called with: flowerbedId = $flowerbedId")
+        myAdapter.setFlowerbedId(flowerbedId)
+    }
 }
 
-private const val TAG = "${APP_TAG}.FlowerbedPageFragment"
+/**
+ * Интрефейс фрагмента вьюпейджера клумбы
+ */
+interface FlowerbedFragmentIntf {
+    fun updateFlowerbedId(flowerbedId: Long)
+}
+
+private const val TAG = "${APP_TAG}.FlowerbedFragment"
 private const val FLOWERBED_ID = "flowerbedId"
 private const val MODE = "mode"
 private const val MODE_INSERT = "insert"

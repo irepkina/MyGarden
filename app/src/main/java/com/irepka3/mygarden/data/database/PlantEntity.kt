@@ -1,7 +1,9 @@
 package com.irepka3.mygarden.data.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
@@ -12,11 +14,11 @@ import androidx.room.Query
 import androidx.room.Update
 
 /**
- * Таблицы "Растения"
+ * Таблица "Растения"
  *
  * Created by i.repkina on 02.11.2021.
  */
-@Entity(tableName = TABLE_NAME,
+@Entity(tableName = PlantEntity.TABLE_NAME,
     foreignKeys = arrayOf(
         ForeignKey(
             entity = FlowerbedEntity::class,
@@ -27,20 +29,51 @@ import androidx.room.Update
     ),
     indices = arrayOf(Index("flowerbedId"))
 )
+
 class PlantEntity {
     // Идентификатор растения
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = COLUMN_ID)
     var plantId: Long = 0
     // Идентификатор клумбы, на которой посажено растение
+    @ColumnInfo(name = COLUMN_FLOWERBED_ID)
     var flowerbedId: Long = 0
     // Название растения
+    @ColumnInfo(name = COLUMN_NAME)
     var name: String = ""
     // Описание растения
+    @ColumnInfo(name = COLUMN_DESCRIPTION)
     var description: String = ""
+    // комментарий к растению
+    @ColumnInfo(name = COLUMN_COMMENT)
+    var comment: String? = null
     // Количество посаженных в клумбе экземпляров растения
-    var count: Int = 0
+    @ColumnInfo(name = COLUMN_COUNT)
+    var plantsCount: Int = 1
     // Дата посадки
-    var plant_date: Long = 0
+    @ColumnInfo(name = COLUMN_PLANT_DATE)
+    var plant_date: Long? = null
+
+    companion object{
+        const val TABLE_NAME = "plant"
+        const val COLUMN_ID = "plantId"
+        const val COLUMN_FLOWERBED_ID = "flowerbedId"
+        const val COLUMN_NAME = "name"
+        const val COLUMN_DESCRIPTION = "description"
+        const val COLUMN_COMMENT = "comment"
+        const val COLUMN_COUNT = "plantsCount"
+        const val COLUMN_PLANT_DATE = "plant_date"
+
+    }
+}
+
+/**
+ * Растение с uri фото по умолчанию
+ */
+class PlantWithPhoto{
+    @Embedded
+    lateinit var plant: PlantEntity
+    var photoUri: String? = null
 }
 
 /**
@@ -48,21 +81,21 @@ class PlantEntity {
  */
 @Dao
 interface PlantEntityDao{
-    // Получить список всех растений
-    @Query("SELECT * FROM $TABLE_NAME")
-    fun getAll(): List<PlantEntity>?
+    // Получить все растения клумбы
+    @Query("SELECT pl.*, ph.uri as photoUri FROM ${PlantEntity.TABLE_NAME} pl " +
+            "LEFT JOIN ${PlantPhotoEntity.TABLE_NAME} ph " +
+            "ON pl.${PlantEntity.COLUMN_ID} = ph.${PlantPhotoEntity.COLUMN_PLANT_ID}" +
+            " AND ph.${PlantPhotoEntity.COLUMN_SELECTED} = 1 " +
+            "WHERE pl.${PlantEntity.COLUMN_FLOWERBED_ID} = :flowerbedId")
+    fun getPlantsByFlowerBedId(flowerbedId: Long): List<PlantWithPhoto>?
 
     // Получить растение по идентификатору
-    @Query("SELECT * FROM $TABLE_NAME WHERE plantId = :plantId")
+    @Query("SELECT * FROM ${PlantEntity.TABLE_NAME} WHERE ${PlantEntity.COLUMN_ID} = :plantId")
     fun getById(plantId: Long): PlantEntity
-
-    // Получить все растения клумбы
-    @Query("SELECT * FROM $TABLE_NAME WHERE flowerbedId = :flowerbedId")
-    fun getPlantsByFlowerBedId(flowerbedId: Long): List<PlantEntity>?
 
     // Добавить растение
     @Insert
-    fun insert(plant: PlantEntity)
+    fun insert(plant: PlantEntity): Long
 
     // Обновить данные растения
     @Update
@@ -73,4 +106,3 @@ interface PlantEntityDao{
     fun delete(plant: PlantEntity)
 }
 
-private const val TABLE_NAME = "plant"

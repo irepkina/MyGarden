@@ -11,7 +11,7 @@ interface FlowerbedRepository {
     // Получить список всех клумб
     fun getFlowerbedAll(): List<Flowerbed>
     // Добавить клумбу
-    fun insertFlowerbed(flowerbed: Flowerbed)
+    fun insertFlowerbed(flowerbed: Flowerbed): Long
     // Изменить данные клумбы
     fun updateFlowerbed(flowerbed: Flowerbed)
     // Удалить клумбу

@@ -3,8 +3,21 @@
     <string name="flowerbed_name_hint">Название клумбы</string>
     <string name="flowerbed_description_hint">Описание клумбы</string>
     <string name="flowerbed_comment_hint">Комментарий</string>
+
+    <string name="plant_name_hint">Название растения</string>
+    <string name="plant_description_hint">Описание растения</string>
+    <string name="plant_comment_hint">Комментарий</string>
+    <string name="plant_count_hint">Количество экземпляров</string>
+    <string name="plant_plantDate_hint">Дата посадки</string>
+
     <string name="save_button_text">Сохранить</string>
     <string name="cancel_button_text">Отменить</string>
+
     <string name="tab_flowerbed_description_text">Описание</string>
     <string name="tab_flowerbed_plants_text">Растения</string>
+    <string name="tab_flowerbed_photo_text">Фото</string>
+
+    <string name="tab_plant_description_text">Растение</string>
+    <string name="tab_plant_works_text">Работы</string>
+    <string name="tab_plant_photo_text">Фото</string>
 </resources>

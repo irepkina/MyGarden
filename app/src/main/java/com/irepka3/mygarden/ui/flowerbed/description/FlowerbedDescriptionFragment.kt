@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
-import com.irepka3.mygarden.factory.FlowerbedFactory
-import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragmentIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
@@ -26,11 +26,10 @@ class FlowerbedDescriptionFragment(): Fragment() {
     private lateinit var binding: FragmentFlowerbedDescriptionBinding
     private var flowerbedId: Long? = null
 
-    private val viewModel by viewModels<FlowerbedViewModel> {
+    private val viewModel by viewModels<FlowerbedDescriptionViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val flowerbedFactory = FlowerbedFactory(requireContext())
-                return FlowerbedViewModel(flowerbedId, flowerbedFactory.getFlowerbedInteractor()) as T
+                return FlowerbedDescriptionViewModel(flowerbedId, dagger().getFlowerbedInteractor()) as T
             }
         }
     }
@@ -66,28 +65,43 @@ class FlowerbedDescriptionFragment(): Fragment() {
             "onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState"
         )
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // подписка на life-data view-модели
-        viewModel.flowerbedLiveData.observe(viewLifecycleOwner) { flowerbed -> showFlowerbed(flowerbed) }
-        viewModel.progressLiveData.observe(viewLifecycleOwner) { result -> binding.progressBar.isVisible = result }
-        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
-            Toast.makeText(this.context, error.message , Toast.LENGTH_SHORT).show()
-        }
-        viewModel.commandLiveData.observe(viewLifecycleOwner) {command ->
-            when (command) {
-                FlowerbedViewModel.Command.SHOW_FLOWERBED_LIST -> (this.activity as MainActivityIntf).showFlowerbedList()
-                else -> Unit
+        viewModel.flowerbedLiveData.observe(viewLifecycleOwner) { flowerbed ->
+            Log.d(TAG, "onDataChanged() called with: flowerbed = $flowerbed")
+            showFlowerbed(flowerbed)
+            if (flowerbed.flowerbedId != null) {
+                Log.d(
+                    TAG,
+                    "onDataChanged flowerbedId = ${flowerbed.flowerbedId}, : this.parentFragment = ${this.parentFragment}"
+                )
+                (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
             }
+        }
+        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
+            binding.progressBar.isVisible = result
+        }
+        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
         binding.saveButton.setOnClickListener {
             Log.d(TAG, "setOnClickListener() called")
-            viewModel.onSaveData(flowerbedId,
-                binding.flowerbedName.text.toString(),
-                binding.flowerbedDescription.text.toString(),
-                binding.flowerbedComment.text.toString())
+            saveFlowerbed()
         }
+    }
 
-        return binding.root
+    private fun saveFlowerbed(){
+        viewModel.onSaveData(
+            flowerbedId,
+            binding.name.text.toString(),
+            binding.description.text.toString(),
+            binding.comment.text.toString()
+        )
     }
 
     private fun readArguments(){
@@ -106,13 +120,22 @@ class FlowerbedDescriptionFragment(): Fragment() {
     }
 
     private fun showFlowerbed(flowerbed: Flowerbed?){
-        binding.flowerbedName.setText(flowerbed?.name)
-        binding.flowerbedDescription.setText(flowerbed?.description)
-        binding.flowerbedComment.setText(flowerbed?.comment)
+        binding.name.setText(flowerbed?.name)
+        binding.description.setText(flowerbed?.description)
+        binding.comment.setText(flowerbed?.comment)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onClose(flowerbedId,
+            binding.name.text.toString(),
+            binding.description.text.toString(),
+            binding.comment.text.toString()
+        )
     }
 }
 
-private const val TAG = "${APP_TAG}.FlowerbedFragment"
+private const val TAG = "${APP_TAG}.FlowerbedDescriptionFragment"
 private const val FLOWERBED_ID = "flowerbedId"
 private const val MODE = "mode"
 private const val MODE_INSERT = "insert"
