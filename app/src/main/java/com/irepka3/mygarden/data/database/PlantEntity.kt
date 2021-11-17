@@ -44,17 +44,24 @@ class PlantEntity {
     // Описание растения
     @ColumnInfo(name = COLUMN_DESCRIPTION)
     var description: String = ""
+
     // комментарий к растению
     @ColumnInfo(name = COLUMN_COMMENT)
     var comment: String? = null
+
     // Количество посаженных в клумбе экземпляров растения
     @ColumnInfo(name = COLUMN_COUNT)
     var plantsCount: Int = 1
+
     // Дата посадки
     @ColumnInfo(name = COLUMN_PLANT_DATE)
     var plant_date: Long? = null
 
-    companion object{
+    //порядок отображения в списке
+    @ColumnInfo(name = COLUMN_ORDER)
+    var order: Int? = null
+
+    companion object {
         const val TABLE_NAME = "plant"
         const val COLUMN_ID = "plantId"
         const val COLUMN_FLOWERBED_ID = "flowerbedId"
@@ -63,6 +70,7 @@ class PlantEntity {
         const val COLUMN_COMMENT = "comment"
         const val COLUMN_COUNT = "plantsCount"
         const val COLUMN_PLANT_DATE = "plant_date"
+        const val COLUMN_ORDER = "number"
 
     }
 }

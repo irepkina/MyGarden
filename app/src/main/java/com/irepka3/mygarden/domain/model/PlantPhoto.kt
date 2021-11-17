@@ -10,8 +10,10 @@ package com.irepka3.mygarden.domain.model
  *
  * Created by i.repkina on 07.11.2021.
  */
-data class PlantPhoto(val plantId: Long = 0,
-                      val plantPhotoId: Long? = null,
-                      val uri: String = "",
-                      var selected: Boolean = false
+data class PlantPhoto(
+    val plantId: Long = 0,
+    val plantPhotoId: Long? = null,
+    val uri: String = "",
+    var selected: Boolean = false,
+    val order: Int? = null
 )

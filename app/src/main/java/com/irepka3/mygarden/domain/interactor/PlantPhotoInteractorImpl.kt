@@ -11,21 +11,20 @@ import javax.inject.Inject
  *
  * Created by i.repkina on 04.11.2021.
  */
-class PlantPhotoInteractorImpl
-@Inject constructor(
+class PlantPhotoInteractorImpl @Inject constructor(
     private val dirRepository: DirRepository,
     private val plantPhotoRepository: PlantPhotoRepository
-    ) : PlantPhotoInteractor {
+) : PlantPhotoInteractor {
 
     override fun getAllByPlantId(plantId: Long): List<PlantPhoto>? {
-        return plantPhotoRepository.getAllByPlantId(plantId)?.sortedBy { it.plantPhotoId }
+        return plantPhotoRepository.getAllByPlantId(plantId)?.sortedBy { it.order; it.plantPhotoId }
     }
 
-    override fun insertPlantPhoto(plantPhoto:  PlantPhoto) {
+    override fun insertPlantPhoto(plantPhoto: PlantPhoto) {
         plantPhotoRepository.insertPlantPhoto(plantPhoto)
     }
 
-    override fun deletePlantPhoto(plantPhotoList:  List<PlantPhoto>) {
+    override fun deletePlantPhoto(plantPhotoList: List<PlantPhoto>) {
         plantPhotoRepository.deletePlantPhoto(plantPhotoList)
     }
 

@@ -16,9 +16,9 @@ import javax.inject.Inject
  * Created by i.repkina on 31.10.2021.
  */
 
-class FlowerbedRepositoryImpl
-@Inject constructor(private val database: AppRoomDataBase)
-    : FlowerbedRepository {
+class FlowerbedRepositoryImpl @Inject constructor(
+    private val database: AppRoomDataBase
+) : FlowerbedRepository {
 
     init {
         Log.d(TAG, "init called")
@@ -60,20 +60,19 @@ class FlowerbedRepositoryImpl
         flowerbedEntity.description = this.description
         flowerbedEntity.comment = this.comment
         return flowerbedEntity
-
     }
 
     /**
      * Трансформирует запись таблицы [FlowerbedEntity] в модель доменного слоя[Flowerbed]
      */
-    private fun FlowerbedEntity.toDomain(): Flowerbed{
+    private fun FlowerbedEntity.toDomain(): Flowerbed {
         return Flowerbed(this.flowerbedId, this.name, this.description, this.comment, null)
     }
 
     /**
      * Трансформирует запись таблицы [FlowerbedWithPhoto] в модель доменного слоя[Flowerbed]
      */
-    private fun FlowerbedWithPhoto.toDomain(): Flowerbed{
+    private fun FlowerbedWithPhoto.toDomain(): Flowerbed {
         Log.d(TAG, "FlowerbedWithPhoto.toDomain() called uri = ${this.photoUri}")
         return Flowerbed(
             flowerbedId = this.flowerbed.flowerbedId,

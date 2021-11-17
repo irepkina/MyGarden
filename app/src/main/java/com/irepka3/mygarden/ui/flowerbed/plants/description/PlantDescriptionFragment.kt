@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantDescriptionBinding
 import com.irepka3.mygarden.domain.model.Plant
+import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragmentIntf
 import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
@@ -39,34 +41,6 @@ class PlantDescriptionFragment: Fragment() {
                     plantId = plantId,
                     dagger().getPlantInteractor()
                 ) as T
-            }
-        }
-    }
-
-    companion object {
-        /**
-         * Создает фрагмент для редактирования описания растения
-         * @param flowerbedId идентификатор клумбы
-         * @param plantId идентификатор растения
-         */
-        fun newInstanceUpdate(flowerbedId: Long, plantId: Long): PlantDescriptionFragment {
-            return PlantDescriptionFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                    putLong(PLANT_ID, plantId)
-                    putString(MODE, MODE_UPDATE)
-                }
-            }
-        }
-
-        /**
-         * Создает фрагмент для добавления описания нового растения
-         */
-        fun newInstanceInsert(flowerbedId: Long): PlantDescriptionFragment {
-            return PlantDescriptionFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                    putString(MODE,  MODE_INSERT) }
             }
         }
     }
@@ -103,17 +77,21 @@ class PlantDescriptionFragment: Fragment() {
             Log.d(TAG, "onDataChanged() called with: plant = $plant")
             showPlant(plant)
             if (plant.plantId != null) {
-                Log.d(TAG,
+                Log.d(
+                    TAG,
                     "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
                 )
                 (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
-
+                (requireActivity() as MainActivityIntf).setCaption(plant.name)
+            } else {
+                (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.new_plant_caption))
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
             binding.progressBar.isVisible = result
         }
         viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
+            Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
             Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
@@ -127,16 +105,16 @@ class PlantDescriptionFragment: Fragment() {
         Log.d(TAG, "readArguments() called")
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
 
         when (val mode = arguments?.getString(MODE)) {
             MODE_UPDATE -> {
                 plantId = arguments?.getLong(PLANT_ID) ?: 0L
                 if (plantId == 0L)
-                    throw Exception("Incorrect arguments: mode = $mode, plantId = $plantId")
+                    throw IllegalStateException("Incorrect arguments: mode = $mode, plantId = $plantId")
             }
             MODE_INSERT -> plantId = null
-            else -> throw Exception("Incorrect arguments: plant mode: $mode")
+            else -> throw IllegalStateException("Incorrect arguments: plant mode: $mode")
         }
     }
 
@@ -175,6 +153,35 @@ class PlantDescriptionFragment: Fragment() {
             binding.count.text.toString().toInt(),
             binding.plantDate.text.toString()
         )
+    }
+
+    companion object {
+        /**
+         * Создает фрагмент для редактирования описания растения
+         * @param flowerbedId идентификатор клумбы
+         * @param plantId идентификатор растения
+         */
+        fun newInstanceUpdate(flowerbedId: Long, plantId: Long): PlantDescriptionFragment {
+            return PlantDescriptionFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                    putLong(PLANT_ID, plantId)
+                    putString(MODE, MODE_UPDATE)
+                }
+            }
+        }
+
+        /**
+         * Создает фрагмент для добавления описания нового растения
+         */
+        fun newInstanceInsert(flowerbedId: Long): PlantDescriptionFragment {
+            return PlantDescriptionFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                    putString(MODE, MODE_INSERT)
+                }
+            }
+        }
     }
 }
 

@@ -2,16 +2,15 @@ package com.irepka3.mygarden.ui.flowerbed
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.MarginPageTransformer
-import com.irepka3.mygarden.R
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.irepka3.mygarden.R
 import com.irepka3.mygarden.databinding.FragmentFlowerbedPageBinding
-import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
@@ -79,10 +78,10 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
             MODE_UPDATE -> {
                 flowerbedId = arguments?.getLong(FLOWERBED_ID)
                 if (flowerbedId == 0L)
-                    throw Exception("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId")
+                    throw IllegalStateException("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId")
             }
             MODE_INSERT -> flowerbedId = null
-            else -> throw Exception("Incorrect arguments: flowerbed mode: $mode")
+            else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
 
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")

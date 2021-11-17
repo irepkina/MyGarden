@@ -14,12 +14,15 @@ import javax.inject.Inject
  * @param context контекст
  * Created by i.repkina on 05.11.2021.
  */
-class FileInteractotImpl
-@Inject constructor(private val context: Context)
-    : FileInteractor {
+class FileInteractotImpl @Inject constructor(
+    private val context: Context
+) : FileInteractor {
 
     override fun copyFileToLocalStorage(directory: File, externalUri: Uri): Uri? {
-        Log.d(TAG, "readImage() called with: pathSegments = ${externalUri.pathSegments}, last = ${externalUri.pathSegments.last()}")
+        Log.d(
+            TAG,
+            "readImage() called with: pathSegments = ${externalUri.pathSegments}, last = ${externalUri.pathSegments.last()}"
+        )
         val file = File(directory, UUID.randomUUID().toString())
         val inputStream = context.contentResolver.openInputStream(externalUri)
         return if (inputStream != null) {

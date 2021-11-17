@@ -81,9 +81,7 @@
         android:textAppearance="@style/Text.body"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/count"
-        android:importantForAutofill="no"
-
-        />
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/saveButton"

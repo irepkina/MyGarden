@@ -19,15 +19,20 @@ import io.reactivex.schedulers.Schedulers
  *
  * Created by i.repkina on 01.11.2021.
  */
-class FlowerbedDescriptionViewModel(private val flowerbedId: Long?, private val interactor: FlowerbedInteractor): ViewModel() {
+class FlowerbedDescriptionViewModel(
+    private val flowerbedId: Long?,
+    private val interactor: FlowerbedInteractor
+) : ViewModel() {
     /**
      * LiveData клумбы
      */
     val flowerbedLiveData = MutableLiveData<Flowerbed>()
+
     /**
      * LiveData для вывода ошибки
      */
     val errorsLiveData = MutableLiveData<Throwable>()
+
     /**
      * LiveData для отображения индикатора загрузки данных
      */

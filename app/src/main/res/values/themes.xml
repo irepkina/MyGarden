@@ -20,6 +20,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.MyGarden.Switch" parent="Theme.AppCompat.Light">
+        <!-- активное состояние (30% прозрачности для фона) -->
+        <item name="colorControlActivated">@color/colorSecondary</item>
+
+        <!-- неактивное состояние ползунка -->
+        <item name="colorSwitchThumbNormal">@color/color_grey</item>
+
+        <!-- цвет дорожки для неактивного состояния (30% прозрачности) -->
+        <item name="android:colorForeground">@android:color/darker_gray</item>
+    </style>
+
     <style name="Theme.MyGarden.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MyGarden.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -27,15 +38,24 @@
     <style name="Item.text" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
+
     <style name="Item.text.strong">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
     <style name="Text.body" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
+
     <style name="Text.strong" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+    <style name="Text.header" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="Text.hint" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>

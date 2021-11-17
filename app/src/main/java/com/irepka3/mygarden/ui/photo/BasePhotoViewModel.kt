@@ -2,6 +2,7 @@ package com.irepka3.mygarden.ui.photo
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.irepka3.mygarden.domain.interactor.FileInteractor
@@ -20,35 +21,46 @@ import java.io.File
  *
  * Created by i.repkina on 07.11.2021.
  */
-abstract class BasePhotoViewModel(private val fileInteractor: FileInteractor): ViewModel() {
+abstract class BasePhotoViewModel(
+    private val fileInteractor: FileInteractor
+) : ViewModel() {
+
+    private val _photoListLiveData = MutableLiveData<List<Photo>>()
+
     /**
      * LiveData списка фотографий
      */
-    val photoListLiveData = MutableLiveData<List<Photo>>()
+    val photoListLiveData: LiveData<List<Photo>> = _photoListLiveData
+
+    private val _errorsLiveData = MutableLiveData<Throwable>()
+
     /**
      * LiveData для вывода ошибки
      */
-    val errorsLiveData = MutableLiveData<Throwable>()
+    val errorsLiveData: LiveData<Throwable> = _errorsLiveData
+
+    private val _progressLiveData = MutableLiveData<Boolean>()
+
     /**
      * LiveData для отображения индикатора загрузки данных
      */
-    val progressLiveData = MutableLiveData<Boolean>()
+    val progressLiveData: LiveData<Boolean> = _progressLiveData
 
     private val compositeDisposable = CompositeDisposable()
 
     /**
      * Загрузка данных во view-модель
      */
-    protected fun loadData(){
-        progressLiveData.value = true
+    protected fun loadData() {
+        _progressLiveData.value = true
         compositeDisposable.add(
-            Single.fromCallable { doLoadData()}
+            Single.fromCallable { doLoadData() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
-                    { list -> photoListLiveData.value = list },
-                    { error ->  errorsLiveData.value = error }
+                    { list -> _photoListLiveData.value = list },
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }
@@ -57,38 +69,40 @@ abstract class BasePhotoViewModel(private val fileInteractor: FileInteractor): V
      * Удаление выбранной фотографии
      * @param photoList выбранные для удаления фотографии [List<Photo>]
      */
-    fun onDelete(photoList: List<Photo>){
-        progressLiveData.value = true
+    fun onDelete(photoList: List<Photo>) {
+        _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
                 doDelete(photoList)
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     {
                         loadData()
                     },
-                    { error -> errorsLiveData.value = error }
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }
 
-    fun onInsert(externalUri: Uri){
-        progressLiveData.value = true
+    fun onInsert(externalUri: Uri) {
+        _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
-                doInsert(fileInteractor.copyFileToLocalStorage(getPhotoDir(), externalUri).toString())
+                doInsert(
+                    fileInteractor.copyFileToLocalStorage(getPhotoDir(), externalUri).toString()
+                )
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     {
                         loadData()
                     },
-                    { error -> errorsLiveData.value = error }
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }
@@ -97,21 +111,21 @@ abstract class BasePhotoViewModel(private val fileInteractor: FileInteractor): V
      * Установить фото по умолчанию
      * @param photoId идентификатор фото по умолчанию
      */
-    fun onSelected(photoId: Long){
+    fun onSelected(photoId: Long) {
         Log.d(TAG, "onSelected() called with: photoId = $photoId")
-        progressLiveData.value = true
+        _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
                 doSelected(photoId)
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     {
                         loadData()
                     },
-                    { error -> errorsLiveData.value = error }
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }

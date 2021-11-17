@@ -11,17 +11,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.irepka3.mygarden.R
-import com.irepka3.mygarden.ui.flowerbed.photo.list.EditMode
 import com.irepka3.mygarden.ui.photo.model.Photo
 import com.irepka3.mygarden.util.Const
-import kotlinx.coroutines.selects.select
 
 /**
  * Адаптер для работы с фото
  *
  * Created by i.repkina on 07.11.2021.
  */
-class BasePhotoAdapter(val callback: BasePhotoAdapterCallback): RecyclerView.Adapter<BasePhotoAdapter.BasePhotoViewHolder>() {
+class BasePhotoAdapter(val callback: BasePhotoAdapterCallback) :
+    RecyclerView.Adapter<BasePhotoAdapter.BasePhotoViewHolder>() {
     private var diffUtilCallback = object : DiffUtil.ItemCallback<Photo>() {
         override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
             return oldItem.photoId == newItem.photoId
@@ -49,7 +48,7 @@ class BasePhotoAdapter(val callback: BasePhotoAdapterCallback): RecyclerView.Ada
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_photo_item, parent, false)
 
-        return BasePhotoViewHolder(itemView)
+        return BasePhotoViewHolder(itemView, callback)
     }
 
     override fun onBindViewHolder(holder: BasePhotoViewHolder, position: Int) {
@@ -61,35 +60,36 @@ class BasePhotoAdapter(val callback: BasePhotoAdapterCallback): RecyclerView.Ada
         return listDiffer.currentList.size
     }
 
-    inner class BasePhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class BasePhotoViewHolder(itemView: View, val callback: BasePhotoAdapterCallback) :
+        RecyclerView.ViewHolder(itemView) {
         private val photoImageView = itemView.findViewById<ImageView>(R.id.imageViewPhoto)
-        private val favoritePhoto = itemView.findViewById<ImageView>(R.id.imageViewStart)
+        private val favoritePhotoBtn =
+            itemView.findViewById<ImageView>(R.id.floatingButtonFavouritePhoto)
 
         fun bind(item: Photo) {
-            Log.d(TAG, "bind() called with: item.selected = ${item.selected}, item.uri = ${item.uri}")
+            Log.d(
+                TAG,
+                "bind() called with: item.selected = ${item.selected}, item.uri = ${item.uri}"
+            )
             Glide.with(itemView.context)
                 .load(Uri.parse(item.uri).path)
                 .fitCenter()
                 .into(photoImageView)
 
-            favoritePhoto.setImageLevel(item.selected.toInt())
+            favoritePhotoBtn.setImageLevel(item.selected.toInt())
 
-            favoritePhoto.setOnClickListener {
+            favoritePhotoBtn.setOnClickListener {
                 if (item.photoId != null) {
                     if (item.selected) {
-                        favoritePhoto.setImageLevel(0)
+                        favoritePhotoBtn.setImageLevel(0)
                         callback.onChangedSelected(item.photoId)
                     } else {
-                        favoritePhoto.setImageLevel(1)
+                        favoritePhotoBtn.setImageLevel(1)
                         callback.onChangedSelected(item.photoId)
                     }
                 }
             }
         }
-    }
-
-    private fun Boolean?.toInt(): Int{
-        return if (this != null && this) 1 else 0
     }
 
     /**
@@ -102,6 +102,11 @@ class BasePhotoAdapter(val callback: BasePhotoAdapterCallback): RecyclerView.Ada
          */
         fun onChangedSelected(photoId: Long)
     }
+}
+
+// преобразует Boolean в Int
+fun Boolean?.toInt(): Int {
+    return if (this != null && this) 1 else 0
 }
 
 

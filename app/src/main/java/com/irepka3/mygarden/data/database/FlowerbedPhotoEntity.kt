@@ -10,7 +10,6 @@ import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Update
 
 /**
  * Таблица "Фотографии клумб"
@@ -21,34 +20,42 @@ import androidx.room.Update
     foreignKeys = arrayOf(
         ForeignKey(
             entity = FlowerbedEntity::class,
-            parentColumns = arrayOf("flowerbedId"),
-            childColumns = arrayOf("ownerFlowerbedId"),
+            parentColumns = arrayOf(FlowerbedEntity.COLUMN_FLOWERBED_ID),
+            childColumns = arrayOf(FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID),
             onDelete = CASCADE
         )
     ),
-    indices = arrayOf(Index("ownerFlowerbedId"))
+    indices = arrayOf(Index(FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID))
 )
 class FlowerbedPhotoEntity {
     // Идентификатор фото клумбы
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
     var flowerbedPhotoId: Long = 0
+
     // Идентификатор клумбы
     @ColumnInfo(name = COLUMN_FLOWERBED_ID)
     var ownerFlowerbedId: Long = 0
+
     // Uri фото клумбы
     @ColumnInfo(name = COLUMN_URI)
     var uri: String = ""
+
     // Фото клумбы по умолчанию
     @ColumnInfo(name = COLUMN_SELECTED)
     var selected: Boolean = false
 
-    companion object{
+    //порядок отображения в списке
+    @ColumnInfo(name = COLUMN_ORDER)
+    var order: Int? = null
+
+    companion object {
         const val TABLE_NAME = "flowerbed_photo"
         const val COLUMN_ID = "flowerbedPhotoId"
         const val COLUMN_FLOWERBED_ID = "ownerFlowerbedId"
         const val COLUMN_URI = "uri"
         const val COLUMN_SELECTED = "selected"
+        const val COLUMN_ORDER = "number"
     }
 }
 

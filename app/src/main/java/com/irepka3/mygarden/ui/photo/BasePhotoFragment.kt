@@ -25,10 +25,10 @@ import com.irepka3.mygarden.util.Const
  *
  * Created by i.repkina on 07.11.2021.
  */
-abstract class BasePhotoFragment: Fragment(), BasePhotoAdapter.BasePhotoAdapterCallback {
+abstract class BasePhotoFragment : Fragment(), BasePhotoAdapter.BasePhotoAdapterCallback {
     private lateinit var binding: FragmentPhotoBinding
 
-    private val adapter =  BasePhotoAdapter(this)
+    private val adapter = BasePhotoAdapter(this)
 
     protected val viewModel: BasePhotoViewModel by viewModels {
         object : ViewModelProvider.Factory {
@@ -57,13 +57,16 @@ abstract class BasePhotoFragment: Fragment(), BasePhotoAdapter.BasePhotoAdapterC
                 }
             }
         }
-        viewModel.progressLiveData.observe(viewLifecycleOwner) { result -> binding.progressBar.isVisible = result }
+        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
+            binding.progressBar.isVisible = result
+        }
         viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
             Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
-            Toast.makeText(this.context, error.message , Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
-        this.binding.photoRecyclerView.layoutManager = LinearLayoutManager(this.context, RecyclerView.HORIZONTAL, false)
+        this.binding.photoRecyclerView.layoutManager =
+            LinearLayoutManager(this.context, RecyclerView.HORIZONTAL, false)
         binding.photoRecyclerView.adapter = adapter
 
         Log.d(TAG, "onCreateView(),scrollPosition() = ${scrollPosition()}")

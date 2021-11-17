@@ -1,4 +1,5 @@
 package com.irepka3.mygarden.ui.flowerbed.photo.list
+
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,7 +16,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.ui.photo.model.Photo
 import com.irepka3.mygarden.util.Const.APP_TAG
-import java.lang.Exception
 
 
 /**
@@ -24,7 +24,7 @@ import java.lang.Exception
  * Created by i.repkina on 07.11.2021.
  */
 class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
-    RecyclerView.Adapter<BasePhotoListAdapter.BasePhotoListViewHolder>(){
+    RecyclerView.Adapter<BasePhotoListAdapter.BasePhotoListViewHolder>() {
 
     private var diffUtilCallback = object : DiffUtil.ItemCallback<Photo>() {
         override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
@@ -61,10 +61,10 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
     /**
      * Возвращает список фото, которые нужно удалить
      */
-    fun getPhotoToDelete(): List<Photo>{
+    fun getPhotoToDelete(): List<Photo> {
         val listToDeleteRes = mutableListOf<Photo>()
         val newList = listDiffer.currentList
-        for (photo in newList){
+        for (photo in newList) {
             if (photo.selected) {
                 listToDeleteRes.add(photo)
                 photo.selected = false
@@ -85,8 +85,12 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
         return BasePhotoListViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: BasePhotoListViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isNotEmpty()){
+    override fun onBindViewHolder(
+        holder: BasePhotoListViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
             for (payload in payloads) {
                 // обновляем только чекбоксы, чтобы картиники не грузились
                 if (payload == PAYLOAD_ADAPTER_MODE) {
@@ -112,8 +116,6 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
         val checkBox = itemView.findViewById<CheckBox>(R.id.photoCheckBox)
 
         fun bind(item: Photo) {
-            Log.d(TAG, "bind() called with: item.uri = ${item.uri}")
-            //photoImageView.setImageURI(Uri.parse(item.uri))
             Glide.with(itemView.context)
                 .load(Uri.parse(item.uri).path)
                 .override(300, 300)
@@ -132,11 +134,11 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
                 // При клике на фото сбрасываем режим на дефолтный, если был режим удаления
                 // Если был дефолтный режим, то открываем фото на просмотр
                 Log.d(TAG, "bind(), setOnClickListener called")
-                if (adapterMode == EditMode.DeleteMode){
+                if (adapterMode == EditMode.DeleteMode) {
                     adapterMode = EditMode.Default
                 } else {
                     if (item.photoId == null) {
-                        throw Exception("Invalid photoId = null")
+                        throw IllegalStateException("Invalid photoId = null")
                     } else {
                         callback.photoClick(listDiffer.currentList.indexOf(item))
                     }

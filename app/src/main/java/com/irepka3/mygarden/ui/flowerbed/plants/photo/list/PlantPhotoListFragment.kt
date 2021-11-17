@@ -18,6 +18,36 @@ class PlantPhotoListFragment: BasePhotoListFragment() {
     private var flowerbedId: Long = 0L
     private var plantId: Long = 0L
 
+    override fun readArguments() {
+        Log.d(TAG, "readArguments() called")
+
+        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
+        if (flowerbedId == 0L)
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
+        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
+
+        plantId = arguments?.getLong(PLANT_ID) ?: 0L
+        if (plantId == 0L)
+            throw IllegalStateException("Incorrect arguments: plantId = $plantId")
+        Log.d(TAG, "readArguments() success, plantId = $plantId")
+    }
+
+    override fun createViewModel(): BasePhotoViewModel {
+        return PlantPhotoListViewModel(
+            flowerbedId = flowerbedId,
+            plantId = plantId,
+            dagger().getFileInteractor(),
+            dagger().getPlantPhotoInteractor()
+        )
+    }
+
+    override fun onPhotoClick(photoPosition: Int) {
+        (requireActivity() as MainActivityIntf).showPlantPhoto(
+            flowerbedId = flowerbedId,
+            plantId = plantId,
+            photoPosition
+        )
+    }
 
     companion object {
         /**
@@ -33,33 +63,6 @@ class PlantPhotoListFragment: BasePhotoListFragment() {
                 }
             }
         }
-    }
-
-    override fun readArguments() {
-        Log.d(TAG, "readArguments() called")
-
-        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
-        if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
-
-        plantId = arguments?.getLong(PLANT_ID) ?: 0L
-        if (plantId == 0L)
-            throw Exception("Incorrect arguments: plantId = $plantId")
-        Log.d(TAG, "readArguments() success, plantId = $plantId")
-    }
-
-    override fun createViewModel(): BasePhotoViewModel {
-        return PlantPhotoListViewModel(
-            flowerbedId = flowerbedId,
-            plantId = plantId,
-            dagger().getFileInteractor(),
-            dagger().getPlantPhotoInteractor()
-        )
-    }
-
-    override fun onPhotoClick(photoPosition: Int) {
-        (requireActivity() as MainActivityIntf).showPlantPhoto(flowerbedId = flowerbedId, plantId = plantId, photoPosition)
     }
 }
 

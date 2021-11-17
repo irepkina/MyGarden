@@ -10,12 +10,13 @@ package com.irepka3.mygarden.domain.model
  * Created by i.repkina on 02.11.2021.
  */
 data class Plant(
-                 val flowerbedId: Long = 0,
-                 val plantId: Long? = null,
-                 val name: String = "",
-                 val description:String = "",
-                 val comment:String? = null,
-                 val count: Int = 1,
-                 val datePlant: Long?=null,
-                 val uri: String? = null
+    val flowerbedId: Long = 0,
+    val plantId: Long? = null,
+    val name: String = "",
+    val description: String = "",
+    val comment: String? = null,
+    val count: Int = 1,
+    val datePlant: Long? = null,
+    val uri: String? = null,
+    val order: Int? = null
 )

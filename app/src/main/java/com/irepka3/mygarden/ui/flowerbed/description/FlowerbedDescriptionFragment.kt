@@ -11,9 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
+import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragmentIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
@@ -30,30 +32,6 @@ class FlowerbedDescriptionFragment(): Fragment() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return FlowerbedDescriptionViewModel(flowerbedId, dagger().getFlowerbedInteractor()) as T
-            }
-        }
-    }
-
-    companion object {
-        /**
-         * Создает фрагмент для редактирования описания клумбы
-         * @param flowerbedId идентификатор клумбы         *
-         */
-        fun newInstanceUpdate(flowerbedId: Long): FlowerbedDescriptionFragment {
-            return FlowerbedDescriptionFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                    putString(MODE, MODE_UPDATE)
-                }
-            }
-        }
-
-        /**
-         * Создает фрагмент для добавления описания новой клумбы
-         */
-        fun newInstanceInsert(): FlowerbedDescriptionFragment {
-            return FlowerbedDescriptionFragment().apply {
-                arguments = Bundle().apply { putString(MODE,  MODE_INSERT) }
             }
         }
     }
@@ -75,11 +53,10 @@ class FlowerbedDescriptionFragment(): Fragment() {
             Log.d(TAG, "onDataChanged() called with: flowerbed = $flowerbed")
             showFlowerbed(flowerbed)
             if (flowerbed.flowerbedId != null) {
-                Log.d(
-                    TAG,
-                    "onDataChanged flowerbedId = ${flowerbed.flowerbedId}, : this.parentFragment = ${this.parentFragment}"
-                )
                 (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
+                (requireActivity() as MainActivityIntf).setCaption(flowerbed.name)
+            } else {
+                (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.new_flowerbed_caption))
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -110,10 +87,10 @@ class FlowerbedDescriptionFragment(): Fragment() {
             MODE_UPDATE -> {
                 flowerbedId = arguments?.getLong(FLOWERBED_ID)
                 if (flowerbedId == 0L)
-                    throw Exception("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId" )
+                    throw IllegalStateException("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId")
             }
             MODE_INSERT -> flowerbedId = null
-            else -> throw Exception("Incorrect arguments: flowerbed mode: $mode" )
+            else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
 
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
@@ -127,11 +104,36 @@ class FlowerbedDescriptionFragment(): Fragment() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.onClose(flowerbedId,
+        viewModel.onClose(
+            flowerbedId,
             binding.name.text.toString(),
             binding.description.text.toString(),
             binding.comment.text.toString()
         )
+    }
+
+    companion object {
+        /**
+         * Создает фрагмент для редактирования описания клумбы
+         * @param flowerbedId идентификатор клумбы         *
+         */
+        fun newInstanceUpdate(flowerbedId: Long): FlowerbedDescriptionFragment {
+            return FlowerbedDescriptionFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                    putString(MODE, MODE_UPDATE)
+                }
+            }
+        }
+
+        /**
+         * Создает фрагмент для добавления описания новой клумбы
+         */
+        fun newInstanceInsert(): FlowerbedDescriptionFragment {
+            return FlowerbedDescriptionFragment().apply {
+                arguments = Bundle().apply { putString(MODE, MODE_INSERT) }
+            }
+        }
     }
 }
 

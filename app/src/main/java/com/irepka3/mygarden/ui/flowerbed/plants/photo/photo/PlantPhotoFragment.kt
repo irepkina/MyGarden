@@ -19,6 +19,37 @@ class FragmentPlantPhoto: BasePhotoFragment() {
     private var plantId: Long = 0L
     private var photoPosition: Int = -1
 
+    override fun readArguments() {
+        Log.d(TAG, "readArguments() called")
+        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
+        if (flowerbedId == 0L)
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
+        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
+
+        plantId = arguments?.getLong(PLANT_ID) ?: 0L
+        if (plantId == 0L)
+            throw IllegalStateException("Incorrect arguments: plantId = $plantId")
+        Log.d(TAG, "readArguments() success, plantId = $plantId")
+
+        photoPosition = arguments?.getInt(PHOTO_POSITION) ?: 1
+        if (photoPosition < 0)
+            throw IllegalStateException("Incorrect arguments: photoPosition = $photoPosition")
+        Log.d(TAG, "readArguments() success, photoPosition = $photoPosition")
+    }
+
+    override fun scrollPosition(): Int {
+        return photoPosition
+    }
+
+    override fun createViewModel(): BasePhotoViewModel {
+        return PlantPhotoListViewModel(
+            flowerbedId = flowerbedId,
+            plantId = plantId,
+            dagger().getFileInteractor(),
+            dagger().getPlantPhotoInteractor()
+        )
+    }
+
     companion object {
         /**
          * Создает фрагмент со списком фотографий растения
@@ -35,37 +66,6 @@ class FragmentPlantPhoto: BasePhotoFragment() {
                 }
             }
         }
-    }
-
-    override fun readArguments() {
-        Log.d(TAG, "readArguments() called")
-        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
-        if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
-
-        plantId = arguments?.getLong(PLANT_ID) ?: 0L
-        if (plantId == 0L)
-            throw Exception("Incorrect arguments: plantId = $plantId")
-        Log.d(TAG, "readArguments() success, plantId = $plantId")
-
-        photoPosition = arguments?.getInt(PHOTO_POSITION) ?: 1
-        if (photoPosition < 0)
-            throw Exception("Incorrect arguments: photoPosition = $photoPosition")
-        Log.d(TAG, "readArguments() success, photoPosition = $photoPosition")
-    }
-
-    override fun scrollPosition(): Int {
-        return photoPosition
-    }
-
-    override fun createViewModel(): BasePhotoViewModel {
-        return PlantPhotoListViewModel(
-            flowerbedId = flowerbedId,
-            plantId = plantId,
-            dagger().getFileInteractor(),
-            dagger().getPlantPhotoInteractor()
-        )
     }
 }
 

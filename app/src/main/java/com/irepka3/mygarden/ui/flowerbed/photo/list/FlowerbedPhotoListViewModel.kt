@@ -1,8 +1,8 @@
 package com.irepka3.mygarden.ui.flowerbed.photo.list
 
 import android.util.Log
-import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractor
 import com.irepka3.mygarden.domain.interactor.FileInteractor
+import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractor
 import com.irepka3.mygarden.domain.model.FlowerbedPhoto
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.ui.photo.model.Photo
@@ -21,7 +21,7 @@ class FlowerbedPhotoListViewModel(
     private val flowerbedId: Long,
     fileInteractor: FileInteractor,
     private val flowerbedPhotoInteractor: FlowerbedPhotoInteractor
-    ): BasePhotoViewModel(fileInteractor) {
+) : BasePhotoViewModel(fileInteractor) {
 
     /**
      * Загрузка данных во view-модель при создании
@@ -32,17 +32,24 @@ class FlowerbedPhotoListViewModel(
 
     override fun doLoadData(): List<Photo> {
         return flowerbedPhotoInteractor.getAllByFlowerbedId(flowerbedId)
-        ?.map { Photo(photoId = it.flowerbedPhotoId, uri = it.uri, selected = it.selected) } ?: emptyList()
+            ?.map { Photo(photoId = it.flowerbedPhotoId, uri = it.uri, selected = it.selected) }
+            ?: emptyList()
     }
 
     override fun doInsert(uri: String) {
-        val flowerbedPhoto = FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = null, uri, false)
+        val flowerbedPhoto =
+            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = null, uri, false)
         flowerbedPhotoInteractor.insertFlowerbedPhoto(flowerbedPhoto)
     }
 
     override fun doDelete(photoList: List<Photo>) {
         flowerbedPhotoInteractor.deleteFlowerbedPhoto(photoList.map {
-            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = it.photoId, uri = it.uri, selected = it.selected)
+            FlowerbedPhoto(
+                flowerbedId = flowerbedId,
+                flowerbedPhotoId = it.photoId,
+                uri = it.uri,
+                selected = it.selected
+            )
         })
     }
 
@@ -52,7 +59,11 @@ class FlowerbedPhotoListViewModel(
 
     override fun doSelected(photoId: Long) {
         Log.d(TAG, "doSelected() called with: photoId = $photoId")
-        flowerbedPhotoInteractor.updateSelectedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = photoId)
+        flowerbedPhotoInteractor.updateSelectedPhoto(
+            flowerbedId = flowerbedId,
+            flowerbedPhotoId = photoId
+        )
     }
 }
+
 private const val TAG = "{$APP_TAG}.FlowerbedPhotoListViewModel"

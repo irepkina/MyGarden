@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/Theme.MyGarden.CardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/space_8"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/viewDate"
+            android:layout_width="128dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="@dimen/space_8"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription"
+            android:background="@drawable/bg_square" />
+
+        <TextView
+            android:id="@+id/textViewWeekDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/viewDate"
+            app:layout_constraintStart_toStartOf="@id/viewDate"
+            app:layout_constraintEnd_toEndOf="@id/viewDate"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:ignore="ContentDescription"
+            android:layout_marginTop="@dimen/space_8"
+            tools:text="вт, 17" />
+
+        <TextView
+            android:id="@+id/textViewMonthYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewWeekDay"
+            app:layout_constraintEnd_toEndOf="@id/viewDate"
+            app:layout_constraintStart_toStartOf="@id/viewDate"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            tools:ignore="ContentDescription"
+            tools:text="сентябрь, 2021" />
+
+        <TextView
+            android:id="@+id/textViewWorkName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:maxLines="2"
+            app:layout_constraintStart_toEndOf="@id/viewDate"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="@style/Item.text.strong"
+            tools:text="Наименование работы" />
+
+        <TextView
+            android:id="@+id/textViewWorkDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginStart="@dimen/space_16"
+            android:maxLines="6"
+            app:layout_constraintStart_toEndOf="@id/viewDate"
+            app:layout_constraintTop_toBottomOf="@id/textViewWorkName"
+            android:textAppearance="@style/Item.text"
+            tools:text="Описание работы" />
+
+        <TextView
+            android:id="@+id/textViewWorkStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginStart="@dimen/space_16"
+            android:maxLines="6"
+            app:layout_constraintStart_toEndOf="@id/viewDate"
+            app:layout_constraintTop_toBottomOf="@id/textViewWorkDescription"
+            android:textAppearance="@style/Item.text"
+            tools:text="Статус работы" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -14,9 +14,9 @@ import javax.inject.Inject
  *
  * Created by i.repkina on 07.11.2021.
  */
-class PlantPhotoRepositoryImpl
-@Inject constructor(private val database: AppRoomDataBase)
-    : PlantPhotoRepository {
+class PlantPhotoRepositoryImpl @Inject constructor(
+    private val database: AppRoomDataBase
+) : PlantPhotoRepository {
 
     init {
         Log.d(TAG, "init called")
@@ -34,25 +34,35 @@ class PlantPhotoRepositoryImpl
 
     override fun deletePlantPhoto(plantPhotoList: List<PlantPhoto>) {
         Log.d(TAG, "deletePlantPhoto() called with: plantPhotoList = $plantPhotoList")
-        return database.plantPhotoDao.delete(plantPhotoList.map { it.toEntity()})
+        return database.plantPhotoDao.delete(plantPhotoList.map { it.toEntity() })
     }
 
     override fun updateSelectedPhoto(plantId: Long, plantPhotoId: Long) {
-        Log.d(TAG,"updateSelectedPhoto() called with: plantId = $plantId, plantPhotoId = $plantPhotoId")
+        Log.d(
+            TAG,
+            "updateSelectedPhoto() called with: plantId = $plantId, plantPhotoId = $plantPhotoId"
+        )
         database.plantPhotoDao.updateSelectedPhoto(plantId = plantId, plantPhotoId = plantPhotoId)
     }
 
-    private fun PlantPhotoEntity.toDomain(): PlantPhoto{
-        return PlantPhoto(plantId = this.plantId, plantPhotoId = this.plantPhotoId, this.uri, this.selected)
+    private fun PlantPhotoEntity.toDomain(): PlantPhoto {
+        return PlantPhoto(
+            plantId = this.plantId,
+            plantPhotoId = this.plantPhotoId,
+            uri = this.uri,
+            selected = this.selected,
+            order = this.order
+        )
     }
 
-    private fun PlantPhoto.toEntity(): PlantPhotoEntity{
+    private fun PlantPhoto.toEntity(): PlantPhotoEntity {
         val PlantPhotoEntity = PlantPhotoEntity()
         PlantPhotoEntity.plantPhotoId = this.plantPhotoId ?: 0L
         PlantPhotoEntity.plantId = this.plantId
         PlantPhotoEntity.uri = this.uri
         PlantPhotoEntity.selected = this.selected
-        return  PlantPhotoEntity
+        PlantPhotoEntity.order = this.order
+        return PlantPhotoEntity
     }
 }
 

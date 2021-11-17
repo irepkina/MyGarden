@@ -19,8 +19,8 @@ import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedlistBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
-import com.irepka3.mygarden.ui.ItemTouchHelperFactory
 import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
@@ -59,18 +59,23 @@ class FlowerbedListFragment: Fragment(), FlowerbedListAdapter.FlowerbedAdapterCa
             binding.progressBar.isVisible = result
         }
         viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
-            Log.d(TAG, "onCreateView() called with: error = ${error.message}")
-            Toast.makeText(this.context, error.message , Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
+        (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.app_name))
         viewModel.loadData()
 
         val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-        val drawable = this.resources.getDrawable(R.drawable.recycleview_divider_transparent, this.activity?.theme)
+        val drawable = this.resources.getDrawable(
+            R.drawable.recycleview_divider_transparent,
+            this.activity?.theme
+        )
         itemDecorator.setDrawable(drawable)
         binding.flowerbedRecyclerView.addItemDecoration(itemDecorator)
 
-        binding.flowerbedRecyclerView.layoutManager = LinearLayoutManager(this.context,
+        binding.flowerbedRecyclerView.layoutManager = LinearLayoutManager(
+            this.context,
             RecyclerView.VERTICAL,
             false
         )
@@ -80,9 +85,11 @@ class FlowerbedListFragment: Fragment(), FlowerbedListAdapter.FlowerbedAdapterCa
             (requireActivity() as MainActivityIntf).showFlowerbedFragment(null)
         }
 
-        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
-            deleteFlowerbed(adapter.getItem(adapterPosition))
-        }
+        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper(
+            { adapterPosition ->
+                deleteFlowerbed(adapter.getItem(adapterPosition))
+            }
+        )
         itemTouchHelper.attachToRecyclerView(binding.flowerbedRecyclerView)
 
         return binding.root

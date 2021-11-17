@@ -19,9 +19,9 @@ import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantlistBinding
 import com.irepka3.mygarden.domain.model.Plant
-import com.irepka3.mygarden.ui.ItemTouchHelperFactory
 import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.list.PlantListViewModel
+import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
 
 /**
  * Фрагмент для отображения списка растений
@@ -41,6 +41,81 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPlantlistBinding.inflate(inflater)
+
+        readArguments()
+
+        // подписка на life-data view-модели
+        viewModel.plantListLiveData.observe(viewLifecycleOwner) { plantList ->
+            adapter.updateItems(
+                plantList
+            )
+        }
+        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
+            binding.progressBar.isVisible = result
+        }
+        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
+            Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.onCreateView()
+
+        val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        val drawable =
+            resources.getDrawable(R.drawable.recycleview_divider_transparent, this.activity?.theme)
+        itemDecorator.setDrawable(drawable)
+        binding.plantRecyclerView.addItemDecoration(itemDecorator)
+
+        this.binding.plantRecyclerView.layoutManager =
+            LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
+        binding.plantRecyclerView.adapter = adapter
+
+        binding.floatingButtonPlant.setOnClickListener {
+            (requireActivity() as MainActivityIntf).showPlantFragment(
+                flowerbedId = flowerbedId,
+                plantId = null
+            )
+        }
+
+        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper(
+            { adapterPosition ->
+                deletePlant(adapter.getItem(adapterPosition))
+            }
+        )
+        itemTouchHelper.attachToRecyclerView(binding.plantRecyclerView)
+
+        return binding.root
+    }
+
+    private fun readArguments(){
+        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
+        if (flowerbedId == 0L)
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
+        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
+    }
+
+    override fun onPlantClick(flowerbedId:Long, plantId: Long?) {
+        Log.d(TAG, "onPlantClick() called with: id = $plantId")
+        (requireActivity() as MainActivityIntf).showPlantFragment(
+            flowerbedId = flowerbedId,
+            plantId = plantId
+        )
+    }
+
+    /**
+     * Удаляет растение
+     */
+    private fun deletePlant(plant: Plant) {
+        viewModel.onDelete(plant)
+    }
+
     companion object {
         /**
          * Создает фрагмент со списком растений клумбы
@@ -53,66 +128,6 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
                 }
             }
         }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentPlantlistBinding.inflate(inflater)
-
-        readArguments()
-
-        // подписка на life-data view-модели
-        viewModel.plantListLiveData.observe(viewLifecycleOwner) { plantList -> adapter.updateItems(plantList) }
-        viewModel.progressLiveData.observe(viewLifecycleOwner) { result -> binding.progressBar.isVisible = result }
-        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
-            Log.d(TAG, "onCreateView() called with: error = ${error.message}")
-            Toast.makeText(this.context, error.message , Toast.LENGTH_SHORT).show()
-        }
-
-
-        viewModel.loadData()
-
-        val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-        val drawable = resources.getDrawable(R.drawable.recycleview_divider_transparent, this.activity?.theme)
-        itemDecorator.setDrawable(drawable)
-        binding.plantRecyclerView.addItemDecoration(itemDecorator)
-
-        this.binding.plantRecyclerView.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        binding.plantRecyclerView.adapter = adapter
-
-        binding.floatingButtonPlant.setOnClickListener { (requireActivity() as MainActivityIntf).showPlantFragment(flowerbedId = flowerbedId, plantId = null) }
-
-        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
-            deletePlant(adapter.getItem(adapterPosition))
-        }
-        itemTouchHelper.attachToRecyclerView(binding.plantRecyclerView)
-
-        return binding.root
-    }
-
-    private fun readArguments(){
-        Log.d(TAG, "readArguments() called, id = $id")
-        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
-        if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
-
-    }
-
-    override fun onPlantClick(flowerbedId:Long, plantId: Long?) {
-        Log.d(TAG, "onPlantClick() called with: id = $plantId")
-        (requireActivity() as MainActivityIntf).showPlantFragment(flowerbedId = flowerbedId, plantId = plantId)
-    }
-
-    /**
-     * Удаляет растение
-     */
-   private fun deletePlant(plant: Plant) {
-        viewModel.onDelete(plant)
     }
 }
 

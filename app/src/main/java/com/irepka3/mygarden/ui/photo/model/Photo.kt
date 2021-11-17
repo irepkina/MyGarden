@@ -7,4 +7,4 @@ data class Photo(
     val photoId: Long? = null,
     val uri: String = "",
     var selected: Boolean = false
-    )
+)
