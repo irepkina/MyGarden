@@ -18,14 +18,16 @@ import com.irepka3.mygarden.domain.repository.PlantRepository
 import com.irepka3.mygarden.domain.repository.RepeatWorkRepository
 import com.irepka3.mygarden.domain.repository.WorkRepository
 import dagger.Component
+import javax.inject.Singleton
 
 /**
  * Dagger-компонент приложения
  *
  * Created by i.repkina on 07.11.2021.
  */
+@Singleton
 @Component(modules = [AppProvideModule::class, AppBindModule::class])
-interface DaggerAppComponent {
+interface AppComponent {
     // Контекст приложения
     fun getContext(): Context
 

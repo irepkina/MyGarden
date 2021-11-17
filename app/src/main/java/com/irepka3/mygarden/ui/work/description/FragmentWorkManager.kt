@@ -136,6 +136,10 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             )
         }
 
+        binding.doneButton.setOnClickListener { viewModel.onDone(createWorkUIModel()) }
+        binding.cancelButton.setOnClickListener { viewModel.onCancel(createWorkUIModel()) }
+        binding.clearStatusButton.setOnClickListener { viewModel.onClear(createWorkUIModel()) }
+
         binding.planDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)

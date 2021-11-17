@@ -35,35 +35,29 @@ abstract class AppRoomDataBase: RoomDatabase() {
     abstract val workDao: WorkEntityDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: AppRoomDataBase? = null
-        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+
+        private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 // todo вынести миграции в отдельный Object класс и каждую миграцию в нем оформить отдельным методом
             }
         }
 
+        // создание базы данных
         fun getInstance(context: Context): AppRoomDataBase {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
-                    context,
-                    AppRoomDataBase::class.java, "AppRoomDataBase"
-                )
-                    // todo список миграций получать из отдельного класса миграций
-                    .addMigrations(MIGRATION_1_2)
-                    .addCallback(object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            Log.d(TAG, "Database.onCreate() called")
-                            super.onCreate(db)
-                            createDemoData(db)
-                        }
-                    })
-                    .build()
-                    .also { roomDatabase ->
-                        INSTANCE = roomDatabase
-                        Log.d(TAG, "Room.databaseBuilder.build(), INSTANCE called")
+            return Room.databaseBuilder(
+                context,
+                AppRoomDataBase::class.java, "AppRoomDataBase"
+            )
+                // todo список миграций получать из отдельного класса миграций
+                .addMigrations(MIGRATION_1_2)
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        Log.d(TAG, "Database.onCreate() called")
+                        super.onCreate(db)
+                        createDemoData(db)
                     }
-            }
+                })
+                .build()
         }
 
         // Создание клумб с растениями для демо-версии

@@ -143,10 +143,46 @@ class WorkManagerViewModel(
     }
 
     /**
-     * Обновление данных работы
+     * Отметка выполнения работы
+     * @param workData данные формы [WorkUIModel]
+     */
+    fun onDone(workData: WorkUIModel) {
+        workData.status = WorkStatus.Done
+        SaveData(workData)
+    }
+
+    /**
+     * Отмена работы
+     * @param workData данные формы [WorkUIModel]
+     */
+    fun onCancel(workData: WorkUIModel) {
+        workData.status = WorkStatus.Cancel
+        SaveData(workData)
+    }
+
+    /**
+     * Очистить статус работы (изменить на План)
+     * @param workData данные формы [WorkUIModel]
+     */
+    fun onClear(workData: WorkUIModel) {
+        workData.status = WorkStatus.Plan
+        SaveData(workData)
+    }
+
+
+    /**
+     * Соханить данные работы
      * @param workData данные формы [WorkUIModel]
      */
     fun onSaveData(workData: WorkUIModel) {
+        SaveData(workData)
+    }
+
+    /**
+     * Сохранение данных работы
+     * @param workData данные формы [WorkUIModel]
+     */
+    private fun SaveData(workData: WorkUIModel) {
         Log.d(TAG, "onSaveData() called, workData = $workData")
         val work = createWorkItem(workData)
         _progressLiveData.value = true
@@ -171,7 +207,6 @@ class WorkManagerViewModel(
                 )
         )
     }
-
     /**
      * Сохраняет данные экрана во вью-модель
      * @param workData данные формы [WorkUIModel]

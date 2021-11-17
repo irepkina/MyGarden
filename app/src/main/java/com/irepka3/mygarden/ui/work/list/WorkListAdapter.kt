@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.domain.model.Work
+import com.irepka3.mygarden.domain.model.WorkStatus
 import com.irepka3.mygarden.ui.work.model.WorkUIId
 import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
@@ -90,10 +91,14 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
             )
             viewDescription.setText(item.description)
 
-            if (item.dateDone != null) {
-                val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-                viewWorkStatus.setText("Выполнено: ${dateFormat.format(item.dateDone)}")
-            }
+            viewWorkStatus.setText(
+                when (item.status) {
+                    WorkStatus.Plan -> "Запланировано"
+                    WorkStatus.Done -> "Выполнено"
+                    WorkStatus.Cancel -> "Отменено"
+                    else -> "Новая работа"
+                }
+            )
 
             itemView.setOnClickListener {
                 callback.onWorkClick(

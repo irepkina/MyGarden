@@ -41,6 +41,7 @@ import dagger.Module
  */
 @Module
 interface AppBindModule {
+
     @Binds
     fun bindFlowerbedRepository(repository: FlowerbedRepositoryImpl): FlowerbedRepository
 
@@ -52,6 +53,12 @@ interface AppBindModule {
 
     @Binds
     fun bindPlantPhotoRepository(repository: PlantPhotoRepositoryImpl): PlantPhotoRepository
+
+    @Binds
+    fun bindWorkRepository(repository: WorkRepositoryImpl): WorkRepository
+
+    @Binds
+    fun bindRepeatWorkRepository(repository: RepeatWorkRepositoryImpl): RepeatWorkRepository
 
     @Binds
     fun bindDirRepository(repository: DirRepositoryImpl): DirRepository
@@ -72,14 +79,7 @@ interface AppBindModule {
     fun bindFileInteractor(interactor: FileInteractotImpl): FileInteractor
 
     @Binds
-    fun bindWorkRepository(repository: WorkRepositoryImpl): WorkRepository
-
-    @Binds
-    fun bindRepeatWorkRepository(repository: RepeatWorkRepositoryImpl): RepeatWorkRepository
-
-    @Binds
     fun bindWorkInteractor(interactor: WorkInteractorImpl): WorkInteractor
-
 
     @Binds
     fun bindWorkManagerInteractor(interactor: WorkManagerInteractorImpl): WorkManagerInteractor

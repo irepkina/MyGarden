@@ -15,6 +15,7 @@ import com.irepka3.mygarden.util.Const
 
 /**
  * Адаптер для работы со списком расписаний
+ *
  * Created by i.repkina on 12.11.2021.
  */
 class ScheduleAdapter(val callback: scheduleAdapterCallback) :
