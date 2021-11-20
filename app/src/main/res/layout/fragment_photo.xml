@@ -31,7 +31,7 @@
             android:layout_width="@dimen/progress_size"
             android:layout_height="@dimen/progress_size"
             android:layout_gravity="center"
-            android:indeterminateTint="@color/colorLoader"
+            android:indeterminateTint="?attr/colorLoader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

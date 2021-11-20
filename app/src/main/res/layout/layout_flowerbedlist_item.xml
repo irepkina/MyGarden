@@ -32,7 +32,8 @@
             android:maxLines="2"
             app:layout_constraintStart_toEndOf="@id/imageViewDefaultFlowerbed"
             app:layout_constraintTop_toTopOf="parent"
-            android:textAppearance="@style/Item.text.strong"/>
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            tools:text="flowerbed name" />
 
         <TextView
             android:id="@+id/textViewFlowerbedDescription"
@@ -43,7 +44,8 @@
             android:maxLines="6"
             app:layout_constraintStart_toEndOf="@id/imageViewDefaultFlowerbed"
             app:layout_constraintTop_toBottomOf="@id/textViewFlowerbedName"
-            android:textAppearance="@style/Item.text"/>
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            tools:text="flowerbed description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.domain.model.Work
 import com.irepka3.mygarden.domain.model.WorkStatus
+import com.irepka3.mygarden.ui.util.context.themeColor
 import com.irepka3.mygarden.ui.work.model.WorkUIId
-import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -36,7 +36,7 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
         }
     }
 
-    private val listDiffer = AsyncListDiffer<Work>(this, diffUtilCallback)
+    private val listDiffer = AsyncListDiffer(this, diffUtilCallback)
 
     // получить элемент по индексу
     fun getItem(index: Int): Work = listDiffer.currentList[index]
@@ -69,30 +69,27 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
     }
 
     inner class WorkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val viewName = itemView.findViewById<TextView>(R.id.textViewWorkName)
-        val viewDescription = itemView.findViewById<TextView>(R.id.textViewWorkDescription)
-        val viewDay = itemView.findViewById<TextView>(R.id.textViewDay)
-        val viewWeek = itemView.findViewById<TextView>(R.id.textViewWeek)
-        val viewWorkStatus = itemView.findViewById<ImageView>(R.id.imageViewStatus)
-        val cardView = itemView.findViewById<CardView>(R.id.cardView)
+        private val viewName = itemView.findViewById<TextView>(R.id.textViewWorkName)
+        private val viewDescription = itemView.findViewById<TextView>(R.id.textViewWorkDescription)
+        private val viewDay = itemView.findViewById<TextView>(R.id.textViewDay)
+        private val viewWeek = itemView.findViewById<TextView>(R.id.textViewWeek)
+        private val viewWorkStatus = itemView.findViewById<ImageView>(R.id.imageViewStatus)
+        private val cardView = itemView.findViewById<CardView>(R.id.cardView)
+        private val cardViewColor = itemView.context.themeColor(R.attr.colorWorkCard)
+        private val cardViewColorCancel = itemView.context.themeColor(R.attr.colorWorkCardDisabled)
 
         fun bind(item: Work) {
-            viewName.setText(item.name)
+            viewName.text = item.name
 
-
-            viewDay.setText(
-                SimpleDateFormat(
-                    "dd",
-                    Locale.getDefault()
-                ).format(item.datePlan)
-            )
-            viewWeek.setText(
-                SimpleDateFormat(
-                    "E",
-                    Locale.getDefault()
-                ).format(item.datePlan)
-            )
-            viewDescription.setText(item.description)
+            viewDay.text = SimpleDateFormat(
+                "dd",
+                Locale.getDefault()
+            ).format(item.datePlan)
+            viewWeek.text = SimpleDateFormat(
+                "E",
+                Locale.getDefault()
+            ).format(item.datePlan)
+            viewDescription.text = item.description
 
             viewWorkStatus.setImageLevel(
                 when {
@@ -103,7 +100,7 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
                 }
             )
 
-            cardView.isSelected = item.status == WorkStatus.Cancel
+            cardView.setCardBackgroundColor(if (item.status == WorkStatus.Cancel) cardViewColorCancel else cardViewColor)
 
             itemView.setOnClickListener {
                 callback.onWorkClick(
@@ -128,5 +125,3 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
         fun onWorkClick(workUIId: WorkUIId)
     }
 }
-
-private const val TAG = "${Const.APP_TAG}.WorkListAdapter"

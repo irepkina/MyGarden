@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="0dp"
     android:layout_marginEnd="0dp"
     style="@style/Theme.MyGarden.CardView"
-    app:cardBackgroundColor="@color/colorWorkCard">
+    app:cardBackgroundColor="?attr/colorWorkCard">
 
     <LinearLayout
         android:id="@+id/linearLayoutScheduleItem"
@@ -22,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:text="расписание" />
+            android:text="расписание"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

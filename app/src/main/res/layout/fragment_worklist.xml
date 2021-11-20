@@ -6,7 +6,7 @@
     android:id="@+id/workListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?android:colorBackground">
 
     <TextView
         android:id="@+id/monthYear"
@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="@id/workRecyclerView"
         app:layout_constraintTop_toTopOf="@id/workRecyclerView"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:indeterminateTint="@color/colorLoader" />
+        android:indeterminateTint="?attr/colorLoader" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButtonAddWork"
@@ -73,8 +73,7 @@
         app:fabSize="normal"
         android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
         android:layout_marginEnd="@dimen/default_margin"
-        android:layout_gravity="bottom|right"
-        app:tint="@color/white"
+        android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

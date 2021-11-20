@@ -17,12 +17,13 @@
 
     <CheckBox
         android:id="@+id/photoCheckBox"
-        style="@style/Theme.MyGarden.CheckBox"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:padding="@dimen/space_2"
         android:layout_margin="@dimen/space_4"
         android:scaleX="1.50"
         android:scaleY="1.50"
         app:layout_constraintTop_toTopOf="@id/imageViewPhoto"
-        app:layout_constraintStart_toStartOf="@id/imageViewPhoto"/>
+        app:layout_constraintStart_toStartOf="@id/imageViewPhoto" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

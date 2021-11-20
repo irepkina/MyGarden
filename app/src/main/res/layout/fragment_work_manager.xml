@@ -74,7 +74,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/planDate"
                 app:layout_constraintBottom_toBottomOf="@id/planDate"
-                tools:src="@drawable/ic_status_done_colored" />
+                tools:src="@drawable/ic_status_done_colored"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/originalButton"
@@ -91,7 +92,7 @@
                 android:id="@+id/progressBar"
                 android:layout_width="@dimen/progress_size"
                 android:layout_height="@dimen/progress_size"
-                android:indeterminateTint="@color/colorLoader"
+                android:indeterminateTint="?attr/colorLoader"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +105,7 @@
                 android:layout_marginTop="@dimen/space_16"
                 android:text="@string/work_periodic_hint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/notificationLayout" />/>
+                app:layout_constraintTop_toBottomOf="@id/notificationLayout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/notificationLayout"
@@ -170,7 +171,6 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="@dimen/space_8"
                     android:layout_marginTop="@dimen/default_margin"
-                    app:boxBackgroundColor="@color/colorBackgroundEditText"
                     app:layout_constraintStart_toEndOf="@id/notificationTime"
                     app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
                     app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
@@ -190,7 +190,6 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="@dimen/space_8"
                     android:layout_marginTop="@dimen/space_8"
-                    app:boxBackgroundColor="@color/colorBackgroundEditText"
                     app:layout_constraintStart_toEndOf="@id/notificationDayBefore"
                     app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
@@ -209,7 +208,6 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="@dimen/space_4"
                     android:layout_marginTop="@dimen/default_margin"
-                    app:boxBackgroundColor="@color/colorBackgroundEditText"
                     app:layout_constraintStart_toEndOf="@id/notificationTimeDivider"
                     app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
                     app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
@@ -244,7 +242,8 @@
                     android:src="@drawable/ic_plus"
                     app:layout_constraintStart_toEndOf="@id/scheduleHeader"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/colorPrimary" />
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/scheduleHeader"

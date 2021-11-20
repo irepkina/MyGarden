@@ -5,7 +5,7 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/colorWorkCard"
+    app:cardBackgroundColor="?attr/colorWorkCardDisabled"
     style="@style/Theme.MyGarden.CardView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="@id/viewDate"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/colorAccentText"
+            android:textColor="?attr/colorAccentText"
             tools:ignore="ContentDescription"
             android:layout_marginTop="@dimen/space_4"
             tools:text="17" />
@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="@id/viewDate"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@color/colorAccentText"
+            android:textColor="?attr/colorAccentText"
             tools:ignore="ContentDescription"
             tools:text="Вт" />
 
@@ -83,7 +83,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:src="@drawable/status_selector"
-            android:layout_marginEnd="@dimen/default_margin" />
+            android:layout_marginEnd="@dimen/default_margin"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

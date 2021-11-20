@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="color_blue">#3F51B5</color>
-    <color name="color_red">#F44336</color>
     <color name="color_grey">#7A7B80</color>
-    <color name="background">#FFFFFF</color>
-    <color name="background_list">#1A000000</color>
-    <color name="white_transparent">#66FFFFFF</color>
-    <color name="transparent">#00000000</color>
 
-    <color name="colorPrimary">#5B9242</color>
-    <color name="colorSecondary">#FFEDB117</color>
-    <color name="colorAccent">#FFEDB117</color>
-    <color name="colorBackground">#FFFFFF</color>
-    <color name="colorWorkCard">#FFD3E1CD</color>
-    <color name="colorWorkCardDisabled">#4DD3E1CD</color>
-    <color name="colorAccentText">#FF906147</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="color_red">#F44336</color>
+    <color name="transparent">#00000000</color>
     <color name="colorBackgroundEditText">#FFF2E1B6</color>
-    <color name="colorLoader">#FFEDB117</color>
+
+    <color name="colorPrimary">#66A34B</color>
+    <color name="colorPrimaryDark">#52813C</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="colorSecondary">#FFEDB117</color>
+    <color name="colorSecondaryDark">#D6A015</color>
+    <color name="colorAccent">#FF906147</color>
+    <color name="colorAccentText">@color/colorAccent</color>
+    <!--<color name="colorBackground">#FFFFFF</color>-->
+    <color name="colorWorkCard">#FFD3E1CD</color>
+    <color name="colorWorkCardDisabled">#F1F6EF</color>
+    <color name="colorLoader">#FF906147</color>
+    <color name="colorCalendarCard">#FFFFFFFF</color>
+    <color name="colorCardDefault">#FFFFFFFF</color>
+    <color name="colorCardDefaultDark">#000000</color>
 </resources>

@@ -5,20 +5,20 @@
     android:id="@+id/flowerbedFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?android:colorBackground">
 
-   <ProgressBar
-       android:id="@+id/progressBar"
-       android:layout_width="@dimen/progress_size"
-       android:layout_height="@dimen/progress_size"
-       android:layout_gravity="center"
-       android:indeterminateTint="@color/colorLoader" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_size"
+        android:layout_height="@dimen/progress_size"
+        android:layout_gravity="center"
+        android:indeterminateTint="?attr/colorLoader" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/flowerbedRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/space_8"/>
+        android:layout_marginTop="@dimen/space_8" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButtonAddFlowerbed"
@@ -28,8 +28,7 @@
         app:fabSize="normal"
         android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
         android:layout_marginEnd="@dimen/default_margin"
-        android:layout_gravity="bottom|right"
-        app:tint="@color/white"
+        android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription" />
 
 </FrameLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="colorWorkCard" format="color" />
+    <attr name="colorWorkCardDisabled" format="color" />
+    <attr name="colorAccentText" format="color" />
+    <attr name="colorAccent" format="color" />
+    <attr name="colorLoader" format="color" />
+    <attr name="colorCalendarCard" format="color" />
+    <attr name="colorCardDefault" format="color" />
+
+</resources>
