@@ -17,8 +17,8 @@ interface ScheduleRepository {
     // Изменить данные расписания
     fun update(schedules: List<Schedule>)
 
-    // Удалить расписание
-    fun delete(schedule: Schedule)
+    // Удалить расписания
+    fun deleteAll(repeatWorkId: Long)
 
     // Получить расписание по идентификатору
     fun getById(scheduleId: Long): Schedule?

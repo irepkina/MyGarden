@@ -65,16 +65,12 @@ class RepeatWorkRepositoryImpl @Inject constructor(
     override fun updateRepeatWork(repeatWork: RepeatWork) {
         Log.d(TAG, "updateRepeatWork() called with: repeatWork = $repeatWork")
         database.repeatWorkDao.update(repeatWork.toEntity())
-        val schedulesUpdate = repeatWork.schedules.filter { it.scheduleId != null }
-        if (schedulesUpdate.isNotEmpty()) {
-            database.scheduleDao.update(schedulesUpdate.map { it.toEntity() })
-        }
 
-        val schedulesInsert = repeatWork.schedules.filter { it.scheduleId == null }
-        if (schedulesInsert.isNotEmpty()) {
-            database.scheduleDao.insert(schedulesInsert.map { it.toEntity() })
-        }
+        database.scheduleDao.deleteAll(repeatWork.repeatWorkId ?: 0L)
 
+        if (repeatWork.schedules.isNotEmpty()) {
+            database.scheduleDao.insert(repeatWork.schedules.map { it.toEntity() })
+        }
     }
 
     override fun deleteRepeatWork(repeatWork: RepeatWork) {

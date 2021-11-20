@@ -34,6 +34,7 @@ class ScheduleAdapter(val callback: scheduleAdapterCallback) :
         }
     }
 
+
     /**
      * Обновление списка расписаний в адаптере
      * @param sheduleList новый список расписаний
@@ -41,6 +42,9 @@ class ScheduleAdapter(val callback: scheduleAdapterCallback) :
     fun updateItems(sheduleList: List<ScheduleUIModel>) {
         listDiffer.submitList(sheduleList.sortedBy { it.number })
     }
+
+    // получить элемент по индексу
+    fun getItem(index: Int): ScheduleUIModel = listDiffer.currentList[index]
 
     private val listDiffer = AsyncListDiffer(this, diffUtilCallback)
 

@@ -24,6 +24,7 @@ import com.irepka3.mygarden.databinding.FragmentWorkManagerBinding
 import com.irepka3.mygarden.domain.model.Schedule
 import com.irepka3.mygarden.domain.model.WorkStatus
 import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.ui.work.description.model.WorkTypeUI
 import com.irepka3.mygarden.ui.work.description.model.WorkUIModel
@@ -166,6 +167,12 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
                 name.error = null
             }
         }
+
+        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
+            deleteSchedule(adapter.getItem(adapterPosition))
+        }
+        itemTouchHelper.attachToRecyclerView(binding.scheduleRecyclerView)
+
     }
 
     private fun initToolBar() {
@@ -278,11 +285,18 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
 
     private fun saveWork() {
         val workUIModel = createWorkUIModel()
-        if (workUIModel.name?.isBlank() != false) {
-            viewModel.onSaveData(workUIModel)
-        } else {
+        if (workUIModel.name?.isBlank() == true) {
             binding.name.error = resources.getString(R.string.error_empty_name)
+        } else {
+            viewModel.onSaveData(workUIModel)
         }
+    }
+
+    /**
+     * Удаление расписания для сохраненной работы
+     */
+    private fun deleteSchedule(schedule: ScheduleUIModel) {
+        viewModel.onDeleteSchedule(schedule)
     }
 
     override fun onDestroyView() {

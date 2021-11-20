@@ -238,8 +238,12 @@ class WorkManagerViewModel(
      */
     fun onDeleteSchedule(scheduleData: ScheduleUIModel) {
         val schedules = _scheduleLiveData.value
+        Log.d(TAG, "onDeleteSchedule() called with: scheduleData = $scheduleData")
         schedules?.let {
-            it.remove(scheduleData)
+            it.removeIf {
+                Log.d(TAG, "onDeleteSchedule(), it.number = ${it.number} called")
+                it.number == scheduleData.number
+            }
             _scheduleLiveData.value = it
         }
     }
@@ -300,4 +304,4 @@ enum class Command {
     NO_COMMAND, CLOSE_VIEW
 }
 
-private const val TAG = "${Const.APP_TAG}.WorkViewModel"
+private const val TAG = "${Const.APP_TAG}.WorkManagerViewModel"

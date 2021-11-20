@@ -2,7 +2,6 @@ package com.irepka3.mygarden.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -120,9 +119,12 @@ interface ScheduleEntityDao {
     @Update
     fun update(schedules: List<ScheduleEntity>)
 
-    // Удалить периодическую работу
-    @Delete
-    fun delete(schedule: ScheduleEntity)
+    // Удалить расписание
+    @Query(
+        "DELETE FROM ${ScheduleEntity.TABLE_NAME} " +
+                "WHERE ${ScheduleEntity.COLUMN_REPEAT_WORK_ID} = :repeatWorkId "
+    )
+    fun deleteAll(repeatWorkId: Long)
 }
 
 

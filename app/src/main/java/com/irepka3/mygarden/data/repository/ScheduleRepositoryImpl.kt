@@ -44,9 +44,9 @@ class ScheduleRepositoryImpl @Inject constructor(
         database.scheduleDao.update(schedules.map { it.toEntity() })
     }
 
-    override fun delete(schedule: Schedule) {
-        Log.d(TAG, "delete() called with: schedule = $schedule")
-        database.scheduleDao.delete(schedule.toEntity())
+    override fun deleteAll(repeatWorkId: Long) {
+        Log.d(TAG, "deleteAll() called with: repeatWorkId = $repeatWorkId")
+        database.scheduleDao.deleteAll(repeatWorkId)
     }
 
     /**
