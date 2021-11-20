@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -120,46 +121,51 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
-        binding.saveButton.setOnClickListener {
-            Log.d(TAG, "setOnClickListener() called")
-            saveWork()
-        }
+        with(binding) {
+            saveButton.setOnClickListener {
+                Log.d(TAG, "setOnClickListener() called")
+                saveWork()
+            }
 
-        /* todo: Восстановить после реализации нотификации
-        binding.checkBoxNoNotification.setOnCheckedChangeListener { buttonView, isChecked ->
-            binding.notificationLayout.isVisible = !isChecked
-        }*/
+            /* todo: Восстановить после реализации нотификации
+            checkBoxNoNotification.setOnCheckedChangeListener { buttonView, isChecked ->
+                notificationLayout.isVisible = !isChecked
+            }*/
 
-        binding.buttonAddSchedule.setOnClickListener {
-            (requireActivity() as MainActivityIntf).showScheduleFragment(
-                ScheduleUIModel(
-                    Schedule(
-                        repeatWorkId = workUIId.repeatWorkId
-                    ), null
+            buttonAddSchedule.setOnClickListener {
+                (requireActivity() as MainActivityIntf).showScheduleFragment(
+                    ScheduleUIModel(
+                        Schedule(
+                            repeatWorkId = workUIId.repeatWorkId
+                        ), null
+                    )
                 )
-            )
+            }
+
+            doneButton.setOnClickListener { viewModel.onDone(createWorkUIModel()) }
+            cancelButton.setOnClickListener { viewModel.onCancel(createWorkUIModel()) }
+            clearStatusButton.setOnClickListener { viewModel.onClear(createWorkUIModel()) }
+
+            planDate.editText?.setOnClickListener {
+                val calendar = Calendar.getInstance()
+                val year = calendar.get(Calendar.YEAR)
+                val month = calendar.get(Calendar.MONTH)
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                val datePickerDialog = DatePickerDialog(
+                    root.context,
+                    { _, newYear, newMonth, newDay ->
+                        planDate.editText?.setText("$newDay.${newMonth + 1}.$newYear")
+                    },
+                    year, month, day
+                )
+                datePickerDialog.show()
+            }
+
+            name.editText?.doOnTextChanged { _, _, _, _ ->
+                name.error = null
+            }
         }
-
-        binding.doneButton.setOnClickListener { viewModel.onDone(createWorkUIModel()) }
-        binding.cancelButton.setOnClickListener { viewModel.onCancel(createWorkUIModel()) }
-        binding.clearStatusButton.setOnClickListener { viewModel.onClear(createWorkUIModel()) }
-
-        binding.planDate.editText?.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(
-                this.requireContext(),
-                { _, newYear, newMonth, newDay ->
-                    binding.planDate.editText?.setText("$newDay.${newMonth + 1}.$newYear")
-                },
-                year, month, day
-            )
-            datePickerDialog.show()
-        }
-
     }
 
     private fun initToolBar() {
@@ -223,6 +229,7 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
     private fun showWork(work: WorkUIModel) {
         with(binding) {
             name.editText?.setText(work.name)
+            name.error = null
             description.editText?.setText(work.description)
             planDate.editText?.setText(work.datePlan)
 
@@ -270,15 +277,11 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
     }
 
     private fun saveWork() {
-        val name = binding.name.editText?.text.toString()
-        if (name.isBlank()) {
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.no_work_name_toast_text),
-                Toast.LENGTH_LONG
-            ).show()
+        val workUIModel = createWorkUIModel()
+        if (workUIModel.name?.isBlank() != false) {
+            viewModel.onSaveData(workUIModel)
         } else {
-            viewModel.onSaveData(createWorkUIModel())
+            binding.name.error = resources.getString(R.string.error_empty_name)
         }
     }
 

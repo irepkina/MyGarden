@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.irepka3.mygarden.R
@@ -35,20 +36,19 @@ class FragmentSchedule : Fragment() {
         initToolBar()
 
         val months = resources.getStringArray(R.array.period_month_array)
-        val spinnerMonthAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, months)
-        spinnerMonthAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-        binding.spinnerMonth.adapter = spinnerMonthAdapter
+        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list_item, months)
+        with(binding.month.editText as AutoCompleteTextView) {
+            setAdapter(monthAdapter)
+            setText(months[scheduleData.schedule.month ?: 0], false)
+        }
 
         val weeks = resources.getStringArray(R.array.period_week_array)
-        val spinnerWeekAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, weeks)
-        spinnerWeekAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-        binding.spinnerWeek.adapter = spinnerWeekAdapter
+        val weekAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list_item, weeks)
 
-        binding.spinnerMonth.setSelection(scheduleData.schedule.month ?: 0)
-
-        binding.spinnerWeek.setSelection(scheduleData.schedule.week ?: 0)
+        with(binding.week.editText as AutoCompleteTextView) {
+            setAdapter(weekAdapter)
+            setText(weeks[scheduleData.schedule.week ?: 0], false)
+        }
 
         with(binding) {
             checkBoxDay1.isChecked = scheduleData.schedule.monday
@@ -58,35 +58,29 @@ class FragmentSchedule : Fragment() {
             checkBoxDay5.isChecked = scheduleData.schedule.friday
             checkBoxDay6.isChecked = scheduleData.schedule.saturday
             checkBoxDay7.isChecked = scheduleData.schedule.sunday
-        }
 
-        Log.d(
-            TAG,
-            "onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState"
-        )
+            saveButton.setOnClickListener {
+                val result = Bundle()
 
-        binding.saveButton.setOnClickListener {
-            val result = Bundle()
+                val selectedMonth = months.indexOf(month.editText?.text.toString())
+                schedule.schedule.month = selectedMonth.takeIf { selectedMonth > 0 }
 
-            schedule.schedule.month = if (binding.spinnerMonth.selectedItemPosition > 0) {
-                binding.spinnerMonth.selectedItemPosition
-            } else null
+                val selectedWeek = weeks.indexOf(week.editText?.text.toString())
+                schedule.schedule.week = selectedWeek.takeIf { selectedWeek > 0 }
 
-            schedule.schedule.week = if (binding.spinnerWeek.selectedItemPosition > 0) {
-                binding.spinnerWeek.selectedItemPosition
-            } else null
 
-            schedule.schedule.monday = binding.checkBoxDay1.isChecked
-            schedule.schedule.tuesday = binding.checkBoxDay2.isChecked
-            schedule.schedule.wednesday = binding.checkBoxDay3.isChecked
-            schedule.schedule.thursday = binding.checkBoxDay4.isChecked
-            schedule.schedule.friday = binding.checkBoxDay5.isChecked
-            schedule.schedule.saturday = binding.checkBoxDay6.isChecked
-            schedule.schedule.sunday = binding.checkBoxDay7.isChecked
+                schedule.schedule.monday = checkBoxDay1.isChecked
+                schedule.schedule.tuesday = checkBoxDay2.isChecked
+                schedule.schedule.wednesday = checkBoxDay3.isChecked
+                schedule.schedule.thursday = checkBoxDay4.isChecked
+                schedule.schedule.friday = checkBoxDay5.isChecked
+                schedule.schedule.saturday = checkBoxDay6.isChecked
+                schedule.schedule.sunday = checkBoxDay7.isChecked
 
-            result.putSerializable("schedule", schedule)
-            parentFragmentManager.setFragmentResult("schedule", result)
-            requireActivity().onBackPressed()
+                result.putSerializable("schedule", schedule)
+                parentFragmentManager.setFragmentResult("schedule", result)
+                requireActivity().onBackPressed()
+            }
         }
 
         return binding.root

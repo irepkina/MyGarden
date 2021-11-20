@@ -136,17 +136,17 @@ class PlantDescriptionViewModel(
                     _plantLiveData.postValue(plant.copy(plantId = newPlantId))
                 } else {
                     Log.d(TAG, "onSaveData(), update called")
-                    interactor.updatePlant(
-                        Plant(
-                            flowerbedId = flowerbedId,
-                            plantId = plantId,
-                            name,
-                            description,
-                            comment,
-                            count,
-                            date
-                        )
+                    val plant = Plant(
+                        flowerbedId = flowerbedId,
+                        plantId = plantId,
+                        name,
+                        description,
+                        comment,
+                        count,
+                        date
                     )
+                    interactor.updatePlant(plant)
+                    _plantLiveData.postValue(plant)
                 }
             }
                 .subscribeOn(Schedulers.io())
@@ -169,7 +169,7 @@ class PlantDescriptionViewModel(
      * @param count количество экземлпяров растения
      * @param plantDate дата посадки растения
      */
-    fun onClose(
+    fun onStoreData(
         flowerbedId: Long,
         plantId: Long?,
         name: String,
@@ -177,9 +177,17 @@ class PlantDescriptionViewModel(
         comment: String?,
         count: Int,
         plantDate: String?
-    ){
+    ) {
         if (plantId != null) {
-            onSaveData(flowerbedId = flowerbedId, plantId = plantId, name, description, comment, count, plantDate)
+            onSaveData(
+                flowerbedId = flowerbedId,
+                plantId = plantId,
+                name,
+                description,
+                comment,
+                count,
+                plantDate
+            )
         }
     }
 }

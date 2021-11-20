@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
@@ -54,8 +55,7 @@ class FlowerbedDescriptionFragment(): Fragment() {
             showFlowerbed(flowerbed)
             if (flowerbed.flowerbedId != null) {
                 (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
-                FlowerbedFragment.currentFlowerbedName = flowerbed.name
-                (requireActivity() as AppCompatActivity).supportActionBar?.title = flowerbed.name
+                (this.parentFragment as? FlowerbedFragmentIntf)?.updateCaption(flowerbed.name)
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -69,18 +69,27 @@ class FlowerbedDescriptionFragment(): Fragment() {
             Log.d(TAG, "setOnClickListener() called")
             saveFlowerbed()
         }
+
+        binding.name.editText?.doOnTextChanged { _, _, _, _ ->
+            binding.name.error = null
+        }
     }
 
-    private fun saveFlowerbed(){
-        viewModel.onSaveData(
-            flowerbedId,
-            binding.name.editText?.text.toString(),
-            binding.description.editText?.text.toString(),
-            binding.comment.editText?.text.toString()
-        )
+    private fun saveFlowerbed() {
+        val name = binding.name.editText?.text.toString()
+        if (name.isBlank()) {
+            binding.name.error = resources.getString(R.string.error_empty_name)
+        } else {
+            viewModel.onSaveData(
+                flowerbedId,
+                name,
+                binding.description.editText?.text.toString(),
+                binding.comment.editText?.text.toString()
+            )
+        }
     }
 
-    private fun readArguments(){
+    private fun readArguments() {
         Log.d(TAG, "readArguments() called")
         when (val mode = arguments?.getString(MODE)) {
             MODE_UPDATE -> {
@@ -96,19 +105,25 @@ class FlowerbedDescriptionFragment(): Fragment() {
     }
 
     private fun showFlowerbed(flowerbed: Flowerbed?) {
+        binding.name.error = null
         binding.name.editText?.setText(flowerbed?.name)
         binding.description.editText?.setText(flowerbed?.description)
         binding.comment.editText?.setText(flowerbed?.comment)
     }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.onClose(
+    override fun onDestroy() {
+        FlowerbedFragment.currentFlowerbedName = ""
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        viewModel.onStoreData(
             flowerbedId,
             binding.name.editText?.text.toString(),
             binding.description.editText?.text.toString(),
             binding.comment.editText?.text.toString()
         )
+        super.onDestroyView()
     }
 
     companion object {

@@ -89,8 +89,12 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
     }
 
     override fun updateFlowerbedId(flowerbedId: Long) {
-        Log.d(TAG, "updateFlowerbedId() called with: flowerbedId = $flowerbedId")
         myAdapter.setFlowerbedId(flowerbedId)
+    }
+
+    override fun updateCaption(caption: String) {
+        currentFlowerbedName = caption
+        binding.collapsingToolbar.title = currentFlowerbedName
     }
 
     companion object {
@@ -133,6 +137,7 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
  */
 interface FlowerbedFragmentIntf {
     fun updateFlowerbedId(flowerbedId: Long)
+    fun updateCaption(caption: String)
 }
 
 private const val TAG = "${APP_TAG}.FlowerbedFragment"

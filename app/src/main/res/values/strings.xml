@@ -32,6 +32,8 @@
     <string name="new_work_caption">Новая работа</string>
 
     <string name="no_work_name_toast_text">Наименование работы не может быть пустым. Изменение данных не будет сохранено!</string>
+    <string name="error_empty_name">Заполните название</string>
+    <string name="error_empty_plandate">Заполните плановую дату</string>
 
     <string name="allert_dialog_save_button_text">Добавить</string>
     <string name="allert_dialog_cancel_button_text">Отменить</string>

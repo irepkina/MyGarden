@@ -75,9 +75,11 @@
     </style>
 
     <style name="Widget.MyGarden.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
-        <item name="buttonTint">?attr/colorAccent</item>
-        <item name="android:textColor">?attr/colorAccentText</item>
+        <!--<item name="buttonTint">?attr/colorAccent</item>
+        <item name="android:textColor">?attr/colorAccentText</item>-->
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="colorOnSurface">@color/colorAccentText</item>
+        <item name="colorSecondary">@color/colorAccent</item>
     </style>
 
     <style name="Widget.MyGarden.TextInputLayout.Colored" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">

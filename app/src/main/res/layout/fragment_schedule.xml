@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,136 +19,144 @@
             app:popupTheme="@style/Theme.MyGarden.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/textViewMonth"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/month_text_view_text" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/spinnerMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintStart_toEndOf="@id/textViewMonth"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:layout_marginTop="@dimen/space_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/month_text_view_text"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <TextView
-            android:id="@+id/textViewWeek"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintTop_toBottomOf="@id/textViewMonth"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/week_text_view_text" />
-
-        <Spinner
-            android:id="@+id/spinnerWeek"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintStart_toEndOf="@id/textViewWeek"
-            app:layout_constraintTop_toBottomOf="@id/textViewMonth" />
-
-        <TextView
-            android:id="@+id/textViewDay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintTop_toBottomOf="@id/textViewWeek"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day_text_view_text" />
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <CheckBox
-            android:id="@+id/checkBoxDay1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day1_text_view_text"
-            app:layout_constraintTop_toBottomOf="@id/textViewDay"
-            app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/week"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:layout_marginTop="@dimen/space_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/month"
+                android:hint="@string/week_text_view_text"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <CheckBox
-            android:id="@+id/checkBoxDay2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day2_text_view_text"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay1"
-            app:layout_constraintStart_toStartOf="parent" />
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/checkBoxDay3"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day3_text_view_text"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay2"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/textViewDay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_24"
+                app:layout_constraintTop_toBottomOf="@id/week"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:text="@string/day_text_view_text" />
 
-        <CheckBox
-            android:id="@+id/checkBoxDay4"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day4_text_view_text"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay3"
-            app:layout_constraintStart_toStartOf="parent" />
+            <CheckBox
+                android:id="@+id/checkBoxDay1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day1_text_view_text"
+                app:layout_constraintTop_toBottomOf="@id/textViewDay"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <CheckBox
-            android:id="@+id/checkBoxDay5"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day5_text_view_text"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay4"
-            app:layout_constraintStart_toStartOf="parent" />
+            <CheckBox
+                android:id="@+id/checkBoxDay2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day2_text_view_text"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay1"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <CheckBox
-            android:id="@+id/checkBoxDay6"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day6_text_view_text"
-            android:textColor="@color/color_red"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay5"
-            app:layout_constraintStart_toStartOf="parent" />
+            <CheckBox
+                android:id="@+id/checkBoxDay3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day3_text_view_text"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay2"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <CheckBox
-            android:id="@+id/checkBoxDay7"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/day7_text_view_text"
-            android:textColor="@color/color_red"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay6"
-            app:layout_constraintStart_toStartOf="parent" />
+            <CheckBox
+                android:id="@+id/checkBoxDay4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day4_text_view_text"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay3"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginHorizontal="@dimen/default_margin"
-            android:text="@string/save_button_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxDay7"
-            android:foreground="?android:attr/selectableItemBackground" />
+            <CheckBox
+                android:id="@+id/checkBoxDay5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day5_text_view_text"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay4"
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <CheckBox
+                android:id="@+id/checkBoxDay6"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day6_text_view_text"
+                android:textColor="@color/color_red"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay5"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <CheckBox
+                android:id="@+id/checkBoxDay7"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin"
+                android:text="@string/day7_text_view_text"
+                android:textColor="@color/color_red"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxDay6"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:backgroundTint="?attr/colorPrimary"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/save_button_text"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_gravity="bottom|start"
+        tools:ignore="ContentDescription" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

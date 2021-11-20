@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantDescriptionBinding
 import com.irepka3.mygarden.domain.model.Plant
@@ -83,8 +84,7 @@ class PlantDescriptionFragment: Fragment() {
                     "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
                 )
                 (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
-                PlantFragment.currentPlantName = plant.name
-                (requireActivity() as AppCompatActivity).supportActionBar?.title = plant.name
+                (this.parentFragment as? PlantFragmentIntf)?.updateCaption(plant.name)
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -98,6 +98,10 @@ class PlantDescriptionFragment: Fragment() {
         binding.saveButton.setOnClickListener {
             Log.d(TAG, "onViewCreated(), setOnClickListener called")
             savePlant()
+        }
+
+        binding.name.editText?.doOnTextChanged { _, _, _, _ ->
+            binding.name.error = null
         }
     }
 
@@ -120,6 +124,7 @@ class PlantDescriptionFragment: Fragment() {
 
     private fun showPlant(plant: Plant?) {
         binding.name.editText?.setText(plant?.name)
+        binding.name.error = null
         binding.description.editText?.setText(plant?.description)
         binding.comment.editText?.setText(plant?.comment)
         binding.count.editText?.setText(plant?.count.toString())
@@ -130,21 +135,30 @@ class PlantDescriptionFragment: Fragment() {
         }
     }
 
-    private fun savePlant(){
-        viewModel.onSaveData(
-            flowerbedId = flowerbedId,
-            plantId = plantId,
-            binding.name.editText?.text.toString(),
-            binding.description.editText?.text.toString(),
-            binding.comment.editText?.text.toString(),
-            binding.count.editText?.text.toString().toInt(),
-            binding.plantDate.editText?.text.toString()
-        )
+    private fun savePlant() {
+        val name = binding.name.editText?.text.toString()
+        if (name.isBlank()) {
+            binding.name.error = resources.getString(R.string.error_empty_name)
+        } else {
+            viewModel.onSaveData(
+                flowerbedId = flowerbedId,
+                plantId = plantId,
+                name = binding.name.editText?.text.toString(),
+                description = binding.description.editText?.text.toString(),
+                comment = binding.comment.editText?.text.toString(),
+                count = binding.count.editText?.text.toString().toInt(),
+                plantDate = binding.plantDate.editText?.text.toString()
+            )
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.onClose(
+    override fun onDestroy() {
+        PlantFragment.currentPlantName = ""
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        viewModel.onStoreData(
             flowerbedId,
             plantId,
             binding.name.editText?.text.toString(),
@@ -153,7 +167,9 @@ class PlantDescriptionFragment: Fragment() {
             binding.count.editText?.text.toString().toInt(),
             binding.plantDate.editText?.text.toString()
         )
+        super.onDestroyView()
     }
+
 
     companion object {
         /**

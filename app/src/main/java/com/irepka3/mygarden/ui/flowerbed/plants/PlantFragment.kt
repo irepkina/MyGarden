@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.irepka3.mygarden.R
+import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantPageBinding
 import com.irepka3.mygarden.util.Const
 
@@ -75,7 +76,6 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
     }
 
     private fun readArgument() {
-        Log.d(TAG, "readArguments() called")
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
             throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
@@ -91,15 +91,15 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
         }
 
         currentPlantName = arguments?.getString(CAPTION) ?: ""
-        Log.d(
-            TAG,
-            "readArguments() success, flowerbedId = $flowerbedId, plantId = $plantId, currentPlanName = $currentPlantName"
-        )
     }
 
     override fun updatePlantId(plantId: Long) {
-        Log.d(TAG, "updatePlantId() called with: plantId = $plantId")
         myAdapter.setPlantId(plantId)
+    }
+
+    override fun updateCaption(caption: String) {
+        currentPlantName = caption
+        binding.collapsingToolbar.title = currentPlantName
     }
 
     companion object {
@@ -112,10 +112,6 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
          * @param plantName наименование растения
          */
         fun newInstanceUpdate(flowerbedId: Long, plantId: Long, plantName: String): PlantFragment {
-            Log.d(
-                TAG,
-                "newInstanceUpdate() called with: flowerbedId = $flowerbedId, plantId = $plantId, plantName = $plantName"
-            )
             return PlantFragment().apply {
                 arguments = Bundle().apply {
                     putLong(FLOWERBED_ID, flowerbedId)
@@ -134,7 +130,7 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
                 arguments = Bundle().apply {
                     putLong(FLOWERBED_ID, flowerbedId)
                     putString(MODE, MODE_INSERT)
-                    putString(CAPTION, context?.getString(R.string.new_plant_caption))
+                    putString(CAPTION, dagger().getContext().getString(R.string.new_plant_caption))
                 }
             }
         }
@@ -146,6 +142,7 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
  */
 interface PlantFragmentIntf {
     fun updatePlantId(plantId: Long)
+    fun updateCaption(caption: String)
 }
 private const val TAG = "${Const.APP_TAG}.PlantFragment"
 private const val FLOWERBED_ID = "flowerbedId"
