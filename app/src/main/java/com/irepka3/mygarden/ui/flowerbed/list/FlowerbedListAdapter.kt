@@ -21,7 +21,7 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  *
  * Created by i.repkina on 31.10.2021.
  */
-class FlowerbedListAdapter(val callback: FlowerbedAdapterCallback) :
+class FlowerbedListAdapter(private val callback: FlowerbedAdapterCallback) :
     RecyclerView.Adapter<FlowerbedListAdapter.FlowerbedViewHolder>() {
     private var diffUtilCallback = object : DiffUtil.ItemCallback<Flowerbed>() {
         override fun areItemsTheSame(oldItem: Flowerbed, newItem: Flowerbed): Boolean {
@@ -33,7 +33,7 @@ class FlowerbedListAdapter(val callback: FlowerbedAdapterCallback) :
         }
     }
 
-    private val listDiffer = AsyncListDiffer<Flowerbed>(this, diffUtilCallback)
+    private val listDiffer = AsyncListDiffer(this, diffUtilCallback)
 
     // получить элемент по индексу
     fun getItem(index: Int): Flowerbed = listDiffer.currentList[index]
@@ -60,7 +60,7 @@ class FlowerbedListAdapter(val callback: FlowerbedAdapterCallback) :
         return listDiffer.currentList.size
     }
 
-    class FlowerbedViewHolder(itemView: View, val callback: FlowerbedAdapterCallback) :
+    class FlowerbedViewHolder(itemView: View, private val callback: FlowerbedAdapterCallback) :
         RecyclerView.ViewHolder(itemView) {
         private val flowerbedNameTextView =
             itemView.findViewById<TextView>(R.id.textViewFlowerbedName)
@@ -86,7 +86,12 @@ class FlowerbedListAdapter(val callback: FlowerbedAdapterCallback) :
             if (item.flowerbedId == 0L)
                 throw IllegalStateException("Incorrect item.flowerbedId = ${item.flowerbedId}")
 
-            itemView.setOnClickListener { callback.onFlowerbedClick(item.flowerbedId ?: 0L) }
+            itemView.setOnClickListener {
+                callback.onFlowerbedClick(
+                    item.flowerbedId ?: 0L,
+                    item.name
+                )
+            }
         }
     }
 
@@ -97,8 +102,9 @@ class FlowerbedListAdapter(val callback: FlowerbedAdapterCallback) :
         /**
          * Вызывает метод фрагмента и передает выбранную клумбу
          * @param flowerbedId идентификатор выбранной клумбы
+         * @param flowerbedName название клумбы
          */
-        fun onFlowerbedClick(flowerbedId: Long)
+        fun onFlowerbedClick(flowerbedId: Long, flowerbedName: String)
     }
 }
 

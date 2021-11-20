@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -23,6 +24,7 @@ import com.irepka3.mygarden.domain.model.Schedule
 import com.irepka3.mygarden.domain.model.WorkStatus
 import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
+import com.irepka3.mygarden.ui.work.description.model.WorkTypeUI
 import com.irepka3.mygarden.ui.work.description.model.WorkUIModel
 import com.irepka3.mygarden.ui.work.description.model.WorkUIState
 import com.irepka3.mygarden.ui.work.model.WorkUIId
@@ -61,6 +63,7 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
         binding = FragmentWorkManagerBinding.inflate(inflater)
 
         readArguments()
+        initToolBar()
 
         val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         val drawable = this.resources.getDrawable(
@@ -122,11 +125,12 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             saveWork()
         }
 
+        /* todo: Восстановить после реализации нотификации
         binding.checkBoxNoNotification.setOnCheckedChangeListener { buttonView, isChecked ->
             binding.notificationLayout.isVisible = !isChecked
-        }
+        }*/
 
-        binding.floatingButtonAddSchedule.setOnClickListener {
+        binding.buttonAddSchedule.setOnClickListener {
             (requireActivity() as MainActivityIntf).showScheduleFragment(
                 ScheduleUIModel(
                     Schedule(
@@ -140,7 +144,7 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
         binding.cancelButton.setOnClickListener { viewModel.onCancel(createWorkUIModel()) }
         binding.clearStatusButton.setOnClickListener { viewModel.onClear(createWorkUIModel()) }
 
-        binding.planDate.setOnClickListener {
+        binding.planDate.editText?.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
@@ -149,13 +153,27 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             val datePickerDialog = DatePickerDialog(
                 this.requireContext(),
                 { _, newYear, newMonth, newDay ->
-                    binding.planDate.setText("$newDay.${newMonth + 1}.$newYear")
+                    binding.planDate.editText?.setText("$newDay.${newMonth + 1}.$newYear")
                 },
                 year, month, day
             )
             datePickerDialog.show()
         }
 
+    }
+
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+
+            actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
+            actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     private fun showScheduleLayout(isShow: Boolean) {
@@ -186,37 +204,47 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             notificationHour.isEnabled = !workUIState.isReadOnly
             notificationMinute.isEnabled = !workUIState.isReadOnly
             checkBoxNoNotification.isEnabled = !workUIState.isReadOnly
-            floatingButtonAddSchedule.isEnabled = !workUIState.isReadOnly
+            buttonAddSchedule.isEnabled = !workUIState.isReadOnly
+
+            name.isVisible =
+                workUIState.workTypeUI != WorkTypeUI.GENERATED_REPEAT && workUIState.workTypeUI != WorkTypeUI.SAVED_REPEAT
 
             doneButton.isVisible = workUIState.isDoneEnabled
             cancelButton.isVisible = workUIState.isCancelEnabled
             clearStatusButton.isVisible = workUIState.isClearStatusEnabled
             originalButton.isVisible = workUIState.isShowOriginRepeatEnabled
 
-            if (workUIState.isEditMode) {
-                (requireActivity() as MainActivityIntf).setCaption(workUIState.workTitle)
-            } else {
-                (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.new_work_caption))
-            }
+            (requireActivity() as AppCompatActivity).supportActionBar?.title =
+                if (workUIState.isEditMode) workUIState.workTitle
+                else resources.getString(R.string.new_work_caption)
         }
     }
 
     private fun showWork(work: WorkUIModel) {
         with(binding) {
-            name.setText(work.name)
-            description.setText(work.description)
-            planDate.setText(work.datePlan)
+            name.editText?.setText(work.name)
+            description.editText?.setText(work.description)
+            planDate.editText?.setText(work.datePlan)
 
-            //dateDone = null todo реализовать отметку выполнения
-            //WorkStatus.Plan  todo реализовать логику изменения статуса
-            notificationDayCount.setText(work.notificationDay.toString())
-            notificationHour.setText(work.notificationHour.toString())
-            notificationMinute.setText(work.notificationMinute.toString())
-            checkBoxNoNotification.isChecked = work.noNotification
-            notificationLayout.isVisible = !work.noNotification
+            notificationDayCount.editText?.setText(work.notificationDay.toString())
+            notificationHour.editText?.setText(work.notificationHour.toString())
+            notificationMinute.editText?.setText(work.notificationMinute.toString())
+            checkBoxNoNotification.isChecked =
+                false //todo: Восстановить после реализации нотификации work.noNotification
+            notificationLayout.isVisible =
+                false //todo: Восстановить после реализации нотификации !work.noNotification
 
             switchWorkType.setOnCheckedChangeListener(null)
             switchWorkType.isChecked = work.repeatWorkId != null || !work.isOnceWork
+
+            workStatusImageView.setImageLevel(
+                when {
+                    work.status == WorkStatus.Done -> 2
+                    work.status == WorkStatus.Cancel -> 3
+                    work.repeatWorkId != null -> 1
+                    else -> 0
+                }
+            )
 
             if (work.workId == null && work.repeatWorkId == null) {
                 showScheduleLayout(switchWorkType.isChecked)
@@ -226,7 +254,6 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             } else {
                 showScheduleLayout(work.workId == work.repeatWorkId)
             }
-
 
             originalButton.setOnClickListener {
                 if (work.repeatWorkId != null) {
@@ -243,7 +270,7 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
     }
 
     private fun saveWork() {
-        val name = binding.name.text.toString()
+        val name = binding.name.editText?.text.toString()
         if (name.isBlank()) {
             Toast.makeText(
                 requireContext(),
@@ -265,22 +292,14 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             isOnceWork = !binding.switchWorkType.isChecked,
             repeatWorkId = workUIId.repeatWorkId,
             workId = workUIId.workId,
-            name = binding.name.text.toString(),
-            description = binding.description.text.toString(),
-            datePlan = binding.planDate.text.toString(),
-            dateDone = null, //todo реализовать отметку выполнения
-            status = WorkStatus.Plan, //todo реализовать логику изменения статуса
-
-            // todo исправить, binding.notificationDayCount.text.toString() != "null"
-            notificationDay = if (binding.notificationDayCount.text.toString() != "null") {
-                binding.notificationDayCount.text.toString().toInt()
-            } else null,
-            notificationHour = if (binding.notificationHour.text.toString() != "null") {
-                binding.notificationHour.text.toString().toInt()
-            } else null,
-            notificationMinute = if (binding.notificationMinute.text.toString() != "null") {
-                binding.notificationMinute.text.toString().toInt()
-            } else null,
+            name = binding.name.editText?.text.toString(),
+            description = binding.description.editText?.text.toString(),
+            datePlan = binding.planDate.editText?.text.toString(),
+            dateDone = null,
+            status = WorkStatus.Plan,
+            notificationDay = null,
+            notificationHour = null,
+            notificationMinute = null,
             noNotification = binding.checkBoxNoNotification.isChecked
         )
     }

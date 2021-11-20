@@ -101,7 +101,8 @@ class PlantListAdapter(val callback: PlantListAdapterCallback) :
             itemView.setOnClickListener {
                 callback.onPlantClick(
                     flowerbedId = item.flowerbedId,
-                    plantId = item.plantId ?: 0L
+                    plantId = item.plantId ?: 0L,
+                    plantName = item.name
                 )
             }
         }
@@ -114,8 +115,9 @@ class PlantListAdapter(val callback: PlantListAdapterCallback) :
         /**
          * Вызывает метод фрагмента и передает выбранное растение
          * @param plantId идентификатор растения
+         * @param plantName название растения
          */
-        fun onPlantClick(flowerbedId: Long, plantId: Long?)
+        fun onPlantClick(flowerbedId: Long, plantId: Long?, plantName: String?)
     }
 }
 

@@ -81,23 +81,21 @@ class FlowerbedListFragment: Fragment(), FlowerbedListAdapter.FlowerbedAdapterCa
         )
         binding.flowerbedRecyclerView.adapter = adapter
 
-        binding.floatingButtonFlowerbed.setOnClickListener {
-            (requireActivity() as MainActivityIntf).showFlowerbedFragment(null)
+        binding.floatingButtonAddFlowerbed.setOnClickListener {
+            (requireActivity() as MainActivityIntf).showFlowerbedFragment(null, "")
         }
 
-        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper(
-            { adapterPosition ->
-                deleteFlowerbed(adapter.getItem(adapterPosition))
-            }
-        )
+        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
+            deleteFlowerbed(adapter.getItem(adapterPosition))
+        }
         itemTouchHelper.attachToRecyclerView(binding.flowerbedRecyclerView)
 
         return binding.root
     }
 
-    override fun onFlowerbedClick(flowerbedId: Long) {
+    override fun onFlowerbedClick(flowerbedId: Long, flowerbedName: String) {
         Log.d(TAG, "onFlowerBedClick() called with: id = $flowerbedId")
-        (this.activity as MainActivityIntf).showFlowerbedFragment(flowerbedId)
+        (this.activity as MainActivityIntf).showFlowerbedFragment(flowerbedId, flowerbedName)
     }
 
     /**

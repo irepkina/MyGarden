@@ -80,15 +80,14 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         binding.floatingButtonPlant.setOnClickListener {
             (requireActivity() as MainActivityIntf).showPlantFragment(
                 flowerbedId = flowerbedId,
-                plantId = null
+                plantId = null,
+                plantName = null
             )
         }
 
-        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper(
-            { adapterPosition ->
-                deletePlant(adapter.getItem(adapterPosition))
-            }
-        )
+        val itemTouchHelper = ItemTouchHelperFactory.getItemTouchHelper { adapterPosition ->
+            deletePlant(adapter.getItem(adapterPosition))
+        }
         itemTouchHelper.attachToRecyclerView(binding.plantRecyclerView)
 
         return binding.root
@@ -101,11 +100,12 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
 
-    override fun onPlantClick(flowerbedId:Long, plantId: Long?) {
+    override fun onPlantClick(flowerbedId: Long, plantId: Long?, plantName: String?) {
         Log.d(TAG, "onPlantClick() called with: id = $plantId")
         (requireActivity() as MainActivityIntf).showPlantFragment(
             flowerbedId = flowerbedId,
-            plantId = plantId
+            plantId = plantId,
+            plantName = plantName
         )
     }
 

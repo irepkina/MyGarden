@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
-import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragmentIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
@@ -54,9 +54,8 @@ class FlowerbedDescriptionFragment(): Fragment() {
             showFlowerbed(flowerbed)
             if (flowerbed.flowerbedId != null) {
                 (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
-                (requireActivity() as MainActivityIntf).setCaption(flowerbed.name)
-            } else {
-                (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.new_flowerbed_caption))
+                FlowerbedFragment.currentFlowerbedName = flowerbed.name
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = flowerbed.name
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -75,9 +74,9 @@ class FlowerbedDescriptionFragment(): Fragment() {
     private fun saveFlowerbed(){
         viewModel.onSaveData(
             flowerbedId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString()
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString()
         )
     }
 
@@ -96,19 +95,19 @@ class FlowerbedDescriptionFragment(): Fragment() {
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
 
-    private fun showFlowerbed(flowerbed: Flowerbed?){
-        binding.name.setText(flowerbed?.name)
-        binding.description.setText(flowerbed?.description)
-        binding.comment.setText(flowerbed?.comment)
+    private fun showFlowerbed(flowerbed: Flowerbed?) {
+        binding.name.editText?.setText(flowerbed?.name)
+        binding.description.editText?.setText(flowerbed?.description)
+        binding.comment.editText?.setText(flowerbed?.comment)
     }
 
     override fun onStop() {
         super.onStop()
         viewModel.onClose(
             flowerbedId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString()
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString()
         )
     }
 

@@ -4,7 +4,9 @@ package com.irepka3.mygarden.ui.work.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -69,36 +71,39 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
     inner class WorkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val viewName = itemView.findViewById<TextView>(R.id.textViewWorkName)
         val viewDescription = itemView.findViewById<TextView>(R.id.textViewWorkDescription)
-        val viewWeekDay = itemView.findViewById<TextView>(R.id.textViewWeekDay)
-        val viewMonthYear = itemView.findViewById<TextView>(R.id.textViewMonthYear)
-        val viewWorkStatus = itemView.findViewById<TextView>(R.id.textViewWorkStatus)
+        val viewDay = itemView.findViewById<TextView>(R.id.textViewDay)
+        val viewWeek = itemView.findViewById<TextView>(R.id.textViewWeek)
+        val viewWorkStatus = itemView.findViewById<ImageView>(R.id.imageViewStatus)
+        val cardView = itemView.findViewById<CardView>(R.id.cardView)
 
         fun bind(item: Work) {
             viewName.setText(item.name)
 
 
-            viewWeekDay.setText(
+            viewDay.setText(
                 SimpleDateFormat(
-                    "E, dd",
+                    "dd",
                     Locale.getDefault()
                 ).format(item.datePlan)
             )
-            viewMonthYear.setText(
+            viewWeek.setText(
                 SimpleDateFormat(
-                    "MMMM, yyyy",
+                    "E",
                     Locale.getDefault()
                 ).format(item.datePlan)
             )
             viewDescription.setText(item.description)
 
-            viewWorkStatus.setText(
-                when (item.status) {
-                    WorkStatus.Plan -> "Запланировано"
-                    WorkStatus.Done -> "Выполнено"
-                    WorkStatus.Cancel -> "Отменено"
-                    else -> "Новая работа"
+            viewWorkStatus.setImageLevel(
+                when {
+                    item.status == WorkStatus.Done -> 2
+                    item.status == WorkStatus.Cancel -> 3
+                    item.repeatWork?.repeatWorkId != null -> 1
+                    else -> 0
                 }
             )
+
+            cardView.isSelected = item.status == WorkStatus.Cancel
 
             itemView.setOnClickListener {
                 callback.onWorkClick(

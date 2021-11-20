@@ -10,16 +10,16 @@
 
     <TextView
         android:id="@+id/monthYear"
-        android:layout_width="140dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/default_margin"
         android:padding="@dimen/space_4"
-        tools:text="Январь, 2021"
+        tools:text="Сентябрь, 2021"
         android:textAlignment="center"
-        android:background="@drawable/bg_square_active" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <ImageView
         android:id="@+id/buttonPreviousMonth"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="@id/monthYear"
         app:layout_constraintBottom_toBottomOf="@id/monthYear"
         app:layout_constraintEnd_toStartOf="@id/monthYear"
-        app:tint="@color/colorSecondary"
+        app:tint="?attr/colorPrimary"
         android:src="@drawable/ic_previous"
         tools:ignore="ContentDescription" />
 
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="@id/monthYear"
         app:layout_constraintBottom_toBottomOf="@id/monthYear"
         app:layout_constraintStart_toEndOf="@id/monthYear"
-        app:tint="@color/colorSecondary"
+        app:tint="?attr/colorPrimary"
         android:src="@drawable/ic_next"
         tools:ignore="ContentDescription" />
 
@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="@id/workRecyclerView"
         app:layout_constraintTop_toTopOf="@id/workRecyclerView"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:indeterminateTint="@color/purple_200" />
+        android:indeterminateTint="@color/colorLoader" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButtonAddWork"
@@ -71,10 +71,10 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
         app:fabSize="normal"
-        android:layout_margin="@dimen/default_margin"
-        android:backgroundTint="@color/color_blue"
+        android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_gravity="bottom|right"
         app:tint="@color/white"
-        android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

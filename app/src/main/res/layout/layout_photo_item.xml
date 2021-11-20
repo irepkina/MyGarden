@@ -28,11 +28,11 @@
         android:src="@drawable/star_selector"
         app:fabSize="normal"
         android:layout_margin="@dimen/default_margin"
-        android:backgroundTint="@color/color_blue"
-        app:tint="@color/white"
+        android:layout_gravity="bottom|right"
         app:layout_constraintEnd_toEndOf="@id/imageViewPhoto"
         app:layout_constraintBottom_toBottomOf="@id/imageViewPhoto"
-        android:layout_gravity="bottom|end"
+        app:tint="@color/white"
         tools:ignore="ContentDescription" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

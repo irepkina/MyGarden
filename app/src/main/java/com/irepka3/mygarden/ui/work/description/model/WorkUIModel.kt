@@ -124,7 +124,7 @@ fun Work.toWorkUIState(): WorkUIState {
     }
 
     return WorkUIState(
-        workTitle = this.name,
+        workTitle = if (this.repeatWork != null) this.repeatWork.name else this.name,
         workTypeUI = workUiType,
         isEditMode = workUiType != WorkTypeUI.NEW_WORK,
         isRepeatSwitcherEnabled = workUiType == WorkTypeUI.NEW_WORK,

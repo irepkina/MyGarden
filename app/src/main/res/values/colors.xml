@@ -13,7 +13,15 @@
     <color name="background">#FFFFFF</color>
     <color name="background_list">#1A000000</color>
     <color name="white_transparent">#66FFFFFF</color>
+    <color name="transparent">#00000000</color>
 
-    <color name="colorPrimary">#FF6200EE</color>
-    <color name="colorSecondary">#FF03DAC5</color>
+    <color name="colorPrimary">#5B9242</color>
+    <color name="colorSecondary">#FFEDB117</color>
+    <color name="colorAccent">#FFEDB117</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorWorkCard">#FFD3E1CD</color>
+    <color name="colorWorkCardDisabled">#4DD3E1CD</color>
+    <color name="colorAccentText">#FF906147</color>
+    <color name="colorBackgroundEditText">#FFF2E1B6</color>
+    <color name="colorLoader">#FFEDB117</color>
 </resources>

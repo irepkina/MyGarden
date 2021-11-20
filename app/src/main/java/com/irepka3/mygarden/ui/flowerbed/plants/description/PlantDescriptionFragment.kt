@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.irepka3.mygarden.R
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantDescriptionBinding
 import com.irepka3.mygarden.domain.model.Plant
-import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragmentIntf
 import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
@@ -57,15 +57,16 @@ class PlantDescriptionFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val selectDateView = binding.plantDate
-        selectDateView.setOnClickListener {
+        selectDateView.editText?.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePickerDialog = DatePickerDialog(this.requireContext(),
+            val datePickerDialog = DatePickerDialog(
+                this.requireContext(),
                 { _, newYear, newMonth, newDay ->
-                        selectDateView.setText("$newDay.${newMonth + 1}.$newYear")
+                    selectDateView.editText?.setText("$newDay.${newMonth + 1}.$newYear")
                 },
                 year, month, day
             )
@@ -82,9 +83,8 @@ class PlantDescriptionFragment: Fragment() {
                     "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
                 )
                 (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
-                (requireActivity() as MainActivityIntf).setCaption(plant.name)
-            } else {
-                (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.new_plant_caption))
+                PlantFragment.currentPlantName = plant.name
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = plant.name
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -118,15 +118,15 @@ class PlantDescriptionFragment: Fragment() {
         }
     }
 
-    private fun showPlant(plant: Plant?){
-        binding.name.setText(plant?.name)
-        binding.description.setText(plant?.description)
-        binding.comment.setText(plant?.comment)
-        binding.count.setText(plant?.count.toString())
+    private fun showPlant(plant: Plant?) {
+        binding.name.editText?.setText(plant?.name)
+        binding.description.editText?.setText(plant?.description)
+        binding.comment.editText?.setText(plant?.comment)
+        binding.count.editText?.setText(plant?.count.toString())
 
         if (plant?.datePlant !== null) {
             val date = Date(plant.datePlant)
-            binding.plantDate.setText(dateFormat.format(date))
+            binding.plantDate.editText?.setText(dateFormat.format(date))
         }
     }
 
@@ -134,11 +134,11 @@ class PlantDescriptionFragment: Fragment() {
         viewModel.onSaveData(
             flowerbedId = flowerbedId,
             plantId = plantId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString(),
-            binding.count.text.toString().toInt(),
-            binding.plantDate.text.toString()
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString(),
+            binding.count.editText?.text.toString().toInt(),
+            binding.plantDate.editText?.text.toString()
         )
     }
 
@@ -147,11 +147,11 @@ class PlantDescriptionFragment: Fragment() {
         viewModel.onClose(
             flowerbedId,
             plantId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString(),
-            binding.count.text.toString().toInt(),
-            binding.plantDate.text.toString()
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString(),
+            binding.count.editText?.text.toString().toInt(),
+            binding.plantDate.editText?.text.toString()
         )
     }
 

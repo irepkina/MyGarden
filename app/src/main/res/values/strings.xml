@@ -81,6 +81,8 @@
 
     <string name="save_button_text">Сохранить</string>
     <string name="cancel_button_text">Отменить</string>
+    <string name="done_button_text">Выполнить</string>
+    <string name="clear_status_button_text">Востановить</string>
 
     <string name="tab_flowerbedlist_text">Клумбы</string>
     <string name="tab_repeat_work_text">Работы</string>

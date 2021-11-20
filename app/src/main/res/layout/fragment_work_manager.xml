@@ -1,296 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/default_padding">
+        android:theme="@style/Theme.MyGarden.AppBarOverlay">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="@dimen/progress_size"
-            android:layout_height="@dimen/progress_size"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:indeterminateTint="@color/purple_200" />
-
-        <EditText
-            android:id="@+id/name"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:inputType="text"
-            android:textAppearance="@style/Text.body"
-            android:hint="@string/work_name_hint"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:importantForAutofill="no" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.MyGarden.PopupOverlay" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:hint="@string/work_description_hint"
-            android:textAppearance="@style/Text.body"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            android:importantForAutofill="no"
-            android:inputType="text" />
-
-        <CheckBox
-            android:id="@+id/checkBoxNoNotification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/work_no_notification_hint"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description" />
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="96dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/notificationLayout"
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkBoxNoNotification">
+            android:paddingHorizontal="@dimen/default_padding"
+            android:layout_marginTop="@dimen/default_margin">
 
-            <TextView
-                android:id="@+id/notificationDayBefore"
+            <CheckBox
+                android:id="@+id/checkBoxNoNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/work_notification_before_hint"
-                android:textAppearance="@style/Text.strong"
+                android:layout_marginTop="@dimen/space_16"
+                android:visibility="gone"
+                android:text="@string/work_no_notification_hint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/notificationDayCount"
-                app:layout_constraintBottom_toBottomOf="@id/notificationDayCount"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@id/description" />
 
-            <EditText
-                android:id="@+id/notificationDayCount"
-                android:layout_width="40dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/planDate"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginHorizontal="@dimen/default_margin"
-                app:layout_constraintStart_toEndOf="@id/notificationDayBefore"
-                app:layout_constraintTop_toTopOf="parent"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textAppearance="@style/Text.strong"
+                android:hint="@string/work_plan_date_hint"
                 android:importantForAutofill="no"
-                android:maxLines="1" />
-
-            <TextView
-                android:id="@+id/notificationDayAfter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginHorizontal="@dimen/default_margin"
-                app:layout_constraintStart_toEndOf="@id/notificationDayCount"
-                app:layout_constraintBottom_toBottomOf="@id/notificationDayCount"
-                app:layout_constraintTop_toTopOf="@id/notificationDayCount"
-                android:text="@string/work_notification_after_hint"
-                android:textAppearance="@style/Text.strong"
-                android:importantForAutofill="no" />
-
-            <TextView
-                android:id="@+id/notificationTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/work_notification_time_hint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/notificationHour"
-                app:layout_constraintBottom_toBottomOf="@id/notificationHour"
-                android:textAppearance="@style/Text.strong"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@id/switchWorkType"
+                app:shapeAppearance="?attr/shapeAppearanceMediumComponent">
 
-            <EditText
-                android:id="@+id/notificationHour"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginHorizontal="@dimen/default_margin"
-                app:layout_constraintStart_toEndOf="@id/notificationTime"
-                app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textAppearance="@style/Text.strong"
-                android:importantForAutofill="no" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:longClickable="false"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:textIsSelectable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/notificationTimeDivider"
+            <ImageView
+                android:id="@+id/workStatusImageView"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:src="@drawable/status_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/planDate"
+                app:layout_constraintBottom_toBottomOf="@id/planDate"
+                tools:src="@drawable/ic_status_done_colored" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/originalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginHorizontal="@dimen/default_margin"
-                app:layout_constraintStart_toEndOf="@id/notificationHour"
-                app:layout_constraintTop_toTopOf="@id/notificationHour"
-                app:layout_constraintBottom_toBottomOf="@id/notificationHour"
-                android:text="@string/work_time_divider_hint"
-                android:textAppearance="@style/Text.strong"
-                android:importantForAutofill="no" />
+                style="@style/Widget.MaterialComponents.Button"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:text="@string/go_to_origin_work"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/planDate" />
 
-            <EditText
-                android:id="@+id/notificationMinute"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginHorizontal="@dimen/default_margin"
-                app:layout_constraintStart_toEndOf="@id/notificationTimeDivider"
-                app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textAppearance="@style/Text.strong"
-                android:importantForAutofill="no" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/textViewSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/work_periodic_hint"
-            android:textAppearance="@style/Text.strong"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notificationLayout"
-            app:layout_constraintTop_toTopOf="@id/switchWorkType"
-            app:layout_constraintBottom_toBottomOf="@id/switchWorkType" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchWorkType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:gravity="start"
-            android:checked="true"
-            android:theme="@style/Theme.MyGarden.Switch"
-            app:layout_constraintStart_toEndOf="@id/textViewSwitch"
-            app:layout_constraintTop_toBottomOf="@id/notificationLayout"
-            android:importantForAutofill="no" />
-
-        <EditText
-            android:id="@+id/planDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:hint="@string/work_plan_date_hint"
-            android:ems="10"
-            android:inputType="date"
-            android:textIsSelectable="true"
-            android:longClickable="false"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_calendar"
-            android:drawableTint="@color/colorPrimary"
-            android:textAppearance="@style/Text.body"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/switchWorkType"
-            android:importantForAutofill="no" />
-
-        <LinearLayout
-            android:id="@+id/scheduleLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/planDate"
-            android:background="@drawable/bg_square"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/scheduleHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/schedule_header_text"
-                android:layout_margin="@dimen/default_margin"
-                android:textAppearance="@style/Text.header"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/progress_size"
+                android:layout_height="@dimen/progress_size"
+                android:indeterminateTint="@color/colorLoader"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/scheduleRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/scheduleHeader" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingButtonAddSchedule"
+            <CheckBox
+                android:id="@+id/switchWorkType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/ic_add"
-                app:fabSize="normal"
-                android:layout_margin="@dimen/default_margin"
-                android:backgroundTint="@color/color_blue"
-                app:tint="@color/white"
-                android:layout_gravity="bottom|end"
-                tools:ignore="ContentDescription"
-                app:layout_constraintBottom_toBottomOf="@id/scheduleRecyclerView" />
-        </LinearLayout>
+                android:layout_marginTop="@dimen/space_16"
+                android:text="@string/work_periodic_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notificationLayout" />/>
 
-        <Button
-            android:id="@+id/originalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/go_to_origin_work"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scheduleLayout"
-            android:foreground="?android:attr/selectableItemBackground" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/notificationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxNoNotification">
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/save_button_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/originalButton"
-            android:foreground="?android:attr/selectableItemBackground" />
+                <TextView
+                    android:id="@+id/notificationDayBefore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:importantForAutofill="no"
+                    android:text="@string/work_notification_before_hint"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintBottom_toBottomOf="@id/notificationDayCount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/notificationDayCount" />
 
-        <Button
-            android:id="@+id/doneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginStart="@dimen/space_8"
-            android:text="Выполнить"
-            app:layout_constraintStart_toEndOf="@id/saveButton"
-            app:layout_constraintTop_toBottomOf="@id/scheduleLayout"
-            android:foreground="?android:attr/selectableItemBackground" />
+                <TextView
+                    android:id="@+id/notificationDayAfter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:importantForAutofill="no"
+                    android:text="@string/work_notification_after_hint"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintBottom_toBottomOf="@id/notificationDayCount"
+                    app:layout_constraintStart_toEndOf="@id/notificationDayCount"
+                    app:layout_constraintTop_toTopOf="@id/notificationDayCount" />
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginStart="@dimen/space_8"
-            android:text="Отменить"
-            app:layout_constraintStart_toEndOf="@id/doneButton"
-            app:layout_constraintTop_toBottomOf="@id/scheduleLayout"
-            android:foreground="?android:attr/selectableItemBackground" />
+                <TextView
+                    android:id="@+id/notificationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:importantForAutofill="no"
+                    android:text="@string/work_notification_time_hint"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintBottom_toBottomOf="@id/notificationHour"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/notificationHour" />
 
-        <Button
-            android:id="@+id/clearStatusButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginStart="@dimen/space_8"
-            android:text="Очистить статус"
-            app:layout_constraintStart_toEndOf="@id/saveButton"
-            app:layout_constraintTop_toBottomOf="@id/cancelButton"
-            android:foreground="?android:attr/selectableItemBackground" />
+                <TextView
+                    android:id="@+id/notificationTimeDivider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_4"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:importantForAutofill="no"
+                    android:text="@string/work_time_divider_hint"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    app:layout_constraintBottom_toBottomOf="@id/notificationHour"
+                    app:layout_constraintStart_toEndOf="@id/notificationHour"
+                    app:layout_constraintTop_toTopOf="@id/notificationHour" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/notificationHour"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:layout_marginTop="@dimen/default_margin"
+                    app:boxBackgroundColor="@color/colorBackgroundEditText"
+                    app:layout_constraintStart_toEndOf="@id/notificationTime"
+                    app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
+                    app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
-</ScrollView>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textAlignment="center"
+                        tools:text="15" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/notificationDayCount"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:layout_marginTop="@dimen/space_8"
+                    app:boxBackgroundColor="@color/colorBackgroundEditText"
+                    app:layout_constraintStart_toEndOf="@id/notificationDayBefore"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textAlignment="center"
+                        tools:text="15" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/notificationMinute"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="@dimen/space_4"
+                    android:layout_marginTop="@dimen/default_margin"
+                    app:boxBackgroundColor="@color/colorBackgroundEditText"
+                    app:layout_constraintStart_toEndOf="@id/notificationTimeDivider"
+                    app:layout_constraintTop_toBottomOf="@id/notificationDayCount"
+                    app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textAlignment="center"
+                        tools:text="15" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/scheduleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/planDate">
+
+                <ImageButton
+                    android:id="@+id/buttonAddSchedule"
+                    android:layout_width="@dimen/button_large_size"
+                    android:layout_height="@dimen/button_large_size"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="@dimen/space_2"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_plus"
+                    app:layout_constraintStart_toEndOf="@id/scheduleHeader"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/scheduleHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/space_2"
+                    android:text="@string/schedule_header_text"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintBottom_toBottomOf="@id/buttonAddSchedule"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/buttonAddSchedule" />
+
+                <View
+                    android:id="@+id/scheduleDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/space_2"
+                    android:layout_marginTop="@dimen/space_8"
+                    android:background="@drawable/recycleview_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/buttonAddSchedule" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/scheduleRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/scheduleDivider" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:hint="@string/work_name_hint"
+                app:errorEnabled="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Полив" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:hint="@string/work_description_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:shapeAppearance="?attr/shapeAppearanceMediumComponent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="с удобрением" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:backgroundTint="?attr/colorPrimary"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/save_button_text"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_gravity="bottom|start"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/clearStatusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/clear_status_button_text"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_gravity="bottom|end"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/doneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/done_button_text"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_gravity="bottom|end"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:backgroundTint="?attr/colorError"
+        app:tint="?attr/colorOnPrimary"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_status_canceled"
+        android:scaleType="fitCenter"
+        android:textColor="?attr/colorOnPrimary"
+        app:fabSize="normal"
+        android:layout_gravity="bottom|end"
+        tools:ignore="ContentDescription" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

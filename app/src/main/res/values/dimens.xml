@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="button_size">32dp</dimen>
+    <dimen name="button_large_size">48dp</dimen>
 
     <dimen name="space_2">2dp</dimen>
     <dimen name="space_4">4dp</dimen>
@@ -25,5 +26,10 @@
 
     <dimen name="image_star_height">50dp</dimen>
     <dimen name="image_star_width">50dp</dimen>
+    <dimen name="expanded_tool_bar_height">200dp</dimen>
+
+    <dimen name="floatting_button_bottom_margin">128dp</dimen>
+    <dimen name="card_height">64dp</dimen>
+    <dimen name="calendar_card_size">56dp</dimen>
 
 </resources>

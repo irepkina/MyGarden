@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -48,7 +49,29 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
             }
         }.attach()
 
+        initToolBar()
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        currentPlantName = ""
+    }
+
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+
+            actionBar?.setDisplayHomeAsUpEnabled(true)
+            actionBar?.setDisplayShowHomeEnabled(true)
+
+            binding.collapsingToolbar.title = currentPlantName
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     private fun readArgument() {
@@ -67,7 +90,11 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
             else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
 
-        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId, plantId = $plantId")
+        currentPlantName = arguments?.getString(CAPTION) ?: ""
+        Log.d(
+            TAG,
+            "readArguments() success, flowerbedId = $flowerbedId, plantId = $plantId, currentPlanName = $currentPlantName"
+        )
     }
 
     override fun updatePlantId(plantId: Long) {
@@ -76,21 +103,25 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
     }
 
     companion object {
+        var currentPlantName = ""
+
         /**
          * Создает фрагмент для редактирования растения
          * @param flowerbedId идентификатор клумбы
          * @param plantId идентификатор растения
+         * @param plantName наименование растения
          */
-        fun newInstanceUpdate(flowerbedId: Long, plantId: Long): PlantFragment {
+        fun newInstanceUpdate(flowerbedId: Long, plantId: Long, plantName: String): PlantFragment {
             Log.d(
                 TAG,
-                "newInstanceUpdate() called with: flowerbedId = $flowerbedId, plantId = $plantId"
+                "newInstanceUpdate() called with: flowerbedId = $flowerbedId, plantId = $plantId, plantName = $plantName"
             )
             return PlantFragment().apply {
                 arguments = Bundle().apply {
                     putLong(FLOWERBED_ID, flowerbedId)
                     putLong(PLANT_ID, plantId)
                     putString(MODE, MODE_UPDATE)
+                    putString(CAPTION, plantName)
                 }
             }
         }
@@ -103,6 +134,7 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
                 arguments = Bundle().apply {
                     putLong(FLOWERBED_ID, flowerbedId)
                     putString(MODE, MODE_INSERT)
+                    putString(CAPTION, context?.getString(R.string.new_plant_caption))
                 }
             }
         }
@@ -118,6 +150,7 @@ interface PlantFragmentIntf {
 private const val TAG = "${Const.APP_TAG}.PlantFragment"
 private const val FLOWERBED_ID = "flowerbedId"
 private const val PLANT_ID = "plantId"
+private const val CAPTION = "caption"
 private const val MODE = "mode"
 private const val MODE_INSERT = "insert"
 private const val MODE_UPDATE = "update"

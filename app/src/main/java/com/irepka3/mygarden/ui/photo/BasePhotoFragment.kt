@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +29,7 @@ import com.irepka3.mygarden.util.Const
 abstract class BasePhotoFragment : Fragment(), BasePhotoAdapter.BasePhotoAdapterCallback {
     private lateinit var binding: FragmentPhotoBinding
 
+    protected var caption = ""
     private val adapter = BasePhotoAdapter(this)
 
     protected val viewModel: BasePhotoViewModel by viewModels {
@@ -74,7 +76,24 @@ abstract class BasePhotoFragment : Fragment(), BasePhotoAdapter.BasePhotoAdapter
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.photoRecyclerView)
 
+        initToolBar()
+
         return binding.root
+    }
+
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+            actionBar?.title = caption
+
+            actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
+            actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     override fun onChangedSelected(photoId: Long) {

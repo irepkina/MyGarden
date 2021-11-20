@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
     }
 
     private fun initToolBar() {
+        /*
         setSupportActionBar(binding.toolbar)
         actionBar = getSupportActionBar()
         actionBar?.setDisplayHomeAsUpEnabled(false)
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        */
     }
 
     override fun showMainPage() {
@@ -52,27 +54,37 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
     }
 
     override fun setCaption(caption: String) {
+        /*
         val actionBar = supportActionBar
         actionBar?.title = caption
         actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
         actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
+        */
     }
 
-    override fun showFlowerbedFragment(flowerbedId: Long?) {
+    override fun showFlowerbedFragment(flowerbedId: Long?, flowerbedName: String?) {
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.container,
-                if (flowerbedId !== null) FlowerbedFragment.newInstanceUpdate(flowerbedId) else
+                if (flowerbedId !== null) FlowerbedFragment.newInstanceUpdate(
+                    flowerbedId,
+                    flowerbedName ?: ""
+                ) else
                     FlowerbedFragment.newInstanceInsert()
             )
             .addToBackStack(null)
             .commit()
     }
 
-    override fun showPlantFragment(flowerbedId: Long, plantId: Long?) {
+    override fun showPlantFragment(flowerbedId: Long, plantId: Long?, plantName: String?) {
         this.supportFragmentManager.beginTransaction()
-            .replace(R.id.container,
-                if (plantId !== null) PlantFragment.newInstanceUpdate(flowerbedId = flowerbedId, plantId = plantId) else
+            .replace(
+                R.id.container,
+                if (plantId !== null) PlantFragment.newInstanceUpdate(
+                    flowerbedId = flowerbedId,
+                    plantId = plantId,
+                    plantName ?: ""
+                ) else
                     PlantFragment.newInstanceInsert(flowerbedId)
             )
             .addToBackStack(null)
@@ -95,7 +107,7 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
                     plantId = plantId,
                     photoPosition
                 ),
-                "FragmentPlantPhoto"
+                null
             )
             .addToBackStack(null)
             .commit()
@@ -125,15 +137,17 @@ interface MainActivityIntf {
     /**
      * Показать фрагмент с карточкой клумбы
      * @param flowerbedId идентификатор клумбы
+     * @param flowerbedName название клумбы
      */
-    fun showFlowerbedFragment(flowerbedId: Long?)
+    fun showFlowerbedFragment(flowerbedId: Long?, flowerbedName: String?)
 
     /**
      * Показать фрагмент с растениями
      * @param flowerbedId идентификатор клумбы
      * @param plantId идентификатор растения
+     * @param plantName название растения
      */
-    fun showPlantFragment(flowerbedId: Long, plantId: Long?)
+    fun showPlantFragment(flowerbedId: Long, plantId: Long?, plantName: String?)
 
     /**
      * Показать фрагмент фото клумбы

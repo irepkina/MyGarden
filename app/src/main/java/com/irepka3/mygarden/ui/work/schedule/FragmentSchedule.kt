@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.databinding.FragmentScheduleBinding
-import com.irepka3.mygarden.ui.MainActivityIntf
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.util.Const
 
@@ -32,7 +32,7 @@ class FragmentSchedule : Fragment() {
         readArguments()
         val scheduleData = schedule
 
-        (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.schedule_caption))
+        initToolBar()
 
         val months = resources.getStringArray(R.array.period_month_array)
         val spinnerMonthAdapter =
@@ -90,6 +90,21 @@ class FragmentSchedule : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+            actionBar?.title = resources.getString(R.string.schedule_caption)
+
+            actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
+            actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     private fun readArguments() {

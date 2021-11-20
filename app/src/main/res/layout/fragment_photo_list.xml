@@ -12,7 +12,7 @@
         android:layout_width="@dimen/progress_size"
         android:layout_height="@dimen/progress_size"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/purple_200"/>
+        android:indeterminateTint="@color/colorLoader" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photoRecyclerView"
@@ -25,10 +25,10 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
         app:fabSize="normal"
-        android:layout_margin="@dimen/default_margin"
-        android:backgroundTint="@color/color_blue"
+        android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_gravity="bottom|right"
         app:tint="@color/white"
-        android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,9 +37,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_delete"
         app:fabSize="normal"
-        android:layout_margin="@dimen/default_margin"
-        android:backgroundTint="@color/color_blue"
+        android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_gravity="bottom|right"
         app:tint="@color/white"
-        android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription" />
 </FrameLayout>

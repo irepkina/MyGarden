@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.irepka3.mygarden.R
+import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedPageBinding
 import com.irepka3.mygarden.util.Const.APP_TAG
 
@@ -35,39 +37,37 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
         myAdapter.setFlowerbedId(flowerbedId)
         myViewPager2.orientation  = ViewPager2.ORIENTATION_HORIZONTAL
         myViewPager2.adapter = myAdapter
-        myViewPager2.setPageTransformer( MarginPageTransformer(MARGIN))
+        myViewPager2.setPageTransformer(MarginPageTransformer(MARGIN))
 
         TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.tab_flowerbed_description_text)
-                1 -> tab.text =  getString(R.string.tab_flowerbed_plants_text)
+                1 -> tab.text = getString(R.string.tab_flowerbed_plants_text)
                 2 -> tab.text = getString(R.string.tab_flowerbed_photo_text)
             }
         }.attach()
 
+        initToolBar()
+
         return binding.root
     }
 
-    companion object {
-        /**
-         * Создает фрагмент для редактирования клумбы
-         * @param flowerbedId идентификатор клумбы         *
-         */
-        fun newInstanceUpdate(flowerbedId: Long): FlowerbedFragment {
-            return FlowerbedFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                    putString(MODE, MODE_UPDATE)
-                }
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        currentFlowerbedName = ""
+    }
 
-        /**
-         * Создает фрагмент для добавления новой клумбы
-         */
-        fun newInstanceInsert(): FlowerbedFragment {
-            return FlowerbedFragment().apply {
-                arguments = Bundle().apply { putString(MODE,  MODE_INSERT) }
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+            actionBar?.title = currentFlowerbedName
+
+            actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
+            actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
             }
         }
     }
@@ -83,6 +83,7 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
             MODE_INSERT -> flowerbedId = null
             else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
+        currentFlowerbedName = arguments?.getString(CAPTION) ?: ""
 
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
@@ -90,6 +91,40 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
     override fun updateFlowerbedId(flowerbedId: Long) {
         Log.d(TAG, "updateFlowerbedId() called with: flowerbedId = $flowerbedId")
         myAdapter.setFlowerbedId(flowerbedId)
+    }
+
+    companion object {
+        var currentFlowerbedName: String = ""
+
+        /**
+         * Создает фрагмент для редактирования клумбы
+         * @param flowerbedId идентификатор клумбы
+         * @param flowerbedName название клумбы
+         */
+        fun newInstanceUpdate(flowerbedId: Long, flowerbedName: String): FlowerbedFragment {
+            return FlowerbedFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                    putString(MODE, MODE_UPDATE)
+                    putString(CAPTION, flowerbedName)
+                }
+            }
+        }
+
+        /**
+         * Создает фрагмент для добавления новой клумбы
+         */
+        fun newInstanceInsert(): FlowerbedFragment {
+            return FlowerbedFragment().apply {
+                arguments = Bundle().apply {
+                    putString(MODE, MODE_INSERT)
+                    putString(
+                        CAPTION,
+                        dagger().getContext().getString(R.string.new_flowerbed_caption)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -102,6 +137,7 @@ interface FlowerbedFragmentIntf {
 
 private const val TAG = "${APP_TAG}.FlowerbedFragment"
 private const val FLOWERBED_ID = "flowerbedId"
+private const val CAPTION = "caption"
 private const val MODE = "mode"
 private const val MODE_INSERT = "insert"
 private const val MODE_UPDATE = "update"

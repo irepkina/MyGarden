@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -12,6 +13,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.databinding.FragmentMainPageBinding
 import com.irepka3.mygarden.util.Const
+
 
 /**
  * Created by i.repkina on 10.11.2021.
@@ -44,8 +46,26 @@ class MainPageFragment : Fragment() {
             }
         }.attach()
 
+        initToolBar()
         return binding.root
     }
+
+    private fun initToolBar() {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            val actionBar = supportActionBar
+
+            actionBar?.setDisplayHomeAsUpEnabled(false)
+            actionBar?.setDisplayShowHomeEnabled(false)
+
+            binding.collapsingToolbar.title = context?.getString(R.string.app_name)
+
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
+
 }
 
 private const val TAG = "${Const.APP_TAG}.MainPageFragment"

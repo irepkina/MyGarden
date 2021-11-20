@@ -3,6 +3,7 @@ package com.irepka3.mygarden.ui.flowerbed.photo.photo
 import android.os.Bundle
 import android.util.Log
 import com.irepka3.mygarden.dagger
+import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.photo.list.FlowerbedPhotoListViewModel
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const
@@ -28,6 +29,8 @@ class FragmentFlowerbedPhoto : BasePhotoFragment() {
         if (photoPosition < 0)
             throw IllegalStateException("Incorrect arguments: photoPosition = $photoPosition")
         Log.d(TAG, "readArguments() success, photoPosition = $photoPosition")
+
+        caption = FlowerbedFragment.currentFlowerbedName
     }
 
     override fun scrollPosition(): Int {
