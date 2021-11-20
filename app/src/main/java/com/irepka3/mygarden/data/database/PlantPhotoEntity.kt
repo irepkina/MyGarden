@@ -20,33 +20,42 @@ import androidx.room.Query
     foreignKeys = arrayOf(
         ForeignKey(
             entity = PlantEntity::class,
-            parentColumns = arrayOf("plantId"),
-            childColumns = arrayOf("plantId"),
+            parentColumns = arrayOf(PlantEntity.COLUMN_ID),
+            childColumns = arrayOf(PlantPhotoEntity.COLUMN_PLANT_ID),
             onDelete = CASCADE
         )
     ),
-    indices = arrayOf(Index("plantId"))
+    indices = arrayOf(Index(PlantPhotoEntity.COLUMN_PLANT_ID))
 )
 class PlantPhotoEntity {
     // Идентификатор фото растения
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
     var plantPhotoId: Long = 0
+
     // Идентификатор растения
     @ColumnInfo(name = COLUMN_PLANT_ID)
     var plantId: Long = 0
+
     // Uri фото растения
     @ColumnInfo(name = COLUMN_URI)
     var uri: String = ""
+
     @ColumnInfo(name = COLUMN_SELECTED)
+    //фото по умолчанию
     var selected: Boolean = false
 
-    companion object{
+    //порядок отображения в списке
+    @ColumnInfo(name = COLUMN_ORDER)
+    var order: Int? = null
+
+    companion object {
         const val TABLE_NAME = "plant_photo"
         const val COLUMN_ID = "plantPhotoId"
         const val COLUMN_PLANT_ID = "plantId"
         const val COLUMN_URI = "uri"
         const val COLUMN_SELECTED = "selected"
+        const val COLUMN_ORDER = "number"
     }
 }
 

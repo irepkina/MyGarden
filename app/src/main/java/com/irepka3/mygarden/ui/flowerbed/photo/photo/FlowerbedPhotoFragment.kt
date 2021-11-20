@@ -3,6 +3,7 @@ package com.irepka3.mygarden.ui.flowerbed.photo.photo
 import android.os.Bundle
 import android.util.Log
 import com.irepka3.mygarden.dagger
+import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.photo.list.FlowerbedPhotoListViewModel
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const
@@ -13,9 +14,36 @@ import com.irepka3.mygarden.util.Const
  *
  * Created by i.repkina on 06.11.2021.
  */
-class FragmentFlowerbedPhoto: BasePhotoFragment() {
+class FragmentFlowerbedPhoto : BasePhotoFragment() {
     private var flowerbedId: Long = 0L
     private var photoPosition: Int = -1
+
+    override fun readArguments() {
+        Log.d(TAG, "readArguments() called, id = $id")
+        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
+        if (flowerbedId == 0L)
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
+        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
+        photoPosition = arguments?.getInt(PHOTO_POSITION) ?: 1
+
+        if (photoPosition < 0)
+            throw IllegalStateException("Incorrect arguments: photoPosition = $photoPosition")
+        Log.d(TAG, "readArguments() success, photoPosition = $photoPosition")
+
+        caption = FlowerbedFragment.currentFlowerbedName
+    }
+
+    override fun scrollPosition(): Int {
+        return photoPosition
+    }
+
+    override fun createViewModel(): BasePhotoViewModel {
+        return FlowerbedPhotoListViewModel(
+            flowerbedId,
+            dagger().getFileInteractor(),
+            dagger().getFlowerbedPhotoInteractor()
+        )
+    }
 
     companion object {
         /**
@@ -31,31 +59,6 @@ class FragmentFlowerbedPhoto: BasePhotoFragment() {
                 }
             }
         }
-    }
-
-    override fun readArguments() {
-        Log.d(TAG, "readArguments() called, id = $id")
-        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
-        if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-        Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
-        photoPosition = arguments?.getInt(PHOTO_POSITION) ?: 1
-
-        if (photoPosition < 0)
-            throw Exception("Incorrect arguments: photoPosition = $photoPosition")
-        Log.d(TAG, "readArguments() success, photoPosition = $photoPosition")
-    }
-
-    override fun scrollPosition(): Int {
-        return photoPosition
-    }
-
-    override fun createViewModel(): BasePhotoViewModel {
-        return FlowerbedPhotoListViewModel(
-            flowerbedId,
-            dagger().getFileInteractor(),
-            dagger().getFlowerbedPhotoInteractor()
-        )
     }
 }
 

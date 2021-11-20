@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/colorWorkCard"
+    style="@style/Theme.MyGarden.CardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_height"
+        android:layout_marginVertical="@dimen/space_8"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/viewDate"
+            android:layout_width="@dimen/calendar_card_size"
+            android:layout_height="@dimen/calendar_card_size"
+            android:layout_margin="@dimen/space_4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription"
+            android:background="@drawable/bg_calendar_card" />
+
+        <TextView
+            android:id="@+id/textViewDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/viewDate"
+            app:layout_constraintStart_toStartOf="@id/viewDate"
+            app:layout_constraintEnd_toEndOf="@id/viewDate"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/colorAccentText"
+            tools:ignore="ContentDescription"
+            android:layout_marginTop="@dimen/space_4"
+            tools:text="17" />
+
+        <TextView
+            android:id="@+id/textViewWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewDay"
+            app:layout_constraintEnd_toEndOf="@id/viewDate"
+            app:layout_constraintStart_toStartOf="@id/viewDate"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorAccentText"
+            tools:ignore="ContentDescription"
+            tools:text="Вт" />
+
+        <TextView
+            android:id="@+id/textViewWorkName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_4"
+            android:maxLines="2"
+            app:layout_constraintStart_toEndOf="@id/viewDate"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Наименование работы" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textViewWorkDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginStart="@dimen/space_16"
+            android:maxLines="6"
+            app:layout_constraintStart_toEndOf="@id/viewDate"
+            app:layout_constraintTop_toBottomOf="@id/textViewWorkName"
+            tools:text="Описание работы"
+            android:textColor="?android:textColorSecondary" />
+
+        <ImageView
+            android:id="@+id/imageViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@drawable/status_selector"
+            android:layout_marginEnd="@dimen/default_margin" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

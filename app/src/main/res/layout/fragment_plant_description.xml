@@ -2,6 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,85 +16,110 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:indeterminateTint="@color/purple_200"/>
+        android:indeterminateTint="@color/colorLoader" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/space_24"
         android:hint="@string/plant_name_hint"
-        android:inputType="text"
-        android:textAppearance="@style/Text.strong"
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Растение 1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:inputType="text"
-        android:textAppearance="@style/Text.body"
+        android:layout_marginTop="@dimen/space_8"
         android:hint="@string/plant_description_hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name"
-        android:importantForAutofill="no" />
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Описание растения 1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/space_8"
         android:hint="@string/plant_comment_hint"
-        android:textAppearance="@style/Text.body"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/description"
-        android:importantForAutofill="no"
-        android:inputType="text" />
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Комментарий к растению 1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/space_8"
         android:hint="@string/plant_count_hint"
-        android:textAppearance="@style/Text.body"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/comment"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="5" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/plantDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
-        android:hint="@string/plant_plantDate_hint"
-        android:ems="10"
-        android:inputType="date"
-        android:textIsSelectable="true"
-        android:longClickable="false"
-        android:focusable="false"
-        android:drawableEnd="@drawable/ic_calendar"
-        android:drawableTint="@color/colorPrimary"
-        android:textAppearance="@style/Text.body"
+        android:hint="@string/work_plan_date_hint"
+        android:importantForAutofill="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/count"
-        android:importantForAutofill="no"
+        app:shapeAppearance="?attr/shapeAppearanceMediumComponent">
 
-        />
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date"
+            android:longClickable="false"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:textIsSelectable="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:backgroundTint="?attr/colorPrimary"
+        android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/save_button_text"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plantDate"
-        android:foreground="?android:attr/selectableItemBackground"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

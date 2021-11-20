@@ -10,9 +10,11 @@ package com.irepka3.mygarden.domain.model
  *
  * Created by i.repkina on 31.10.2021.
  */
-data class Flowerbed(val flowerbedId: Long? = null,
-                     val name:String = "",
-                     val description:String = "",
-                     val comment:String? = null,
-                     val uri: String? = null
+data class Flowerbed(
+    val flowerbedId: Long? = null,
+    val name: String = "",
+    val description: String = "",
+    val comment: String? = null,
+    val uri: String? = null,
+    val order: Int? = null
 )

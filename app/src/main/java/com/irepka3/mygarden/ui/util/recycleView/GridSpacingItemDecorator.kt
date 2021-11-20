@@ -1,4 +1,4 @@
-package com.irepka3.mygarden.util.recycleView
+package com.irepka3.mygarden.ui.util.recycleView
 
 import android.content.res.Resources
 import android.graphics.Rect
@@ -20,8 +20,8 @@ class GridSpacingItemDecorator(
     private val spanCount: Int,
     @DimenRes spacingDp: Int,
     private val includeEdge: Boolean
-    ): RecyclerView.ItemDecoration() {
-    private val spacing:Int
+) : RecyclerView.ItemDecoration() {
+    private val spacing: Int
 
     init {
         spacing = resources.getDimensionPixelSize(spacingDp)
@@ -35,7 +35,7 @@ class GridSpacingItemDecorator(
     ) {
         val position = parent.getChildAdapterPosition(view) // позиция элемента
         val column = position % spanCount // колонка
-        // вычисляем размер колонки, взависимости от того, нужно ли добавлят отступ от края
+        // вычисляем размер колонки, взависимости от того, нужно ли добавлять отступ от края
         if (includeEdge) {
             outRect.left =
                 spacing - column * spacing / spanCount

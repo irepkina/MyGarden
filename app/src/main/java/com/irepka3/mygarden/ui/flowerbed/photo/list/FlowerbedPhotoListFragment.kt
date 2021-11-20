@@ -13,28 +13,14 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  *
  * Created by i.repkina on 04.11.2021.
  */
-class FlowerbedPhotoListFragment: BasePhotoListFragment() {
+class FlowerbedPhotoListFragment : BasePhotoListFragment() {
     private var flowerbedId: Long = 0L
-
-    companion object {
-        /**
-         * Создает фрагмент со списком фотографий клумбы
-         * @param flowerbedId идентификатор клумбы         *
-         */
-        fun newInstance(flowerbedId: Long): FlowerbedPhotoListFragment {
-            return FlowerbedPhotoListFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                }
-            }
-        }
-    }
 
     override fun readArguments() {
         Log.d(TAG, "readArguments() called, id = $id")
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
         Log.d(TAG, "readArguments() success, id = $id")
     }
 
@@ -49,6 +35,20 @@ class FlowerbedPhotoListFragment: BasePhotoListFragment() {
 
     override fun onPhotoClick(photoPosition: Int) {
         (requireActivity() as MainActivityIntf).showFlowerbedPhoto(flowerbedId, photoPosition)
+    }
+
+    companion object {
+        /**
+         * Создает фрагмент со списком фотографий клумбы
+         * @param flowerbedId идентификатор клумбы         *
+         */
+        fun newInstance(flowerbedId: Long): FlowerbedPhotoListFragment {
+            return FlowerbedPhotoListFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                }
+            }
+        }
     }
 }
 

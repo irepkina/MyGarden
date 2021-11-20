@@ -15,9 +15,9 @@ import javax.inject.Inject
  *
  * Created by i.repkina on 02.11.2021.
  */
-class PlantRepositoryImpl
-@Inject constructor(private val database: AppRoomDataBase)
-    : PlantRepository {
+class PlantRepositoryImpl @Inject constructor(
+    private val database: AppRoomDataBase
+) : PlantRepository {
 
     init {
         Log.d(TAG, "init called")
@@ -25,7 +25,8 @@ class PlantRepositoryImpl
 
     override fun getPlantsByFlowerbed(flowerbedId: Long): List<Plant> {
         Log.d(TAG, "getPlantsByFlowerBed() called with: flowerbed_id = $flowerbedId")
-        return database.plantDao.getPlantsByFlowerBedId(flowerbedId)?.map { it.toDomain() } ?: emptyList()
+        return database.plantDao.getPlantsByFlowerBedId(flowerbedId)?.map { it.toDomain() }
+            ?: emptyList()
     }
 
     override fun getPlant(plantId: Long): Plant {

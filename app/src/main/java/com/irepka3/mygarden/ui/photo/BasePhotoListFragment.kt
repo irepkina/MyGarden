@@ -19,8 +19,8 @@ import com.irepka3.mygarden.R
 import com.irepka3.mygarden.databinding.FragmentPhotoListBinding
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.ui.photo.model.Photo
+import com.irepka3.mygarden.ui.util.recycleView.GridSpacingItemDecorator
 import com.irepka3.mygarden.util.Const.APP_TAG
-import com.irepka3.mygarden.util.recycleView.GridSpacingItemDecorator
 
 
 /**
@@ -28,7 +28,7 @@ import com.irepka3.mygarden.util.recycleView.GridSpacingItemDecorator
  *
  * Created by i.repkina on 07.11.2021.
  */
-abstract class BasePhotoListFragment: Fragment(),
+abstract class BasePhotoListFragment : Fragment(),
     BasePhotoListAdapter.BasePhotoListAdapterCallback {
     private lateinit var binding: FragmentPhotoListBinding
     private val adapter = BasePhotoListAdapter(this)
@@ -36,7 +36,7 @@ abstract class BasePhotoListFragment: Fragment(),
     protected val viewModel: BasePhotoViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-              return createViewModel() as T
+                return createViewModel() as T
             }
         }
     }
@@ -54,11 +54,14 @@ abstract class BasePhotoListFragment: Fragment(),
 
         // подписка на life-data view-модели
         viewModel.photoListLiveData.observe(viewLifecycleOwner) { photoList ->
-            adapter.updateItems(photoList) }
-        viewModel.progressLiveData.observe(viewLifecycleOwner) { result -> binding.progressBar.isVisible = result }
+            adapter.updateItems(photoList)
+        }
+        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
+            binding.progressBar.isVisible = result
+        }
         viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
             Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
-            Toast.makeText(this.context, error.message , Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
 
         val itemDecorator = GridSpacingItemDecorator(
@@ -86,12 +89,13 @@ abstract class BasePhotoListFragment: Fragment(),
     }
 
     // Создание контракта для выбора фото
-    private val filesChooserContract = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
-        for (uri in uriList) {
-            Log.d(TAG, "onActivityResult: uri = $uri")
-            insertPhoto(uri)
+    private val filesChooserContract =
+        registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
+            for (uri in uriList) {
+                Log.d(TAG, "onActivityResult: uri = $uri")
+                insertPhoto(uri)
+            }
         }
-    }
 
     // Чтение аргументов
     abstract fun readArguments()
@@ -117,27 +121,20 @@ abstract class BasePhotoListFragment: Fragment(),
         setFloatingButtonVisibility(editMode)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        setFloatingButtonVisibility(EditMode.Default)
-        adapter.adapterMode = EditMode.Default
-    }
-
-    private fun setFloatingButtonVisibility(editMode: EditMode){
+    private fun setFloatingButtonVisibility(editMode: EditMode) {
         if (editMode == EditMode.DeleteMode) {
             binding.floatingButtonAddPhoto.isVisible = false
             binding.floatingButtonDeletePhoto.isVisible = true
-        }
-        else {
+        } else {
             binding.floatingButtonAddPhoto.isVisible = true
             binding.floatingButtonDeletePhoto.isVisible = false
         }
-
     }
 
     abstract fun onPhotoClick(photoPosition: Int)
 }
 
 private const val TAG = "${APP_TAG}.BasePhotoListFragment"
+
 // количество столбцов в recycleview
 private const val COLUMN_COUNT = 3

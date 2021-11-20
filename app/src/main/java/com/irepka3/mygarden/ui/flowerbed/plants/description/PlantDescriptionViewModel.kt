@@ -1,6 +1,7 @@
 package com.irepka3.mygarden.ui.flowerbed.plants.description
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.irepka3.mygarden.domain.interactor.PlantInteractor
@@ -11,7 +12,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -23,23 +23,37 @@ import java.util.Locale
  *
  * Created by i.repkina on 05.11.2021..
  */
-class PlantDescriptionViewModel(private val flowerbedId: Long, private val plantId: Long?, private val interactor: PlantInteractor): ViewModel() {
+class PlantDescriptionViewModel(
+    private val flowerbedId: Long,
+    private val plantId: Long?,
+    private val interactor: PlantInteractor
+) : ViewModel() {
+
+    private val _plantLiveData = MutableLiveData<Plant>()
+
     /**
      * LiveData клумбы
      */
-    val plantLiveData = MutableLiveData<Plant>()
+    val plantLiveData: LiveData<Plant> = _plantLiveData
+
+    private val _errorsLiveData = MutableLiveData<Throwable>()
+
     /**
      * LiveData для вывода ошибки
      */
-    val errorsLiveData = MutableLiveData<Throwable>()
+    val errorsLiveData: LiveData<Throwable> = _errorsLiveData
+
+    private val _progressLiveData = MutableLiveData<Boolean>()
+
     /**
      * LiveData для отображения индикатора загрузки данных
      */
-    val progressLiveData = MutableLiveData<Boolean>()
+    val progressLiveData: LiveData<Boolean> = _progressLiveData
 
     private val compositeDisposable = CompositeDisposable()
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
     /**
      * Загрузка данных во view-модель при создании
      */
@@ -52,7 +66,7 @@ class PlantDescriptionViewModel(private val flowerbedId: Long, private val plant
      */
     private fun loadData(){
         Log.d(TAG, "loadData() called plantId = $plantId")
-        progressLiveData.value = true
+        _progressLiveData.value = true
         compositeDisposable.add(
             Single.fromCallable {
                 if (plantId == null) {
@@ -65,10 +79,10 @@ class PlantDescriptionViewModel(private val flowerbedId: Long, private val plant
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
-                    { plant -> plantLiveData.value = plant },
-                    { error ->  errorsLiveData.value = error }
+                    { plant -> _plantLiveData.value = plant },
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }
@@ -100,29 +114,47 @@ class PlantDescriptionViewModel(private val flowerbedId: Long, private val plant
         val date = try {
             if (!plantDate.isNullOrBlank()) dateFormat.parse(plantDate).time else null
         } catch (e: Exception) {
-            errorsLiveData.value = e
+            _errorsLiveData.value = e
             return
         }
 
-        progressLiveData.value = true
+        _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
                 if (plantId == null) {
                     Log.d(TAG, "onSaveData(), insert called")
-                    val plant = Plant(flowerbedId = flowerbedId, plantId = null,  name, description, comment, count, date)
+                    val plant = Plant(
+                        flowerbedId = flowerbedId,
+                        plantId = null,
+                        name,
+                        description,
+                        comment,
+                        count,
+                        date
+                    )
                     val newPlantId = interactor.insertPlant(plant)
-                    plantLiveData.postValue(plant.copy(plantId = newPlantId))
+                    _plantLiveData.postValue(plant.copy(plantId = newPlantId))
                 } else {
                     Log.d(TAG, "onSaveData(), update called")
-                    interactor.updatePlant(Plant(flowerbedId = flowerbedId, plantId = plantId, name, description, comment, count, date))
+                    interactor.updatePlant(
+                        Plant(
+                            flowerbedId = flowerbedId,
+                            plantId = plantId,
+                            name,
+                            description,
+                            comment,
+                            count,
+                            date
+                        )
+                    )
                 }
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { progressLiveData.value = false }
+                .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     { },
-                    { error -> errorsLiveData.value = error }
+                    { error -> _errorsLiveData.value = error }
                 )
         )
     }

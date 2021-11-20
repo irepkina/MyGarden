@@ -3,15 +3,89 @@
     <string name="flowerbed_name_hint">Название клумбы</string>
     <string name="flowerbed_description_hint">Описание клумбы</string>
     <string name="flowerbed_comment_hint">Комментарий</string>
+    <string name="new_flowerbed_caption">Новая клумба</string>
 
     <string name="plant_name_hint">Название растения</string>
     <string name="plant_description_hint">Описание растения</string>
     <string name="plant_comment_hint">Комментарий</string>
     <string name="plant_count_hint">Количество экземпляров</string>
     <string name="plant_plantDate_hint">Дата посадки</string>
+    <string name="new_plant_caption">Новое растение</string>
+
+    <string name="work_name_hint">Наименование</string>
+    <string name="work_description_hint">Описание</string>
+    <string name="work_data_hint">Дата выполнения</string>
+    <string name="work_notification_before_hint">Напомнить за</string>
+    <string name="work_notification_after_hint">дней</string>
+    <string name="work_notification_time_hint">Время напоминания</string>
+    <string name="work_time_divider_hint">:</string>
+    <string name="work_no_notification_hint">Не напоминать</string>
+    <string name="work_notification_default_day">3</string>
+    <string name="work_notification_default_hour">9</string>
+    <string name="work_notification_default_minute">00</string>
+
+    <string name="work_plan_date_hint">Плановая дата</string>
+
+    <string name="work_once_hint">Однократно</string>
+    <string name="work_periodic_hint">Повторяющаяся</string>
+    <string name="period_type">Период</string>
+    <string name="new_work_caption">Новая работа</string>
+
+    <string name="no_work_name_toast_text">Наименование работы не может быть пустым. Изменение данных не будет сохранено!</string>
+
+    <string name="allert_dialog_save_button_text">Добавить</string>
+    <string name="allert_dialog_cancel_button_text">Отменить</string>
+
+    <string name="year_text_view_text">Год</string>
+    <string name="month_text_view_text">Месяц</string>
+    <string name="week_text_view_text">Неделя</string>
+    <string name="week_schedule_text">нед.</string>
+    <string name="day_text_view_text">День</string>
+
+
+    <string name="day1_text_view_text">Пн</string>
+    <string name="day2_text_view_text">Вт</string>
+    <string name="day3_text_view_text">Ср</string>
+    <string name="day4_text_view_text">Чт</string>
+    <string name="day5_text_view_text">Птн</string>
+    <string name="day6_text_view_text">Сб</string>
+    <string name="day7_text_view_text">Вск</string>
+
+    <string name="schedule_caption">Расписание</string>
+
+    <string-array name="period_month_array">
+        <item>Каждый месяц</item>
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
+
+    <string-array name="period_week_array">
+        <item>каждую неделю</item>
+        <item>первая</item>
+        <item>вторая</item>
+        <item>третья</item>
+        <item>четвертая</item>
+    </string-array>
+
+    <string name="go_to_origin_work">Перейти к расписанию</string>
 
     <string name="save_button_text">Сохранить</string>
     <string name="cancel_button_text">Отменить</string>
+    <string name="done_button_text">Выполнить</string>
+    <string name="clear_status_button_text">Востановить</string>
+
+    <string name="tab_flowerbedlist_text">Клумбы</string>
+    <string name="tab_repeat_work_text">Работы</string>
 
     <string name="tab_flowerbed_description_text">Описание</string>
     <string name="tab_flowerbed_plants_text">Растения</string>
@@ -20,4 +94,6 @@
     <string name="tab_plant_description_text">Растение</string>
     <string name="tab_plant_works_text">Работы</string>
     <string name="tab_plant_photo_text">Фото</string>
+
+    <string name="schedule_header_text">Расписание</string>
 </resources>

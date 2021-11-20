@@ -1,9 +1,9 @@
 package com.irepka3.mygarden
 
 import android.app.Application
-import com.irepka3.mygarden.di.DaggerAppComponent
+import com.irepka3.mygarden.di.AppComponent
 import com.irepka3.mygarden.di.AppProvideModule
-import com.irepka3.mygarden.di.DaggerDaggerAppComponent
+import com.irepka3.mygarden.di.DaggerAppComponent
 
 /**
  * Created by i.repkina on 07.11.2021.
@@ -11,7 +11,7 @@ import com.irepka3.mygarden.di.DaggerDaggerAppComponent
 class MyGardenApplication : Application() {
 
     companion object {
-        lateinit var daggerAppComponent: DaggerAppComponent
+        lateinit var daggerAppComponent: AppComponent
             private set
     }
 
@@ -20,9 +20,9 @@ class MyGardenApplication : Application() {
         daggerAppComponent = initDagger()
     }
 
-    private fun initDagger() = DaggerDaggerAppComponent.builder()
+    private fun initDagger() = DaggerAppComponent.builder()
         .appProvideModule(AppProvideModule(this))
         .build()
 }
 
-fun dagger(): DaggerAppComponent = MyGardenApplication.daggerAppComponent
+fun dagger(): AppComponent = MyGardenApplication.daggerAppComponent

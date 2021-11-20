@@ -1,11 +1,9 @@
 package com.irepka3.mygarden.domain.interactor
 
-import android.util.Log
 import com.irepka3.mygarden.domain.model.Flowerbed
 import com.irepka3.mygarden.domain.repository.DirRepository
 import com.irepka3.mygarden.domain.repository.FlowerbedRepository
 import com.irepka3.mygarden.util.Const.APP_TAG
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -14,18 +12,17 @@ import javax.inject.Inject
  *
  * Created by i.repkina on 01.11.2021.
  */
-class FlowerbedInteractorImpl
-@Inject constructor(
+class FlowerbedInteractorImpl @Inject constructor(
     private val flowerbedRepository: FlowerbedRepository,
     private val dirRepository: DirRepository
-    ) : FlowerbedInteractor {
+) : FlowerbedInteractor {
 
     override fun getFlowerbedAll(): List<Flowerbed> {
-        return flowerbedRepository.getFlowerbedAll()
+        return flowerbedRepository.getFlowerbedAll().sortedBy { it.order; it.flowerbedId }
     }
 
     override fun getFlowerbed(flowerbedId: Long): Flowerbed? {
-       return flowerbedRepository.getFlowerbed(flowerbedId)
+        return flowerbedRepository.getFlowerbed(flowerbedId)
     }
 
     override fun insertFlowerbed(flowerbed: Flowerbed): Long {
@@ -38,7 +35,7 @@ class FlowerbedInteractorImpl
 
     override fun deleteFlowerbed(flowerbed: Flowerbed) {
         if (flowerbed.flowerbedId == null)
-            throw Exception("Invalid flowerbedId, flowerbedId is null")
+            throw IllegalStateException("Invalid flowerbedId, flowerbedId is null")
         val file = dirRepository.getFlowerbedDir(flowerbed.flowerbedId)
         if (file.exists()) {
             file.deleteRecursively()

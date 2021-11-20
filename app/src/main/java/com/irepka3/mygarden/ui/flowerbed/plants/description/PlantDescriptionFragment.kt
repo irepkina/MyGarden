@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantDescriptionBinding
 import com.irepka3.mygarden.domain.model.Plant
+import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragmentIntf
 import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
@@ -43,6 +45,116 @@ class PlantDescriptionFragment: Fragment() {
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        Log.d(TAG, "onCreateView() called")
+        binding = FragmentPlantDescriptionBinding.inflate(inflater)
+        readArguments()
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val selectDateView = binding.plantDate
+        selectDateView.editText?.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                this.requireContext(),
+                { _, newYear, newMonth, newDay ->
+                    selectDateView.editText?.setText("$newDay.${newMonth + 1}.$newYear")
+                },
+                year, month, day
+            )
+            datePickerDialog.show()
+        }
+
+        // подписка на life-data view-модели
+        viewModel.plantLiveData.observe(viewLifecycleOwner) { plant ->
+            Log.d(TAG, "onDataChanged() called with: plant = $plant")
+            showPlant(plant)
+            if (plant.plantId != null) {
+                Log.d(
+                    TAG,
+                    "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
+                )
+                (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
+                PlantFragment.currentPlantName = plant.name
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = plant.name
+            }
+        }
+        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
+            binding.progressBar.isVisible = result
+        }
+        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
+            Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
+            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.saveButton.setOnClickListener {
+            Log.d(TAG, "onViewCreated(), setOnClickListener called")
+            savePlant()
+        }
+    }
+
+    private fun readArguments() {
+        Log.d(TAG, "readArguments() called")
+        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
+        if (flowerbedId == 0L)
+            throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")
+
+        when (val mode = arguments?.getString(MODE)) {
+            MODE_UPDATE -> {
+                plantId = arguments?.getLong(PLANT_ID) ?: 0L
+                if (plantId == 0L)
+                    throw IllegalStateException("Incorrect arguments: mode = $mode, plantId = $plantId")
+            }
+            MODE_INSERT -> plantId = null
+            else -> throw IllegalStateException("Incorrect arguments: plant mode: $mode")
+        }
+    }
+
+    private fun showPlant(plant: Plant?) {
+        binding.name.editText?.setText(plant?.name)
+        binding.description.editText?.setText(plant?.description)
+        binding.comment.editText?.setText(plant?.comment)
+        binding.count.editText?.setText(plant?.count.toString())
+
+        if (plant?.datePlant !== null) {
+            val date = Date(plant.datePlant)
+            binding.plantDate.editText?.setText(dateFormat.format(date))
+        }
+    }
+
+    private fun savePlant(){
+        viewModel.onSaveData(
+            flowerbedId = flowerbedId,
+            plantId = plantId,
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString(),
+            binding.count.editText?.text.toString().toInt(),
+            binding.plantDate.editText?.text.toString()
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onClose(
+            flowerbedId,
+            plantId,
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString(),
+            binding.count.editText?.text.toString().toInt(),
+            binding.plantDate.editText?.text.toString()
+        )
+    }
+
     companion object {
         /**
          * Создает фрагмент для редактирования описания растения
@@ -66,115 +178,10 @@ class PlantDescriptionFragment: Fragment() {
             return PlantDescriptionFragment().apply {
                 arguments = Bundle().apply {
                     putLong(FLOWERBED_ID, flowerbedId)
-                    putString(MODE,  MODE_INSERT) }
+                    putString(MODE, MODE_INSERT)
+                }
             }
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Log.d(TAG, "onCreateView() called")
-        binding = FragmentPlantDescriptionBinding.inflate(inflater)
-        readArguments()
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val selectDateView = binding.plantDate
-        selectDateView.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(this.requireContext(),
-                { _, newYear, newMonth, newDay ->
-                        selectDateView.setText("$newDay.${newMonth + 1}.$newYear")
-                },
-                year, month, day
-            )
-            datePickerDialog.show()
-        }
-
-        // подписка на life-data view-модели
-        viewModel.plantLiveData.observe(viewLifecycleOwner) { plant ->
-            Log.d(TAG, "onDataChanged() called with: plant = $plant")
-            showPlant(plant)
-            if (plant.plantId != null) {
-                Log.d(TAG,
-                    "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
-                )
-                (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
-
-            }
-        }
-        viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
-            binding.progressBar.isVisible = result
-        }
-        viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
-            Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
-        }
-
-        binding.saveButton.setOnClickListener {
-            Log.d(TAG, "onViewCreated(), setOnClickListener called")
-            savePlant()
-        }
-    }
-
-    private fun readArguments() {
-        Log.d(TAG, "readArguments() called")
-        flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
-        if (flowerbedId == 0L)
-            throw Exception("Incorrect arguments: flowerbedId = $flowerbedId")
-
-        when (val mode = arguments?.getString(MODE)) {
-            MODE_UPDATE -> {
-                plantId = arguments?.getLong(PLANT_ID) ?: 0L
-                if (plantId == 0L)
-                    throw Exception("Incorrect arguments: mode = $mode, plantId = $plantId")
-            }
-            MODE_INSERT -> plantId = null
-            else -> throw Exception("Incorrect arguments: plant mode: $mode")
-        }
-    }
-
-    private fun showPlant(plant: Plant?){
-        binding.name.setText(plant?.name)
-        binding.description.setText(plant?.description)
-        binding.comment.setText(plant?.comment)
-        binding.count.setText(plant?.count.toString())
-
-        if (plant?.datePlant !== null) {
-            val date = Date(plant.datePlant)
-            binding.plantDate.setText(dateFormat.format(date))
-        }
-    }
-
-    private fun savePlant(){
-        viewModel.onSaveData(
-            flowerbedId = flowerbedId,
-            plantId = plantId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString(),
-            binding.count.text.toString().toInt(),
-            binding.plantDate.text.toString()
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.onClose(
-            flowerbedId,
-            plantId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString(),
-            binding.count.text.toString().toInt(),
-            binding.plantDate.text.toString()
-        )
     }
 }
 

@@ -9,8 +9,10 @@ package com.irepka3.mygarden.domain.model
  *
  * Created by i.repkina on 04.11.2021.
  */
-data class FlowerbedPhoto(val flowerbedId: Long = 0,
-                          val flowerbedPhotoId: Long? = null,
-                          val uri: String = "",
-                          val selected: Boolean = false
+data class FlowerbedPhoto(
+    val flowerbedId: Long = 0,
+    val flowerbedPhotoId: Long? = null,
+    val uri: String = "",
+    val selected: Boolean = false,
+    val order: Int? = null
 )

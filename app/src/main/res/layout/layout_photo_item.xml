@@ -21,13 +21,18 @@
         app:zoomage_minScale="0.6"
         app:zoomage_maxScale="8" />
 
-    <ImageView
-        android:id="@+id/imageViewStart"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingButtonFavouritePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/star_selector"
-        android:layout_width="@dimen/image_star_width"
-        android:layout_height="@dimen/image_star_height"
-        app:layout_constraintTop_toTopOf="@id/imageViewPhoto"
+        app:fabSize="normal"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_gravity="bottom|right"
         app:layout_constraintEnd_toEndOf="@id/imageViewPhoto"
-        tools:ignore="ContentDescription"/>
+        app:layout_constraintBottom_toBottomOf="@id/imageViewPhoto"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

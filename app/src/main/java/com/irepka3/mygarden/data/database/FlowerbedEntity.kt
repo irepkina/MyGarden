@@ -3,17 +3,13 @@ package com.irepka3.mygarden.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.Delete
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Insert
+import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Relation
-import androidx.room.Transaction
 import androidx.room.Update
-import com.irepka3.mygarden.domain.model.FlowerbedPhoto
-import com.irepka3.mygarden.util.Const.APP_TAG
 
 
 /**
@@ -28,15 +24,22 @@ class FlowerbedEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_FLOWERBED_ID)
     var flowerbedId: Long = 0
+
     // название клумбы
     @ColumnInfo(name = COLUMN_NAME)
     var name: String = ""
+
     // описание клумбы
     @ColumnInfo(name = COLUMN_DESCRIPTION)
     var description: String = ""
+
     // комментарий к клумбе
     @ColumnInfo(name = COLUMN_COMMENT)
     var comment: String? = null
+
+    //порядок отображения в списке
+    @ColumnInfo(name = COLUMN_ORDER)
+    var order: Int? = null
 
     companion object {
         const val TABLE_NAME = "flowerbed"
@@ -44,6 +47,7 @@ class FlowerbedEntity {
         const val COLUMN_NAME = "name"
         const val COLUMN_DESCRIPTION = "description"
         const val COLUMN_COMMENT = "comment"
+        const val COLUMN_ORDER = "number"
     }
 }
 

@@ -29,7 +29,7 @@ class PlantAdapter(
         return pageCount
     }
 
-    fun setPlantId(plantId: Long?){
+    fun setPlantId(plantId: Long?) {
         if (this.plantId != plantId) {
             this.plantId = plantId
             pageCount = if (plantId != null) PAGE_COUNT else 1
@@ -44,23 +44,21 @@ class PlantAdapter(
         return when (position) {
             0 -> {
                 if (plantId != null)
-                    PlantDescriptionFragment.newInstanceUpdate(flowerbedId = flowerbedId, plantId = plantId)
+                    PlantDescriptionFragment.newInstanceUpdate(
+                        flowerbedId = flowerbedId,
+                        plantId = plantId
+                    )
                 else
                     PlantDescriptionFragment.newInstanceInsert(flowerbedId)
             }
-            1 ->  {
-                if (plantId == null) throw Exception("PlantId in plant can't be null")
-                // todo: Фрагмент со списком работ.newInstance(flowerbedId)
-                Fragment()
-            }
-            2 -> {
-                if (plantId == null) throw Exception("PlantId in plant can't be null")
+            1 -> {
+                if (plantId == null) throw IllegalStateException("PlantId in plant can't be null")
                 PlantPhotoListFragment.newInstance(flowerbedId = flowerbedId, plantId = plantId)
             }
-            else -> throw Exception("Invalid position = $position")
+            else -> throw IllegalStateException("Invalid position = $position")
         }
     }
 }
 
-private const val TAG ="${APP_TAG}.PlantAdapter"
-private const val PAGE_COUNT = 3
+private const val TAG = "${APP_TAG}.PlantAdapter"
+private const val PAGE_COUNT = 2

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
+import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragmentIntf
 import com.irepka3.mygarden.util.Const.APP_TAG
 
@@ -30,30 +32,6 @@ class FlowerbedDescriptionFragment(): Fragment() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return FlowerbedDescriptionViewModel(flowerbedId, dagger().getFlowerbedInteractor()) as T
-            }
-        }
-    }
-
-    companion object {
-        /**
-         * Создает фрагмент для редактирования описания клумбы
-         * @param flowerbedId идентификатор клумбы         *
-         */
-        fun newInstanceUpdate(flowerbedId: Long): FlowerbedDescriptionFragment {
-            return FlowerbedDescriptionFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(FLOWERBED_ID, flowerbedId)
-                    putString(MODE, MODE_UPDATE)
-                }
-            }
-        }
-
-        /**
-         * Создает фрагмент для добавления описания новой клумбы
-         */
-        fun newInstanceInsert(): FlowerbedDescriptionFragment {
-            return FlowerbedDescriptionFragment().apply {
-                arguments = Bundle().apply { putString(MODE,  MODE_INSERT) }
             }
         }
     }
@@ -75,11 +53,9 @@ class FlowerbedDescriptionFragment(): Fragment() {
             Log.d(TAG, "onDataChanged() called with: flowerbed = $flowerbed")
             showFlowerbed(flowerbed)
             if (flowerbed.flowerbedId != null) {
-                Log.d(
-                    TAG,
-                    "onDataChanged flowerbedId = ${flowerbed.flowerbedId}, : this.parentFragment = ${this.parentFragment}"
-                )
                 (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
+                FlowerbedFragment.currentFlowerbedName = flowerbed.name
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = flowerbed.name
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -98,9 +74,9 @@ class FlowerbedDescriptionFragment(): Fragment() {
     private fun saveFlowerbed(){
         viewModel.onSaveData(
             flowerbedId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString()
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString()
         )
     }
 
@@ -110,28 +86,53 @@ class FlowerbedDescriptionFragment(): Fragment() {
             MODE_UPDATE -> {
                 flowerbedId = arguments?.getLong(FLOWERBED_ID)
                 if (flowerbedId == 0L)
-                    throw Exception("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId" )
+                    throw IllegalStateException("Incorrect arguments: mode = $mode, flowerbedId = $flowerbedId")
             }
             MODE_INSERT -> flowerbedId = null
-            else -> throw Exception("Incorrect arguments: flowerbed mode: $mode" )
+            else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
 
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
 
-    private fun showFlowerbed(flowerbed: Flowerbed?){
-        binding.name.setText(flowerbed?.name)
-        binding.description.setText(flowerbed?.description)
-        binding.comment.setText(flowerbed?.comment)
+    private fun showFlowerbed(flowerbed: Flowerbed?) {
+        binding.name.editText?.setText(flowerbed?.name)
+        binding.description.editText?.setText(flowerbed?.description)
+        binding.comment.editText?.setText(flowerbed?.comment)
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel.onClose(flowerbedId,
-            binding.name.text.toString(),
-            binding.description.text.toString(),
-            binding.comment.text.toString()
+        viewModel.onClose(
+            flowerbedId,
+            binding.name.editText?.text.toString(),
+            binding.description.editText?.text.toString(),
+            binding.comment.editText?.text.toString()
         )
+    }
+
+    companion object {
+        /**
+         * Создает фрагмент для редактирования описания клумбы
+         * @param flowerbedId идентификатор клумбы         *
+         */
+        fun newInstanceUpdate(flowerbedId: Long): FlowerbedDescriptionFragment {
+            return FlowerbedDescriptionFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(FLOWERBED_ID, flowerbedId)
+                    putString(MODE, MODE_UPDATE)
+                }
+            }
+        }
+
+        /**
+         * Создает фрагмент для добавления описания новой клумбы
+         */
+        fun newInstanceInsert(): FlowerbedDescriptionFragment {
+            return FlowerbedDescriptionFragment().apply {
+                arguments = Bundle().apply { putString(MODE, MODE_INSERT) }
+            }
+        }
     }
 }
 

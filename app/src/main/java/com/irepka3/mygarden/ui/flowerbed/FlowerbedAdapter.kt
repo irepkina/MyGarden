@@ -8,7 +8,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.irepka3.mygarden.ui.flowerbed.description.FlowerbedDescriptionFragment
 import com.irepka3.mygarden.ui.flowerbed.photo.list.FlowerbedPhotoListFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.list.PlantListFragment
-import com.irepka3.mygarden.util.Const
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
@@ -48,14 +47,14 @@ class FlowerbedAdapter(
                     FlowerbedDescriptionFragment.newInstanceInsert()
             }
             1 ->  {
-                if (flowerbedId == null) throw Exception("FlowerBedId in plant can't be null")
+                if (flowerbedId == null) throw IllegalStateException("FlowerBedId in plant can't be null")
                 PlantListFragment.newInstance(flowerbedId)
             }
             2 -> {
-                if (flowerbedId == null) throw Exception("FlowerBedId in photo can't be null")
+                if (flowerbedId == null) throw IllegalStateException("FlowerBedId in photo can't be null")
                 FlowerbedPhotoListFragment.newInstance(flowerbedId)
             }
-            else -> throw Exception("Invalid position = $position")
+            else -> throw IllegalStateException("Invalid position = $position")
         }
     }
 }
