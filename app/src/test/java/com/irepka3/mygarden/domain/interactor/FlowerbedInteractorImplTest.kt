@@ -1,7 +1,6 @@
-package com.irepka3.mygarden.domain
+package com.irepka3.mygarden.domain.interactor
 
-import com.irepka3.mygarden.domain.interactor.FlowerbedInteractorImpl
-import com.irepka3.mygarden.domain.model.Flowerbed
+import com.irepka3.mygarden.common.factory.FlowerbedFactory
 import com.irepka3.mygarden.domain.repository.DirRepository
 import com.irepka3.mygarden.domain.repository.FlowerbedRepository
 import io.mockk.every
@@ -9,6 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.File
 
 
 /**
@@ -17,8 +17,8 @@ import org.junit.Test
  * Created by i.repkina on 15.11.2021.
  */
 class FlowerbedInteractorImplTest {
-    private val flowerbedRepository = mockk<FlowerbedRepository>(relaxed = true)
-    private val dirRepository = mockk<DirRepository>(relaxed = true)
+    private val flowerbedRepository = mockk<FlowerbedRepository>(relaxUnitFun = true)
+    private val dirRepository = mockk<DirRepository>(relaxUnitFun = true)
 
     private val underTest = FlowerbedInteractorImpl(flowerbedRepository, dirRepository)
 
@@ -26,12 +26,12 @@ class FlowerbedInteractorImplTest {
     fun getFlowerbedAll() {
         // prepare
         val expected = listOf(
-            Flowerbed(flowerbedId = 1),
-            Flowerbed(flowerbedId = 2)
+            FlowerbedFactory.createFlowerbed(1),
+            FlowerbedFactory.createFlowerbed(2)
         )
         val repositoryResult = listOf(
-            Flowerbed(flowerbedId = 2),
-            Flowerbed(flowerbedId = 1)
+            FlowerbedFactory.createFlowerbed(2),
+            FlowerbedFactory.createFlowerbed(1)
         )
         every { flowerbedRepository.getFlowerbedAll() } returns repositoryResult
 
@@ -47,7 +47,7 @@ class FlowerbedInteractorImplTest {
     @Test
     fun getFlowerbed() {
         // prepare
-        val expected = Flowerbed(flowerbedId = 7)
+        val expected = FlowerbedFactory.createFlowerbed(7)
         every { flowerbedRepository.getFlowerbed(7) } returns expected
 
         // do
@@ -61,7 +61,7 @@ class FlowerbedInteractorImplTest {
     @Test
     fun insertFlowerbed() {
         // prepare
-        val flowerbed = Flowerbed(flowerbedId = null)
+        val flowerbed = FlowerbedFactory.createFlowerbed(null)
         val expected = 1L
         every { flowerbedRepository.insertFlowerbed(flowerbed) } returns expected
 
@@ -76,7 +76,7 @@ class FlowerbedInteractorImplTest {
     @Test
     fun updateFlowerbed() {
         // prepare
-        val flowerbed = Flowerbed(flowerbedId = null)
+        val flowerbed = FlowerbedFactory.createFlowerbed(null)
 
         // do
         underTest.updateFlowerbed(flowerbed)
@@ -88,19 +88,25 @@ class FlowerbedInteractorImplTest {
     @Test
     fun deleteFlowerbed() {
         // prepare
-        val flowerbed = Flowerbed(flowerbedId = 1)
+        val flowerbedId = 1L
+        val flowerbed = FlowerbedFactory.createFlowerbed(flowerbedId)
+        val file = mockk<File>(relaxed = true) {
+            every { exists() } returns true
+        }
+        every { dirRepository.getFlowerbedDir(flowerbedId) } returns file
 
         // do
         underTest.deleteFlowerbed(flowerbed)
 
         // check
-        verify { dirRepository.getFlowerbedDir(1) }
+        verify { dirRepository.getFlowerbedDir(flowerbedId) }
+        verify { file.deleteRecursively() }
     }
 
     @Test(expected = IllegalStateException::class)
     fun deleteFlowerbedEmptyId() {
         // prepare
-        val flowerbed = Flowerbed(flowerbedId = null)
+        val flowerbed = FlowerbedFactory.createFlowerbed(null)
 
         // do
         underTest.deleteFlowerbed(flowerbed)

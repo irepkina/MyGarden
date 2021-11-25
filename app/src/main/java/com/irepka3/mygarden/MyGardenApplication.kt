@@ -6,6 +6,8 @@ import com.irepka3.mygarden.di.AppProvideModule
 import com.irepka3.mygarden.di.DaggerAppComponent
 
 /**
+ * Класс приложения
+ *
  * Created by i.repkina on 07.11.2021.
  */
 class MyGardenApplication : Application() {
@@ -25,4 +27,5 @@ class MyGardenApplication : Application() {
         .build()
 }
 
+// Возвращает экземпляр компонента dagger-а
 fun dagger(): AppComponent = MyGardenApplication.daggerAppComponent

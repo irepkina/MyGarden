@@ -16,7 +16,8 @@ import androidx.room.Query
  *
  * Created by i.repkina on 04.11.2021.
  */
-@Entity(tableName = FlowerbedPhotoEntity.TABLE_NAME,
+@Entity(
+    tableName = FlowerbedPhotoEntity.TABLE_NAME,
     foreignKeys = arrayOf(
         ForeignKey(
             entity = FlowerbedEntity::class,
@@ -27,28 +28,29 @@ import androidx.room.Query
     ),
     indices = arrayOf(Index(FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID))
 )
-class FlowerbedPhotoEntity {
+data class FlowerbedPhotoEntity(
     // Идентификатор фото клумбы
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
-    var flowerbedPhotoId: Long = 0
+    var flowerbedPhotoId: Long = 0,
 
     // Идентификатор клумбы
     @ColumnInfo(name = COLUMN_FLOWERBED_ID)
-    var ownerFlowerbedId: Long = 0
+    var ownerFlowerbedId: Long = 0,
 
     // Uri фото клумбы
     @ColumnInfo(name = COLUMN_URI)
-    var uri: String = ""
+    var uri: String = "",
 
     // Фото клумбы по умолчанию
     @ColumnInfo(name = COLUMN_SELECTED)
-    var selected: Boolean = false
+    var selected: Boolean = false,
 
     //порядок отображения в списке
     @ColumnInfo(name = COLUMN_ORDER)
     var order: Int? = null
 
+) {
     companion object {
         const val TABLE_NAME = "flowerbed_photo"
         const val COLUMN_ID = "flowerbedPhotoId"
@@ -63,7 +65,7 @@ class FlowerbedPhotoEntity {
  * Интерфейс для доступа к таблице Фотографии клумбы
  */
 @Dao
-interface FlowerbedPhotoEntityDao{
+interface FlowerbedPhotoEntityDao {
     // Получить список всех фото клумбы
     @Query("SELECT * FROM ${FlowerbedPhotoEntity.TABLE_NAME} WHERE ${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} = :flowerbedId")
     fun getAllByFlowerbedId(flowerbedId: Long): List<FlowerbedPhotoEntity>?
@@ -77,10 +79,12 @@ interface FlowerbedPhotoEntityDao{
     fun delete(photo: List<FlowerbedPhotoEntity>)
 
     // Установить фото по умолчанию для клумбы
-    @Query("UPDATE  ${FlowerbedPhotoEntity.TABLE_NAME} " +
-            "SET selected = case when ${FlowerbedPhotoEntity.COLUMN_ID} = :flowerbedPhotoId then " +
-            "case when ${FlowerbedPhotoEntity.COLUMN_SELECTED} = 1 then 0 else 1 end else 0 end " +
-            "WHERE ${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} = :flowerbedId ")
+    @Query(
+        "UPDATE  ${FlowerbedPhotoEntity.TABLE_NAME} " +
+                "SET selected = case when ${FlowerbedPhotoEntity.COLUMN_ID} = :flowerbedPhotoId then " +
+                "case when ${FlowerbedPhotoEntity.COLUMN_SELECTED} = 1 then 0 else 1 end else 0 end " +
+                "WHERE ${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} = :flowerbedId "
+    )
     fun updateSelectedPhoto(flowerbedId: Long, flowerbedPhotoId: Long)
 }
 

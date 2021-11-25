@@ -19,28 +19,28 @@ import androidx.room.Update
  * Created by i.repkina on 31.10.2021.
  */
 @Entity(tableName = FlowerbedEntity.TABLE_NAME)
-class FlowerbedEntity {
+data class FlowerbedEntity(
     // идентификатор клумбы
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_FLOWERBED_ID)
-    var flowerbedId: Long = 0
+    var flowerbedId: Long = 0,
 
     // название клумбы
     @ColumnInfo(name = COLUMN_NAME)
-    var name: String = ""
+    var name: String = "",
 
     // описание клумбы
     @ColumnInfo(name = COLUMN_DESCRIPTION)
-    var description: String = ""
+    var description: String = "",
 
     // комментарий к клумбе
     @ColumnInfo(name = COLUMN_COMMENT)
-    var comment: String? = null
+    var comment: String? = null,
 
     //порядок отображения в списке
     @ColumnInfo(name = COLUMN_ORDER)
     var order: Int? = null
-
+) {
     companion object {
         const val TABLE_NAME = "flowerbed"
         const val COLUMN_FLOWERBED_ID = "flowerbedId"
@@ -54,7 +54,7 @@ class FlowerbedEntity {
 /**
  * Клума с uri фото по умолчанию
  */
-class FlowerbedWithPhoto{
+class FlowerbedWithPhoto {
     @Embedded
     lateinit var flowerbed: FlowerbedEntity
     var photoUri: String? = null
@@ -64,16 +64,21 @@ class FlowerbedWithPhoto{
  * Интерфейс для доступа к таблице "Клумба"
  */
 @Dao
-interface FlowerbedEntityDao{
+interface FlowerbedEntityDao {
     // Получить список всех клумб
-    @Query("SELECT fb.*, ph.uri as photoUri FROM ${FlowerbedEntity.TABLE_NAME} fb " +
-            "LEFT JOIN ${FlowerbedPhotoEntity.TABLE_NAME} ph " +
-            "ON fb.${FlowerbedEntity.COLUMN_FLOWERBED_ID} = ph.${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID}" +
-            " AND ph.${FlowerbedPhotoEntity.COLUMN_SELECTED} = 1 ")
+    @Query(
+        "SELECT fb.*, ph.uri as photoUri FROM ${FlowerbedEntity.TABLE_NAME} fb " +
+                "LEFT JOIN ${FlowerbedPhotoEntity.TABLE_NAME} ph " +
+                "ON fb.${FlowerbedEntity.COLUMN_FLOWERBED_ID} = ph.${FlowerbedPhotoEntity.COLUMN_FLOWERBED_ID} " +
+                "AND ph.${FlowerbedPhotoEntity.COLUMN_SELECTED} = 1 "
+    )
     fun getAll(): List<FlowerbedWithPhoto>?
 
     // Получить клумбу по ее идентификатору
-    @Query("SELECT * FROM ${FlowerbedEntity.TABLE_NAME} WHERE ${FlowerbedEntity.COLUMN_FLOWERBED_ID} = :flowerbedId")
+    @Query(
+        "SELECT * FROM ${FlowerbedEntity.TABLE_NAME} " +
+                "WHERE ${FlowerbedEntity.COLUMN_FLOWERBED_ID} = :flowerbedId"
+    )
     fun getById(flowerbedId: Long): FlowerbedEntity
 
     // Добавить клумбу

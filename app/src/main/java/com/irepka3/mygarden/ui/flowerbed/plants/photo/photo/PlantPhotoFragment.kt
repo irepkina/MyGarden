@@ -3,9 +3,9 @@ package com.irepka3.mygarden.ui.flowerbed.plants.photo.photo
 import android.os.Bundle
 import android.util.Log
 import com.irepka3.mygarden.dagger
-import com.irepka3.mygarden.ui.flowerbed.photo.photo.BasePhotoFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.photo.list.PlantPhotoListViewModel
+import com.irepka3.mygarden.ui.photo.BasePhotoFragment
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const
 

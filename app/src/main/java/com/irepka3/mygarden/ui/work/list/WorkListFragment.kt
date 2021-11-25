@@ -25,6 +25,8 @@ import com.irepka3.mygarden.ui.work.model.WorkUIId
 import com.irepka3.mygarden.util.Const
 
 /**
+ * Фрагмент со списком работ
+ *
  * Created by i.repkina on 10.11.2021.
  */
 class WorkListFragment : Fragment(), WorkListAdapter.WorkListAdapterCallback {

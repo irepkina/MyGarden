@@ -1,4 +1,4 @@
-package com.irepka3.mygarden.ui.flowerbed.photo.list
+package com.irepka3.mygarden.ui.photo
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.irepka3.mygarden.R
 import com.irepka3.mygarden.databinding.FragmentPhotoListBinding
-import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.ui.photo.model.Photo
 import com.irepka3.mygarden.ui.util.recycleView.GridSpacingItemDecorator
 import com.irepka3.mygarden.util.Const.APP_TAG

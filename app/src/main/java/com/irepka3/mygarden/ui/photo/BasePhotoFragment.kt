@@ -1,4 +1,4 @@
-package com.irepka3.mygarden.ui.flowerbed.photo.photo
+package com.irepka3.mygarden.ui.photo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.irepka3.mygarden.databinding.FragmentPhotoBinding
-import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const
 
 

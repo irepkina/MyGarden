@@ -20,7 +20,7 @@ import com.irepka3.mygarden.util.Const
  *
  * Created by i.repkina on 06.11.2021.
  */
-class PlantFragment: Fragment(), PlantFragmentIntf {
+class PlantFragment : Fragment(), PlantFragmentIntf {
     private lateinit var binding: FragmentPlantPageBinding
     private lateinit var myViewPager2: ViewPager2
     private lateinit var myAdapter: PlantAdapter
@@ -32,14 +32,14 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG,"onCreateView() called")
+        Log.d(TAG, "onCreateView() called")
         binding = FragmentPlantPageBinding.inflate(inflater)
         readArgument()
 
         myViewPager2 = binding.pager
         myAdapter = PlantAdapter(flowerbedId, this.childFragmentManager, this.lifecycle)
         myAdapter.setPlantId(plantId)
-        myViewPager2.orientation  = ViewPager2.ORIENTATION_HORIZONTAL
+        myViewPager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         myViewPager2.adapter = myAdapter
         myViewPager2.setPageTransformer(MarginPageTransformer(MARGIN))
 
@@ -94,12 +94,21 @@ class PlantFragment: Fragment(), PlantFragmentIntf {
     }
 
     override fun updatePlantId(plantId: Long) {
+        this.plantId = plantId
+        this.arguments = Bundle().apply {
+            putLong(FLOWERBED_ID, flowerbedId)
+            putLong(PLANT_ID, plantId)
+            putString(MODE, MODE_UPDATE)
+            putString(CAPTION, currentPlantName)
+        }
         myAdapter.setPlantId(plantId)
     }
 
     override fun updateCaption(caption: String) {
-        currentPlantName = caption
-        binding.collapsingToolbar.title = currentPlantName
+        if (view != null) {
+            currentPlantName = caption
+            binding.collapsingToolbar.title = currentPlantName
+        }
     }
 
     companion object {
@@ -144,6 +153,7 @@ interface PlantFragmentIntf {
     fun updatePlantId(plantId: Long)
     fun updateCaption(caption: String)
 }
+
 private const val TAG = "${Const.APP_TAG}.PlantFragment"
 private const val FLOWERBED_ID = "flowerbedId"
 private const val PLANT_ID = "plantId"

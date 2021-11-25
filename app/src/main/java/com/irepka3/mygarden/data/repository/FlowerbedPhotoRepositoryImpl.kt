@@ -2,7 +2,8 @@ package com.irepka3.mygarden.data.repository
 
 import android.util.Log
 import com.irepka3.mygarden.data.database.AppRoomDataBase
-import com.irepka3.mygarden.data.database.FlowerbedPhotoEntity
+import com.irepka3.mygarden.data.mapper.toDomain
+import com.irepka3.mygarden.data.mapper.toEntity
 import com.irepka3.mygarden.domain.model.FlowerbedPhoto
 import com.irepka3.mygarden.domain.repository.FlowerbedPhotoRepository
 import com.irepka3.mygarden.util.Const.APP_TAG
@@ -18,10 +19,6 @@ import javax.inject.Inject
 class FlowerbedPhotoRepositoryImpl @Inject constructor(
     private val database: AppRoomDataBase
 ) : FlowerbedPhotoRepository {
-
-    init {
-        Log.d(TAG, "init called")
-    }
 
     override fun getAllByFlowerbedId(flowerbedId: Long): List<FlowerbedPhoto> {
         Log.d(TAG, "getAllByFlowerbedId() called with: flowerbedId = $flowerbedId")
@@ -48,26 +45,6 @@ class FlowerbedPhotoRepositoryImpl @Inject constructor(
             flowerbedId = flowerbedId,
             flowerbedPhotoId = flowerbedPhotoId
         )
-    }
-
-    private fun FlowerbedPhotoEntity.toDomain(): FlowerbedPhoto {
-        return FlowerbedPhoto(
-            flowerbedId = this.ownerFlowerbedId,
-            flowerbedPhotoId = this.flowerbedPhotoId,
-            uri = this.uri,
-            selected = this.selected,
-            order = this.order
-        )
-    }
-
-    private fun FlowerbedPhoto.toEntity(): FlowerbedPhotoEntity {
-        val flowerbedPhotoEntity = FlowerbedPhotoEntity()
-        flowerbedPhotoEntity.flowerbedPhotoId = this.flowerbedPhotoId ?: 0L
-        flowerbedPhotoEntity.ownerFlowerbedId = this.flowerbedId
-        flowerbedPhotoEntity.uri = this.uri
-        flowerbedPhotoEntity.selected = this.selected
-        flowerbedPhotoEntity.order = this.order
-        return flowerbedPhotoEntity
     }
 }
 

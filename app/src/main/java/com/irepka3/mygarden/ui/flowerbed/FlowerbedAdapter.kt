@@ -20,7 +20,7 @@ import com.irepka3.mygarden.util.Const.APP_TAG
 class FlowerbedAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle
-) : FragmentStateAdapter(fragmentManager,lifecycle) {
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
     private var pageCount: Int = 1
     private var flowerbedId: Long? = null
 
@@ -28,7 +28,7 @@ class FlowerbedAdapter(
         return pageCount
     }
 
-    fun setFlowerbedId(flowerbedId: Long?){
+    fun setFlowerbedId(flowerbedId: Long?) {
         if (this.flowerbedId != flowerbedId) {
             this.flowerbedId = flowerbedId
             pageCount = if (flowerbedId != null) PAGE_COUNT else 1
@@ -46,7 +46,7 @@ class FlowerbedAdapter(
                 else
                     FlowerbedDescriptionFragment.newInstanceInsert()
             }
-            1 ->  {
+            1 -> {
                 if (flowerbedId == null) throw IllegalStateException("FlowerBedId in plant can't be null")
                 PlantListFragment.newInstance(flowerbedId)
             }
@@ -59,5 +59,5 @@ class FlowerbedAdapter(
     }
 }
 
-private const val TAG ="${APP_TAG}.FlowerbedAdapter"
+private const val TAG = "${APP_TAG}.FlowerbedAdapter"
 private const val PAGE_COUNT = 3

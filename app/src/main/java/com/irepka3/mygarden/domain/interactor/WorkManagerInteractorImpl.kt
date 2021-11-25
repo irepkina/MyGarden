@@ -1,7 +1,6 @@
 package com.irepka3.mygarden.domain.interactor
 
 import android.util.Log
-import com.irepka3.mygarden.domain.model.RepeatWork
 import com.irepka3.mygarden.domain.model.Schedule
 import com.irepka3.mygarden.domain.model.Work
 import com.irepka3.mygarden.domain.model.WorkStatus
@@ -71,13 +70,21 @@ class WorkManagerInteractorImpl @Inject constructor(
                 Work(
                     workId = repeatWork.repeatWorkId,
                     repeatWork = repeatWork,
-                    status = WorkStatus.Plan
+                    status = WorkStatus.Plan,
+                    name = repeatWork.name,
+                    description = repeatWork.description
                 )
             }
             // сгенерированная повторяющаяся работа
             repeatWorkId != null && workId == null -> {
                 val repeatWork = repeatWorkInteractor.getById(repeatWorkId)
-                Work(workId = null, repeatWork = repeatWork, status = WorkStatus.Plan)
+                Work(
+                    workId = null,
+                    name = repeatWork.name,
+                    description = repeatWork.description,
+                    repeatWork = repeatWork,
+                    status = WorkStatus.Plan
+                )
             }
             else -> throw IllegalStateException("Invalid arguments workId = null, repeatWorkId = null")
         }
@@ -109,7 +116,7 @@ class WorkManagerInteractorImpl @Inject constructor(
      * @param year год
      * @param month месяц
      */
-    fun generateRepeatWorks(works: List<Work>, year: Int, month: Int): List<Work> {
+    private fun generateRepeatWorks(works: List<Work>, year: Int, month: Int): List<Work> {
         val resultWorkList = mutableListOf<Work>()
         // фильтруеи список реальных работ и создаем по ним индекс в виде set-а
         // (чтобы проверить, что сгенерированной работа не была сгенерирована ранее)
@@ -217,22 +224,6 @@ class WorkManagerInteractorImpl @Inject constructor(
 
         Log.d(TAG, "generateDataByWeek() dateList = ${dateList.map { dateFormat.format(it) }}")
         return dateList
-    }
-
-    fun RepeatWork.toWork(): Work {
-        return Work(
-            workId = null,
-            repeatWork = this,
-            name = this.name,
-            description = this.description,
-            datePlan = null,
-            dateDone = null,
-            status = WorkStatus.Plan,
-            notificationDay = null,
-            notificationHour = null,
-            notificationMinute = null,
-            noNotification = false
-        )
     }
 
     private data class RepeatWorkIndex(private val id: Long, private val date: Long)

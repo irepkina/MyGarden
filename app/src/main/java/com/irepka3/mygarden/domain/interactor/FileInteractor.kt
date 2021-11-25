@@ -13,7 +13,7 @@ interface FileInteractor {
      * Копирует внешний файл в локальное хранилище
      * @param directory папка в локальном хранилище, в которой сохранять файл
      * @param externalUri ссылка на внешний файл
-      */
+     */
     fun copyFileToLocalStorage(directory: File, externalUri: Uri): Uri?
 
     /**

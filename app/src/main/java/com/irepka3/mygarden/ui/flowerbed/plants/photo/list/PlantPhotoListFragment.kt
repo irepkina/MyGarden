@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.ui.MainActivityIntf
-import com.irepka3.mygarden.ui.flowerbed.photo.list.BasePhotoListFragment
+import com.irepka3.mygarden.ui.photo.BasePhotoListFragment
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const.APP_TAG
 

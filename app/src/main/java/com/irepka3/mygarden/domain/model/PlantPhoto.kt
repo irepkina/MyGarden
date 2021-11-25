@@ -1,6 +1,5 @@
 package com.irepka3.mygarden.domain.model
 
-
 /**
  * Модель фото растения доменного слоя
  * @property plantId идентификатор растения

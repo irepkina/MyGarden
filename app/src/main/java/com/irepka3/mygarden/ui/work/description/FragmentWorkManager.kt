@@ -24,6 +24,7 @@ import com.irepka3.mygarden.databinding.FragmentWorkManagerBinding
 import com.irepka3.mygarden.domain.model.Schedule
 import com.irepka3.mygarden.domain.model.WorkStatus
 import com.irepka3.mygarden.ui.MainActivityIntf
+import com.irepka3.mygarden.ui.util.edittext.SimpleTextWatcher
 import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.ui.work.description.model.WorkTypeUI
@@ -39,13 +40,16 @@ import java.util.Calendar
  *
  * Created by i.repkina on 11.11.2021.
  */
-class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback {
+class FragmentWorkManager : Fragment(), ScheduleAdapter.scheduleAdapterCallback {
     private lateinit var binding: FragmentWorkManagerBinding
 
     // идентификатор работы
     private lateinit var workUIId: WorkUIId
 
     private val adapter = ScheduleAdapter(this)
+    private val nameWatcher = SimpleTextWatcher() { binding.name.error = null }
+    private val dataChangeWatcher = SimpleTextWatcher() { viewModel.onDataChanged() }
+
 
     private val viewModel by viewModels<WorkManagerViewModel> {
         object : ViewModelProvider.Factory {
@@ -108,6 +112,9 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
             if (scheduleData != null) {
                 adapter.updateItems(scheduleData)
             }
+        }
+        viewModel.isDataChangedLiveData.observe(viewLifecycleOwner) { result ->
+            binding.saveButton.isVisible = result
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
             binding.progressBar.isVisible = result
@@ -234,6 +241,7 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
     }
 
     private fun showWork(work: WorkUIModel) {
+        removeWatchers()
         with(binding) {
             name.editText?.setText(work.name)
             name.error = null
@@ -281,6 +289,27 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
                 }
             }
         }
+        addWatchers()
+    }
+
+    private fun addWatchers() {
+        binding.name.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.addTextChangedListener(nameWatcher)
+        binding.description.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.planDate.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.notificationDayCount.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.notificationHour.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.notificationMinute.editText?.addTextChangedListener(dataChangeWatcher)
+    }
+
+    private fun removeWatchers() {
+        binding.name.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.removeTextChangedListener(nameWatcher)
+        binding.description.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.planDate.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.notificationDayCount.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.notificationHour.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.notificationMinute.editText?.removeTextChangedListener(dataChangeWatcher)
     }
 
     private fun saveWork() {
@@ -330,8 +359,8 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
          * Создает фрагмент для создания и редактирования работы
          * @param workUIId идентификатор работы
          */
-        fun newInstance(workUIId: WorkUIId): FragmentWorkMamager {
-            return FragmentWorkMamager().apply {
+        fun newInstance(workUIId: WorkUIId): FragmentWorkManager {
+            return FragmentWorkManager().apply {
                 arguments = Bundle().apply {
                     putSerializable(WORK_UI_ID, workUIId)
                 }
@@ -340,5 +369,5 @@ class FragmentWorkMamager : Fragment(), ScheduleAdapter.scheduleAdapterCallback 
     }
 }
 
-private const val TAG = "${Const.APP_TAG}.FragmentWorkMamager"
+private const val TAG = "${Const.APP_TAG}.FragmentWorkManager"
 private const val WORK_UI_ID = "WorkUI"

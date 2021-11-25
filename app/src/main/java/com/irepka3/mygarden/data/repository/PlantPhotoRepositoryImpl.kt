@@ -2,7 +2,8 @@ package com.irepka3.mygarden.data.repository
 
 import android.util.Log
 import com.irepka3.mygarden.data.database.AppRoomDataBase
-import com.irepka3.mygarden.data.database.PlantPhotoEntity
+import com.irepka3.mygarden.data.mapper.toDomain
+import com.irepka3.mygarden.data.mapper.toEntity
 import com.irepka3.mygarden.domain.model.PlantPhoto
 import com.irepka3.mygarden.domain.repository.PlantPhotoRepository
 import com.irepka3.mygarden.util.Const.APP_TAG
@@ -17,10 +18,6 @@ import javax.inject.Inject
 class PlantPhotoRepositoryImpl @Inject constructor(
     private val database: AppRoomDataBase
 ) : PlantPhotoRepository {
-
-    init {
-        Log.d(TAG, "init called")
-    }
 
     override fun getAllByPlantId(plantId: Long): List<PlantPhoto> {
         Log.d(TAG, "getAllByPlantId() called with: plantId = $plantId")
@@ -43,26 +40,6 @@ class PlantPhotoRepositoryImpl @Inject constructor(
             "updateSelectedPhoto() called with: plantId = $plantId, plantPhotoId = $plantPhotoId"
         )
         database.plantPhotoDao.updateSelectedPhoto(plantId = plantId, plantPhotoId = plantPhotoId)
-    }
-
-    private fun PlantPhotoEntity.toDomain(): PlantPhoto {
-        return PlantPhoto(
-            plantId = this.plantId,
-            plantPhotoId = this.plantPhotoId,
-            uri = this.uri,
-            selected = this.selected,
-            order = this.order
-        )
-    }
-
-    private fun PlantPhoto.toEntity(): PlantPhotoEntity {
-        val PlantPhotoEntity = PlantPhotoEntity()
-        PlantPhotoEntity.plantPhotoId = this.plantPhotoId ?: 0L
-        PlantPhotoEntity.plantId = this.plantId
-        PlantPhotoEntity.uri = this.uri
-        PlantPhotoEntity.selected = this.selected
-        PlantPhotoEntity.order = this.order
-        return PlantPhotoEntity
     }
 }
 

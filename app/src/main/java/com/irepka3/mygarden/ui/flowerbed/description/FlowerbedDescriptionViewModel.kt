@@ -24,6 +24,7 @@ class FlowerbedDescriptionViewModel(
     private val flowerbedId: Long?,
     private val interactor: FlowerbedInteractor
 ) : ViewModel() {
+
     private val _flowerbedLiveData = MutableLiveData<Flowerbed>()
 
     /**
@@ -45,6 +46,13 @@ class FlowerbedDescriptionViewModel(
      */
     val progressLiveData: LiveData<Boolean> = _progressLiveData
 
+    private val _isDataChangedLiveData = MutableLiveData<Boolean>()
+
+    /**
+     * LiveData для отслеживания изменения данных на экране
+     */
+    val isDataChangedLiveData: LiveData<Boolean> = _isDataChangedLiveData
+
     private val compositeDisposable = CompositeDisposable()
 
     /**
@@ -57,7 +65,7 @@ class FlowerbedDescriptionViewModel(
     /**
      * Загрузка данных во view-модель
      */
-    private fun loadData(){
+    private fun loadData() {
         _progressLiveData.value = true
         compositeDisposable.add(
             Single.fromCallable {
@@ -69,7 +77,10 @@ class FlowerbedDescriptionViewModel(
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { _progressLiveData.value = false }
+                .doFinally {
+                    _progressLiveData.value = false
+                    _isDataChangedLiveData.value = false
+                }
                 .subscribe(
                     { flowerbed -> _flowerbedLiveData.value = flowerbed },
                     { error -> _errorsLiveData.value = error }
@@ -84,9 +95,11 @@ class FlowerbedDescriptionViewModel(
      * @param description описание клумбы
      * @param comment комментарий к клумбе
      */
-    fun onSaveData(flowerbedId: Long?, name: String, description: String, comment: String?){
-        Log.d(TAG, "onSaveData() called with: id = $flowerbedId, name = $name, description = $description, comment = $comment")
-
+    fun onSaveData(flowerbedId: Long?, name: String, description: String, comment: String?) {
+        Log.d(
+            TAG,
+            "onSaveData() called with: id = $flowerbedId, name = $name, description = $description, comment = $comment"
+        )
         _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {
@@ -97,14 +110,18 @@ class FlowerbedDescriptionViewModel(
                     _flowerbedLiveData.postValue(flowerbed.copy(flowerbedId = newFlowerbedId))
                 } else {
                     Log.d(TAG, "onSaveData(), update called")
-                    interactor.updateFlowerbed(Flowerbed(flowerbedId, name, description, comment))
+                    val flowerbed = Flowerbed(flowerbedId, name, description, comment)
+                    interactor.updateFlowerbed(flowerbed)
+                    _flowerbedLiveData.postValue(flowerbed)
                 }
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { _progressLiveData.value = false }
+                .doFinally {
+                    _progressLiveData.value = false
+                }
                 .subscribe(
-                    {},
+                    { _isDataChangedLiveData.value = false },
                     { error -> _errorsLiveData.value = error }
                 )
         )
@@ -124,6 +141,13 @@ class FlowerbedDescriptionViewModel(
             description = description,
             comment = comment
         )
+    }
+
+    /**
+     * Сохранение в лайвдату информации об изменении данных на экране
+     */
+    fun onDataChanged() {
+        _isDataChangedLiveData.value = true
     }
 }
 

@@ -62,8 +62,6 @@ class FlowerbedListFragment: Fragment(), FlowerbedListAdapter.FlowerbedAdapterCa
             Log.e(TAG, "onCreateView() called with: error = ${error.message}", error)
             Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
         }
-
-        (requireActivity() as MainActivityIntf).setCaption(resources.getString(R.string.app_name))
         viewModel.loadData()
 
         val itemDecorator = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)

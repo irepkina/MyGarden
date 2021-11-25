@@ -34,7 +34,8 @@ class PlantInteractorImpl @Inject constructor(
     override fun deletePlant(plant: Plant) {
         if (plant.plantId == null)
             throw IllegalStateException("Invalid flowerbedId, flowerbedId is null")
-        val file = dirRepository.getPlantDir(flowerbedId = plant.flowerbedId, plantId = plant.plantId)
+        val file =
+            dirRepository.getPlantDir(flowerbedId = plant.flowerbedId, plantId = plant.plantId)
         if (file.exists()) {
             file.deleteRecursively()
         }

@@ -29,53 +29,53 @@ import androidx.room.Update
         Index(ScheduleEntity.COLUMN_REPEAT_WORK_ID)
     )
 )
-class ScheduleEntity {
+data class ScheduleEntity(
     // идентификатор расписания работ
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_SCHEDULE_ID)
-    var scheduleId: Long = 0
+    var scheduleId: Long = 0,
 
     // идентификатор периодической работы
     @ColumnInfo(name = COLUMN_REPEAT_WORK_ID)
-    var repeatWorkId: Long = 0
+    var repeatWorkId: Long = 0,
 
     // месяц выполнения работы
     @ColumnInfo(name = COLUMN_MONTH)
-    var month: Int? = null
+    var month: Int? = null,
 
     // неделя выполнения работы
     @ColumnInfo(name = COLUMN_WEEK)
-    var week: Int? = null
+    var week: Int? = null,
 
     // день недели выполнения работы
     @ColumnInfo(name = COLUMN_MONDAY)
     // понедельник
-    var monday: Boolean = false
+    var monday: Boolean = false,
 
     // вторник
     @ColumnInfo(name = COLUMN_TUESDAY)
-    var tuesday: Boolean = false
+    var tuesday: Boolean = false,
 
     // среда
     @ColumnInfo(name = COLUMN_WEDNESDAY)
-    var wednesday: Boolean = false
+    var wednesday: Boolean = false,
 
     // четверг
     @ColumnInfo(name = COLUMN_THURSDAY)
-    var thursday: Boolean = false
+    var thursday: Boolean = false,
 
     // пятница
     @ColumnInfo(name = COLUMN_FRIDAY)
-    var friday: Boolean = false
+    var friday: Boolean = false,
 
     // суббота
     @ColumnInfo(name = COLUMN_SATURDAY)
-    var saturday: Boolean = false
+    var saturday: Boolean = false,
 
     // воскресенье
     @ColumnInfo(name = COLUMN_SUNDAY)
     var sunday: Boolean = false
-
+) {
     companion object {
         const val TABLE_NAME = "schedule"
         const val COLUMN_SCHEDULE_ID = "scheduleId"

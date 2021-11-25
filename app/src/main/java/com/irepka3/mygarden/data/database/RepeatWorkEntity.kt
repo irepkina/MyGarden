@@ -18,40 +18,40 @@ import androidx.room.Update
  * Created by i.repkina on 10.11.2021.
  */
 @Entity(tableName = RepeatWorkEntity.TABLE_NAME)
-class RepeatWorkEntity {
+data class RepeatWorkEntity(
     // идентификатор перодической работы
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_REPEAT_WORK_ID)
-    var repeatWorkId: Long = 0
+    var repeatWorkId: Long = 0,
 
     // описание периодической работы
     @ColumnInfo(name = COLUMN_NAME)
-    var name: String = ""
+    var name: String = "",
 
     // описание к периодической работе
     @ColumnInfo(name = COLUMN_DESCRIPTION)
-    var description: String? = ""
+    var description: String? = "",
 
     // количество дней, за которое нужно напомнить о работе
     @ColumnInfo(name = COLUMN_NOTIFICATION_DAY)
-    var notificationDay: Int? = null
+    var notificationDay: Int? = null,
 
     // время (часы), в которое нужно напомнить о выполнении работы
     @ColumnInfo(name = COLUMN_NOTIFICATION_HOUR)
-    var notificationHour: Int? = null
+    var notificationHour: Int? = null,
 
     // время (минуты), в которое нужно напомнить о выполнении работы
     @ColumnInfo(name = COLUMN_NOTIFICATION_MINUTE)
-    var notificationMinute: Int? = null
+    var notificationMinute: Int? = null,
 
     // отключить напоминание о выполнении работы
     @ColumnInfo(name = COLUMN_NO_NOTIFICATION)
-    var noNotification: Boolean = false
+    var noNotification: Boolean = false,
 
     // статус работы (0 - запланировано, 1 - выполнено, 2 - отменено)
     @ColumnInfo(name = COLUMN_STATUS)
     var status: Int = 0
-
+) {
     companion object {
         const val TABLE_NAME = "repeatWork"
         const val COLUMN_REPEAT_WORK_ID = "repeatWorkId"
@@ -65,16 +65,16 @@ class RepeatWorkEntity {
     }
 }
 
-class RepeatWorkWithScheduele {
+data class RepeatWorkWithScheduele(
     @Embedded
-    lateinit var repeatWork: RepeatWorkEntity
+    var repeatWork: RepeatWorkEntity,
 
     @Relation(
         parentColumn = RepeatWorkEntity.COLUMN_REPEAT_WORK_ID,
         entityColumn = ScheduleEntity.COLUMN_REPEAT_WORK_ID
     )
-    lateinit var schedule: List<ScheduleEntity>
-}
+    var schedule: List<ScheduleEntity>
+)
 
 /**
  * Интерфейс для доступа к таблице "Периодическая работа"

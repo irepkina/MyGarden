@@ -10,7 +10,7 @@ import com.irepka3.mygarden.ui.flowerbed.photo.photo.FragmentFlowerbedPhoto
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.photo.photo.FragmentPlantPhoto
 import com.irepka3.mygarden.ui.mainpage.MainPageFragment
-import com.irepka3.mygarden.ui.work.description.FragmentWorkMamager
+import com.irepka3.mygarden.ui.work.description.FragmentWorkManager
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.ui.work.model.WorkUIId
 import com.irepka3.mygarden.ui.work.schedule.FragmentSchedule
@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initToolBar()
         // открываем главный экран только если это запуск приложения
         // в остальных случаях андроид сам восстановит
         if (savedInstanceState == null) {
@@ -34,32 +33,10 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
         }
     }
 
-    private fun initToolBar() {
-        /*
-        setSupportActionBar(binding.toolbar)
-        actionBar = getSupportActionBar()
-        actionBar?.setDisplayHomeAsUpEnabled(false)
-        actionBar?.setDisplayShowHomeEnabled(false)
-
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-        */
-    }
-
     override fun showMainPage() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, MainPageFragment())
             .commit()
-    }
-
-    override fun setCaption(caption: String) {
-        /*
-        val actionBar = supportActionBar
-        actionBar?.title = caption
-        actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
-        actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
-        */
     }
 
     override fun showFlowerbedFragment(flowerbedId: Long?, flowerbedName: String?) {
@@ -115,7 +92,7 @@ class MainActivity : AppCompatActivity(), MainActivityIntf {
 
     override fun showWorkManagerFragment(workUIId: WorkUIId) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, FragmentWorkMamager.newInstance(workUIId))
+            .replace(R.id.container, FragmentWorkManager.newInstance(workUIId))
             .addToBackStack(null)
             .commit()
     }
@@ -176,11 +153,6 @@ interface MainActivityIntf {
      */
     fun showScheduleFragment(scheduleData: ScheduleUIModel?)
 
-    /**
-     * Обновить заголовок экрана
-     * @param caption заголовок
-     */
-    fun setCaption(caption: String)
 }
 
 private const val  TAG = "$APP_TAG.MainActivity"

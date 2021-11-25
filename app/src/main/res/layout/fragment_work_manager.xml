@@ -328,6 +328,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/save_button_text"
         android:textColor="?attr/colorOnPrimary"
+        android:visibility="gone"
         android:layout_gravity="bottom|start"
         tools:ignore="ContentDescription" />
 

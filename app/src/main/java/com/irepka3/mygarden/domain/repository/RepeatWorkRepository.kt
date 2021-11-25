@@ -2,7 +2,6 @@ package com.irepka3.mygarden.domain.repository
 
 import com.irepka3.mygarden.domain.model.RepeatWork
 
-
 /**
  * Интерфейс доменного слоя для репозитория повторяющихся работ.
  *

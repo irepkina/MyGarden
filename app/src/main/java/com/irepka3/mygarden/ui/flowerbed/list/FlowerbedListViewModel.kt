@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class FlowerbedListViewModel(
     private val interactor: FlowerbedInteractor
-    ): ViewModel() {
+) : ViewModel() {
 
     private val _flowerbedLiveData = MutableLiveData<List<Flowerbed>>()
 
@@ -49,7 +49,7 @@ class FlowerbedListViewModel(
     /**
      * Загрузка данных во view-модель
      */
-    fun loadData(){
+    fun loadData() {
         Log.d(TAG, "loadData() called")
         _progressLiveData.value = true
         compositeDisposable.add(
@@ -72,7 +72,7 @@ class FlowerbedListViewModel(
      * Удаление выбранной клумбы
      * @param flowerbed выбранная клумба [Flowerbed]
      */
-    fun onDelete(flowerbed: Flowerbed){
+    fun onDelete(flowerbed: Flowerbed) {
         _progressLiveData.value = true
         compositeDisposable.add(
             Completable.fromCallable {

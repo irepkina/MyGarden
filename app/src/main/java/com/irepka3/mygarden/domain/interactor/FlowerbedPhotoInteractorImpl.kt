@@ -25,17 +25,18 @@ class FlowerbedPhotoInteractorImpl @Inject constructor(
         flowerbedPhotoRepository.insertFlowerbedPhoto(flowerbedPhoto)
     }
 
-    override fun deleteFlowerbedPhoto(flowerbedPhotoList:  List<FlowerbedPhoto>) {
+    override fun deleteFlowerbedPhoto(flowerbedPhotoList: List<FlowerbedPhoto>) {
         flowerbedPhotoRepository.deleteFlowerbedPhoto(flowerbedPhotoList)
     }
 
     override fun updateSelectedPhoto(flowerbedId: Long, flowerbedPhotoId: Long) {
-        flowerbedPhotoRepository.updateSelectedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = flowerbedPhotoId)
+        flowerbedPhotoRepository.updateSelectedPhoto(
+            flowerbedId = flowerbedId,
+            flowerbedPhotoId = flowerbedPhotoId
+        )
     }
 
     override fun getFlowerbedDir(flowerbedId: Long): File {
         return dirRepository.getFlowerbedDir(flowerbedId)
     }
 }
-
-private const val IMAGE_FOLDER = "MyGarden.images"

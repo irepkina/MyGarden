@@ -1,4 +1,4 @@
-package com.irepka3.mygarden.ui.flowerbed.photo.photo
+package com.irepka3.mygarden.ui.photo
 
 import android.net.Uri
 import android.util.Log

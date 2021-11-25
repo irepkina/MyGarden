@@ -8,6 +8,7 @@ import com.irepka3.mygarden.domain.interactor.WorkManagerInteractor
 import com.irepka3.mygarden.domain.model.RepeatWork
 import com.irepka3.mygarden.domain.model.Work
 import com.irepka3.mygarden.domain.model.WorkStatus
+import com.irepka3.mygarden.domain.util.date.toDate
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.ui.work.description.model.WorkUIModel
 import com.irepka3.mygarden.ui.work.description.model.WorkUIState
@@ -20,8 +21,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Вью модель для экрана работы
@@ -67,6 +66,14 @@ class WorkManagerViewModel(
      */
     val progressLiveData: LiveData<Boolean> = _progressLiveData
 
+    private val _isDataChangedLiveData = MutableLiveData<Boolean>()
+
+    /**
+     * LiveData для отслеживания изменения данных на экране
+     */
+    val isDataChangedLiveData: LiveData<Boolean> = _isDataChangedLiveData
+
+
     private val _commandLiveData = MutableLiveData(Command.NO_COMMAND)
 
     /**
@@ -101,10 +108,10 @@ class WorkManagerViewModel(
                     workUIId.workId == null && workUIId.repeatWorkId == null -> {
                         Work(
                             repeatWork = RepeatWork(
-                                notificationDay = 3,
-                                notificationHour = 9,
-                                notificationMinute = 0,
-                                noNotification = false
+                                notificationDay = null,
+                                notificationHour = null,
+                                notificationMinute = null,
+                                noNotification = true
                             )
                         )
                     }
@@ -122,6 +129,7 @@ class WorkManagerViewModel(
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     { work ->
+                        _isDataChangedLiveData.value = false
                         _workLiveData.value = work.toUIModel()
                         _workUIStateLiveData.value = work.toWorkUIState()
                         _scheduleLiveData.value = work?.repeatWork?.schedules
@@ -202,11 +210,15 @@ class WorkManagerViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
-                    { _commandLiveData.value = Command.CLOSE_VIEW },
+                    {
+                        _commandLiveData.value = Command.CLOSE_VIEW
+                        _isDataChangedLiveData.value = false
+                    },
                     { error -> _errorsLiveData.value = error }
                 )
         )
     }
+
     /**
      * Сохраняет данные экрана во вью-модель
      * @param workData данные формы [WorkUIModel]
@@ -229,10 +241,10 @@ class WorkManagerViewModel(
             schedules.add(scheduleData)
         }
         _scheduleLiveData.value = schedules
+        _isDataChangedLiveData.value = true
     }
 
     /**
-     * todo: реализовать удаление расписания
      * Удаляет расписание из вью-модели
      * @param scheduleData данные расписания [ScheduleUIModel]
      */
@@ -246,6 +258,7 @@ class WorkManagerViewModel(
             }
             _scheduleLiveData.value = it
         }
+        _isDataChangedLiveData.value = true
     }
 
     /**
@@ -254,22 +267,15 @@ class WorkManagerViewModel(
      */
     private fun createWorkItem(workData: WorkUIModel): Work {
         Log.d(TAG, "createWorkItem() called")
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val workDataPlan = workData.datePlan
-        val datePlan = try {
-            if (!workDataPlan.isNullOrBlank()) dateFormat.parse(workDataPlan).time else null
-        } catch (e: java.lang.Exception) {
-            _errorsLiveData.value = e
-            null
+
+        val datePlan = workDataPlan.toDate { error ->
+            _errorsLiveData.value = error
         }
 
-        val dateDone = try {
-            if (!workData.dateDone.isNullOrBlank()) dateFormat.parse(workData.dateDone).time else null
-        } catch (e: java.lang.Exception) {
-            _errorsLiveData.value = e
-            null
+        val dateDone = workData.dateDone.toDate { error ->
+            _errorsLiveData.value = error
         }
-
         val repeatWork = if (!workData.isOnceWork || workData.repeatWorkId != null) {
             RepeatWork(
                 repeatWorkId = workData.repeatWorkId,
@@ -298,8 +304,18 @@ class WorkManagerViewModel(
             noNotification = workData.noNotification
         )
     }
+
+    /**
+     * Сохранение в лайвдату информации об изменении данных на экране
+     */
+    fun onDataChanged() {
+        _isDataChangedLiveData.value = true
+    }
 }
 
+/**
+ * Команда закрыть вью
+ */
 enum class Command {
     NO_COMMAND, CLOSE_VIEW
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
  *
  * Created by i.repkina on 09.11.2021.
  */
-class DirRepositoryImpl @Inject constructor(context: Context): DirRepository {
+class DirRepositoryImpl @Inject constructor(context: Context) : DirRepository {
     private val imagesDir = File(context.filesDir, IMAGE_FOLDER)
 
     override fun getCashDir(): File = imagesDir.also { it.mkdirs() }

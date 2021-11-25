@@ -2,8 +2,10 @@ package com.irepka3.mygarden.domain.util.date
 
 import android.util.Log
 import com.irepka3.mygarden.util.Const.APP_TAG
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.Locale
 
 
 /**
@@ -11,6 +13,7 @@ import java.time.ZoneId
  *
  * Created by i.repkina on 14.11.2021.
  */
+
 
 /**
  * Возвращает дату первого искомого дня недели в месяце
@@ -38,8 +41,28 @@ fun getFirstMonthDayOfWeek(year: Int, month: Int, dayOfWeek: Int): LocalDate {
 // Перводит [LocalDate] в формат миллисекунд
 fun LocalDate.toMillis(): Long {
     val mills = this.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    //val mills =  this.toEpochDay() * 24 * 60 * 60 * 1000
     return mills
+}
+
+val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
+// Переводит String в Long и возвращает ошибку
+inline fun String?.toDate(onError: (Exception) -> Unit): Long? {
+    return try {
+        if (!this.isNullOrBlank()) dateFormat.parse(this)?.time else null
+    } catch (e: Exception) {
+        onError.invoke(e)
+        null
+    }
+}
+
+// Переводит String в Long
+fun String?.toDate(): Long? {
+    return try {
+        if (!this.isNullOrBlank()) dateFormat.parse(this)?.time else null
+    } catch (e: Exception) {
+        null
+    }
 }
 
 private const val TAG = "${APP_TAG}.DateUtil"
