@@ -5,29 +5,40 @@
 Приложение для учета клумб и растений, а также планирования работ по саду.
 
 Главный экран
-![Главный экран](https://user-images.githubusercontent.com/91030616/143498444-631c1321-ec64-4afb-8c89-84c9fecd1eff.jpg)
+![Uploading Главный экран![Главный экран](https://user-images.githubusercontent.com/91030616/143500290-a22bc17f-6909-4df5-9773-f415a943134c.jpg)
+.jpg…]()
+
 
 Экран для заполнения данных клумбы
-![Карточка клумбы](https://user-images.githubusercontent.com/91030616/143499499-4609724f-7d11-4ab1-a096-9804b7a9698b.jpg)
+![Карточка клумбы](https://user-images.githubusercontent.com/91030616/143500308-81a7318a-427f-4ba0-b537-67d3f299ea11.jpg)
+
 
 Список растений клумбы:
-![Список растений клумбы](https://user-images.githubusercontent.com/91030616/143499444-e197822d-889f-44ac-90c4-cb902abddfd5.jpg)
+![Список растений клумбы](https://user-images.githubusercontent.com/91030616/143500323-bc9f66f3-bbed-4a33-804b-5587a56c6e5e.jpg)
+
 
 Экран для заполнения данных растения
-![Экран растения](https://user-images.githubusercontent.com/91030616/143499455-d77ca00f-a6ae-4c4e-a48b-3b184f462802.jpg)
+![Экран растения](https://user-images.githubusercontent.com/91030616/143500484-feb60e72-baf4-4ae6-ad3d-eadd24dd6419.jpg)
+
 
 Экран со списком фотографий
-![Список фото](https://user-images.githubusercontent.com/91030616/143499451-9bf7e433-f3fd-4e9c-a8e1-413fb3ccdb8f.jpg)
+![Список фото](https://user-images.githubusercontent.com/91030616/143500501-5d9562fc-5386-4883-b7fb-e12a14a203de.jpg)
+
 
 Список работ
-![Список работ](https://user-images.githubusercontent.com/91030616/143499440-77d89a10-9b98-4899-9d75-8ad791a4ee4a.jpg)
+![Список работ](https://user-images.githubusercontent.com/91030616/143500512-de1d869b-4ed6-46c4-8e11-f830d43dd349.jpg)
+
 
 Экран повторяющейся работы:
-![Повторяющаяся работа](https://user-images.githubusercontent.com/91030616/143499435-b3d23f13-d385-46b4-9b50-d0f205b3a5f7.jpg)
+![Повторяющаяся работа](https://user-images.githubusercontent.com/91030616/143500586-795d449b-fab7-4a59-b516-4bf9a932861f.jpg)
+
 
 Экран для задания расписания повторяющейся работы
-![Расписание для повторяющейся работы](https://user-images.githubusercontent.com/91030616/143499439-ab9ef8ce-399a-47f1-b670-5aba0120b003.jpg)
+![Расписание для повторяющейся работы](https://user-images.githubusercontent.com/91030616/143500631-d71ae5e8-28e6-46f0-922b-19c95aba9423.jpg)
+
 
 Экран для отметки выполнения работы или отмены
-![Выполнение_Отмена работы](https://user-images.githubusercontent.com/91030616/143499433-b4fd3443-a58e-4ce1-a631-884ba56f3bea.jpg)
+![Выполнение_Отмена работы](https://user-images.githubusercontent.com/91030616/143500652-941a2ef0-c105-4c35-ac76-a45a25ff34ca.jpg)
+
+
 
