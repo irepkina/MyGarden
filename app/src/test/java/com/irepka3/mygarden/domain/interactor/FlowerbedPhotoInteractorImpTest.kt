@@ -1,14 +1,15 @@
 package com.irepka3.mygarden.domain
 
+import com.irepka3.mygarden.common.factory.FlowerbedFactory
 import com.irepka3.mygarden.domain.interactor.FlowerbedPhotoInteractorImpl
-import com.irepka3.mygarden.domain.model.FlowerbedPhoto
 import com.irepka3.mygarden.domain.repository.DirRepository
 import com.irepka3.mygarden.domain.repository.FlowerbedPhotoRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.File
 
 /**
  * Тесты для класса FlowerbedPhotoInteractorImpl
@@ -16,8 +17,8 @@ import org.junit.Test
  * Created by i.repkina on 16.11.2021.
  */
 class FlowerbedPhotoInteractorImplTest {
-    private val flowerbedPhotoRepository = mockk<FlowerbedPhotoRepository>(relaxed = true)
-    private val dirRepository = mockk<DirRepository>(relaxed = true)
+    private val flowerbedPhotoRepository = mockk<FlowerbedPhotoRepository>(relaxUnitFun = true)
+    private val dirRepository = mockk<DirRepository>(relaxUnitFun = true)
 
     private val underTest = FlowerbedPhotoInteractorImpl(dirRepository, flowerbedPhotoRepository)
 
@@ -26,12 +27,13 @@ class FlowerbedPhotoInteractorImplTest {
         // prepare
         val flowerbedId = 1L
         val repositoryResult = listOf(
-            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = 2),
-            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = 1)
+            FlowerbedFactory.createFlowerbedPhoto(1L, 2L),
+            FlowerbedFactory.createFlowerbedPhoto(1L, 1L)
         )
+
         val expected = listOf(
-            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = 1),
-            FlowerbedPhoto(flowerbedId = flowerbedId, flowerbedPhotoId = 2)
+            FlowerbedFactory.createFlowerbedPhoto(1L, 1L),
+            FlowerbedFactory.createFlowerbedPhoto(1L, 2L),
         )
 
         every { flowerbedPhotoRepository.getAllByFlowerbedId(flowerbedId) } returns repositoryResult
@@ -41,13 +43,16 @@ class FlowerbedPhotoInteractorImplTest {
 
         // check
         verify { flowerbedPhotoRepository.getAllByFlowerbedId(flowerbedId) }
-        Assert.assertEquals(expected, actual)
+        assertEquals(expected, actual)
     }
 
     @Test
     fun insertFlowerbedPhoto() {
         // prepare
-        val flowerbedPhoto = FlowerbedPhoto(flowerbedId = 1, flowerbedPhotoId = null, order = 2)
+        val flowerbedPhoto = FlowerbedFactory.createFlowerbedPhoto(1L, null)
+
+        // do
+        underTest.insertFlowerbedPhoto(flowerbedPhoto)
 
         // check
         verify { flowerbedPhotoRepository.insertFlowerbedPhoto(flowerbedPhoto) }
@@ -57,10 +62,8 @@ class FlowerbedPhotoInteractorImplTest {
     fun deleteFlowerbedPhoto() {
         // prepare
         val flowerbedPhoto = listOf(
-            FlowerbedPhoto(
-                flowerbedId = 1, flowerbedPhotoId = 1
-            ),
-            FlowerbedPhoto(flowerbedId = 1, flowerbedPhotoId = 1)
+            FlowerbedFactory.createFlowerbedPhoto(1L, 1L),
+            FlowerbedFactory.createFlowerbedPhoto(1L, 2L)
         )
 
         // do
@@ -87,12 +90,15 @@ class FlowerbedPhotoInteractorImplTest {
     fun getFlowerbedDir() {
         // prepare
         val flowerbedId = 1L
+        val expected = mockk<File>()
+        every { dirRepository.getFlowerbedDir(flowerbedId) } returns expected
 
         // do
-        underTest.getFlowerbedDir(flowerbedId)
+        val actual = underTest.getFlowerbedDir(flowerbedId)
 
         // check
         verify { dirRepository.getFlowerbedDir(flowerbedId) }
+        assertEquals(expected, actual)
     }
 
 }

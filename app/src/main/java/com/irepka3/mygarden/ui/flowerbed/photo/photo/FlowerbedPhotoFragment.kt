@@ -5,6 +5,7 @@ import android.util.Log
 import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.photo.list.FlowerbedPhotoListViewModel
+import com.irepka3.mygarden.ui.photo.BasePhotoFragment
 import com.irepka3.mygarden.ui.photo.BasePhotoViewModel
 import com.irepka3.mygarden.util.Const
 
@@ -19,7 +20,6 @@ class FragmentFlowerbedPhoto : BasePhotoFragment() {
     private var photoPosition: Int = -1
 
     override fun readArguments() {
-        Log.d(TAG, "readArguments() called, id = $id")
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
             throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")

@@ -1,4 +1,4 @@
-package com.irepka3.mygarden.ui.list
+package com.irepka3.mygarden.ui.flowerbed.plants.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

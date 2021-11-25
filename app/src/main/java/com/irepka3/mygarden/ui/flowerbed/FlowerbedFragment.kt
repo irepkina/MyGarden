@@ -19,23 +19,26 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  * Фрагмент для отображения информации о клумбе
  */
 class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
-     private lateinit var binding: FragmentFlowerbedPageBinding
-     private lateinit var myViewPager2: ViewPager2
-     private lateinit var myAdapter: FlowerbedAdapter
-     private var flowerbedId: Long? = null
+    private lateinit var binding: FragmentFlowerbedPageBinding
+    private lateinit var myViewPager2: ViewPager2
+    private lateinit var myAdapter: FlowerbedAdapter
+    private var flowerbedId: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG,"onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
+        Log.d(
+            TAG,
+            "onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState"
+        )
         binding = FragmentFlowerbedPageBinding.inflate(inflater)
         readArgument()
 
         myViewPager2 = binding.pager
         myAdapter = FlowerbedAdapter(this.childFragmentManager, this.lifecycle)
         myAdapter.setFlowerbedId(flowerbedId)
-        myViewPager2.orientation  = ViewPager2.ORIENTATION_HORIZONTAL
+        myViewPager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         myViewPager2.adapter = myAdapter
         myViewPager2.setPageTransformer(MarginPageTransformer(MARGIN))
 
@@ -61,7 +64,7 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
         with(requireActivity() as AppCompatActivity) {
             setSupportActionBar(binding.toolbar)
             val actionBar = supportActionBar
-            actionBar?.title = currentFlowerbedName
+            binding.collapsingToolbar.title = currentFlowerbedName
 
             actionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
             actionBar?.setDisplayShowHomeEnabled(supportFragmentManager.backStackEntryCount > 0)
@@ -89,6 +92,12 @@ class FlowerbedFragment : Fragment(), FlowerbedFragmentIntf {
     }
 
     override fun updateFlowerbedId(flowerbedId: Long) {
+        this.flowerbedId = flowerbedId
+        arguments = Bundle().apply {
+            putLong(FLOWERBED_ID, flowerbedId)
+            putString(MODE, MODE_UPDATE)
+            putString(CAPTION, currentFlowerbedName)
+        }
         myAdapter.setFlowerbedId(flowerbedId)
     }
 

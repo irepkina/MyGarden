@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -19,6 +18,7 @@ import com.irepka3.mygarden.databinding.FragmentPlantDescriptionBinding
 import com.irepka3.mygarden.domain.model.Plant
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragment
 import com.irepka3.mygarden.ui.flowerbed.plants.PlantFragmentIntf
+import com.irepka3.mygarden.ui.util.edittext.SimpleTextWatcher
 import com.irepka3.mygarden.util.Const
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -28,11 +28,13 @@ import java.util.Locale
 /**
  * Created by i.repkina on 05.11.2021.
  */
-class PlantDescriptionFragment: Fragment() {
+class PlantDescriptionFragment : Fragment() {
     private lateinit var binding: FragmentPlantDescriptionBinding
     private var flowerbedId: Long = 0L
     private var plantId: Long? = null
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val nameWatcher = SimpleTextWatcher() { binding.name.error = null }
+    private val dataChangeWatcher = SimpleTextWatcher() { viewModel.onDataChanged() }
 
     private val viewModel by viewModels<PlantDescriptionViewModel> {
         object : ViewModelProvider.Factory {
@@ -46,7 +48,11 @@ class PlantDescriptionFragment: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         Log.d(TAG, "onCreateView() called")
         binding = FragmentPlantDescriptionBinding.inflate(inflater)
         readArguments()
@@ -79,12 +85,8 @@ class PlantDescriptionFragment: Fragment() {
             Log.d(TAG, "onDataChanged() called with: plant = $plant")
             showPlant(plant)
             if (plant.plantId != null) {
-                Log.d(
-                    TAG,
-                    "onDataChanged plantId = ${plantId}, : this.parentFragment = ${this.parentFragment}"
-                )
-                (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
                 (this.parentFragment as? PlantFragmentIntf)?.updateCaption(plant.name)
+                (this.parentFragment as? PlantFragmentIntf)?.updatePlantId(plant.plantId)
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
@@ -100,8 +102,8 @@ class PlantDescriptionFragment: Fragment() {
             savePlant()
         }
 
-        binding.name.editText?.doOnTextChanged { _, _, _, _ ->
-            binding.name.error = null
+        viewModel.isDataChangedLiveData.observe(viewLifecycleOwner) { result ->
+            binding.saveButton.isVisible = result
         }
     }
 
@@ -122,9 +124,30 @@ class PlantDescriptionFragment: Fragment() {
         }
     }
 
+    private fun addWatchers() {
+        binding.name.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.addTextChangedListener(nameWatcher)
+        binding.description.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.comment.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.count.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.plantDate.editText?.addTextChangedListener(dataChangeWatcher)
+    }
+
+    private fun removeWatchers() {
+        binding.name.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.removeTextChangedListener(nameWatcher)
+        binding.description.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.comment.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.count.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.plantDate.editText?.removeTextChangedListener(dataChangeWatcher)
+    }
+
     private fun showPlant(plant: Plant?) {
+        if (plant?.plantId != null) {
+            plantId = plant.plantId
+        }
+        removeWatchers()
         binding.name.editText?.setText(plant?.name)
-        binding.name.error = null
         binding.description.editText?.setText(plant?.description)
         binding.comment.editText?.setText(plant?.comment)
         binding.count.editText?.setText(plant?.count.toString())
@@ -133,6 +156,7 @@ class PlantDescriptionFragment: Fragment() {
             val date = Date(plant.datePlant)
             binding.plantDate.editText?.setText(dateFormat.format(date))
         }
+        addWatchers()
     }
 
     private fun savePlant() {

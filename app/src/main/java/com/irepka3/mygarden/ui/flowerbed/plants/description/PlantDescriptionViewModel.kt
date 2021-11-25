@@ -6,14 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.irepka3.mygarden.domain.interactor.PlantInteractor
 import com.irepka3.mygarden.domain.model.Plant
+import com.irepka3.mygarden.domain.util.date.toDate
 import com.irepka3.mygarden.util.Const.APP_TAG
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * View-модель для фрагмента карточки растения
@@ -50,9 +49,14 @@ class PlantDescriptionViewModel(
      */
     val progressLiveData: LiveData<Boolean> = _progressLiveData
 
-    private val compositeDisposable = CompositeDisposable()
+    private val _isDataChangedLiveData = MutableLiveData<Boolean>()
 
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    /**
+     * LiveData для отслеживания изменения данных на экране
+     */
+    val isDataChangedLiveData: LiveData<Boolean> = _isDataChangedLiveData
+
+    private val compositeDisposable = CompositeDisposable()
 
     /**
      * Загрузка данных во view-модель при создании
@@ -64,7 +68,7 @@ class PlantDescriptionViewModel(
     /**
      * Загрузка данных во view-модель
      */
-    private fun loadData(){
+    private fun loadData() {
         Log.d(TAG, "loadData() called plantId = $plantId")
         _progressLiveData.value = true
         compositeDisposable.add(
@@ -81,7 +85,10 @@ class PlantDescriptionViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
-                    { plant -> _plantLiveData.value = plant },
+                    { plant ->
+                        _plantLiveData.value = plant
+                        _isDataChangedLiveData.value = true
+                    },
                     { error -> _errorsLiveData.value = error }
                 )
         )
@@ -105,16 +112,14 @@ class PlantDescriptionViewModel(
         comment: String?,
         count: Int,
         plantDate: String?
-    ){
+    ) {
         Log.d(
             TAG,
             "onSaveData() called with: flowerbedId = $flowerbedId, plantId = $plantId, name = $name, description = $description, comment = $comment, count = $count, datePlant = $plantDate"
         )
 
-        val date = try {
-            if (!plantDate.isNullOrBlank()) dateFormat.parse(plantDate).time else null
-        } catch (e: Exception) {
-            _errorsLiveData.value = e
+        val date = plantDate.toDate { error ->
+            _errorsLiveData.value = error
             return
         }
 
@@ -153,7 +158,7 @@ class PlantDescriptionViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
-                    { },
+                    { _isDataChangedLiveData.value = false },
                     { error -> _errorsLiveData.value = error }
                 )
         )
@@ -179,16 +184,23 @@ class PlantDescriptionViewModel(
         plantDate: String?
     ) {
         if (plantId != null) {
-            onSaveData(
+            _plantLiveData.value = Plant(
                 flowerbedId = flowerbedId,
                 plantId = plantId,
-                name,
-                description,
-                comment,
-                count,
-                plantDate
+                name = name,
+                description = description,
+                comment = comment,
+                count = count,
+                datePlant = plantDate.toDate()
             )
         }
+    }
+
+    /**
+     * Выставляет признак, что данные на экране изменились
+     */
+    fun onDataChanged() {
+        _isDataChangedLiveData.value = true
     }
 }
 

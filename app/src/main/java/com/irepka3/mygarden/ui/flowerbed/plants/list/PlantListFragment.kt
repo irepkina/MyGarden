@@ -20,7 +20,6 @@ import com.irepka3.mygarden.dagger
 import com.irepka3.mygarden.databinding.FragmentPlantlistBinding
 import com.irepka3.mygarden.domain.model.Plant
 import com.irepka3.mygarden.ui.MainActivityIntf
-import com.irepka3.mygarden.ui.list.PlantListViewModel
 import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
 
 /**
@@ -28,7 +27,7 @@ import com.irepka3.mygarden.ui.util.recycleView.ItemTouchHelperFactory
  *
  * Created by i.repkina on 31.10.2021.
  */
-class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
+class PlantListFragment : Fragment(), PlantListAdapter.PlantListAdapterCallback {
     private lateinit var binding: FragmentPlantlistBinding
     private val adapter = PlantListAdapter(this)
     private var flowerbedId: Long = 0L
@@ -93,7 +92,7 @@ class PlantListFragment: Fragment(), PlantListAdapter.PlantListAdapterCallback {
         return binding.root
     }
 
-    private fun readArguments(){
+    private fun readArguments() {
         flowerbedId = arguments?.getLong(FLOWERBED_ID) ?: 0L
         if (flowerbedId == 0L)
             throw IllegalStateException("Incorrect arguments: flowerbedId = $flowerbedId")

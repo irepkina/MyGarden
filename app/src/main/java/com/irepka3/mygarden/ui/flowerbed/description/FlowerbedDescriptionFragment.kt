@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -18,6 +17,7 @@ import com.irepka3.mygarden.databinding.FragmentFlowerbedDescriptionBinding
 import com.irepka3.mygarden.domain.model.Flowerbed
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragment
 import com.irepka3.mygarden.ui.flowerbed.FlowerbedFragmentIntf
+import com.irepka3.mygarden.ui.util.edittext.SimpleTextWatcher
 import com.irepka3.mygarden.util.Const.APP_TAG
 
 /**
@@ -25,25 +25,34 @@ import com.irepka3.mygarden.util.Const.APP_TAG
  *
  * Created by i.repkina on 31.10.2021.
  */
-class FlowerbedDescriptionFragment(): Fragment() {
+class FlowerbedDescriptionFragment() : Fragment() {
     private lateinit var binding: FragmentFlowerbedDescriptionBinding
     private var flowerbedId: Long? = null
+    private val nameWatcher = SimpleTextWatcher() { binding.name.error = null }
+    private val dataChangeWatcher = SimpleTextWatcher() { viewModel.onDataChanged() }
 
     private val viewModel by viewModels<FlowerbedDescriptionViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return FlowerbedDescriptionViewModel(flowerbedId, dagger().getFlowerbedInteractor()) as T
+                return FlowerbedDescriptionViewModel(
+                    flowerbedId,
+                    dagger().getFlowerbedInteractor()
+                ) as T
             }
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentFlowerbedDescriptionBinding.inflate(inflater)
         readArguments()
-        Log.d(TAG,
+        Log.d(
+            TAG,
             "onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState"
         )
-
         return binding.root
     }
 
@@ -54,12 +63,15 @@ class FlowerbedDescriptionFragment(): Fragment() {
             Log.d(TAG, "onDataChanged() called with: flowerbed = $flowerbed")
             showFlowerbed(flowerbed)
             if (flowerbed.flowerbedId != null) {
-                (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
                 (this.parentFragment as? FlowerbedFragmentIntf)?.updateCaption(flowerbed.name)
+                (this.parentFragment as? FlowerbedFragmentIntf)?.updateFlowerbedId(flowerbed.flowerbedId)
             }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner) { result ->
             binding.progressBar.isVisible = result
+        }
+        viewModel.isDataChangedLiveData.observe(viewLifecycleOwner) { result ->
+            binding.saveButton.isVisible = result
         }
         viewModel.errorsLiveData.observe(viewLifecycleOwner) { error ->
             Toast.makeText(this.context, error.message, Toast.LENGTH_SHORT).show()
@@ -68,10 +80,6 @@ class FlowerbedDescriptionFragment(): Fragment() {
         binding.saveButton.setOnClickListener {
             Log.d(TAG, "setOnClickListener() called")
             saveFlowerbed()
-        }
-
-        binding.name.editText?.doOnTextChanged { _, _, _, _ ->
-            binding.name.error = null
         }
     }
 
@@ -89,6 +97,20 @@ class FlowerbedDescriptionFragment(): Fragment() {
         }
     }
 
+    private fun addWatchers() {
+        binding.name.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.addTextChangedListener(nameWatcher)
+        binding.description.editText?.addTextChangedListener(dataChangeWatcher)
+        binding.comment.editText?.addTextChangedListener(dataChangeWatcher)
+    }
+
+    private fun removeWatchers() {
+        binding.name.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.name.editText?.removeTextChangedListener(nameWatcher)
+        binding.description.editText?.removeTextChangedListener(dataChangeWatcher)
+        binding.comment.editText?.removeTextChangedListener(dataChangeWatcher)
+    }
+
     private fun readArguments() {
         Log.d(TAG, "readArguments() called")
         when (val mode = arguments?.getString(MODE)) {
@@ -100,15 +122,18 @@ class FlowerbedDescriptionFragment(): Fragment() {
             MODE_INSERT -> flowerbedId = null
             else -> throw IllegalStateException("Incorrect arguments: flowerbed mode: $mode")
         }
-
         Log.d(TAG, "readArguments() success, flowerbedId = $flowerbedId")
     }
 
     private fun showFlowerbed(flowerbed: Flowerbed?) {
-        binding.name.error = null
+        if (flowerbed?.flowerbedId != null) {
+            flowerbedId = flowerbed.flowerbedId
+        }
+        removeWatchers()
         binding.name.editText?.setText(flowerbed?.name)
         binding.description.editText?.setText(flowerbed?.description)
         binding.comment.editText?.setText(flowerbed?.comment)
+        addWatchers()
     }
 
     override fun onDestroy() {
@@ -150,6 +175,7 @@ class FlowerbedDescriptionFragment(): Fragment() {
         }
     }
 }
+
 
 private const val TAG = "${APP_TAG}.FlowerbedDescriptionFragment"
 private const val FLOWERBED_ID = "flowerbedId"

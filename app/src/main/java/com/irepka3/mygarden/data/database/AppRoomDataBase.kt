@@ -25,7 +25,7 @@ import java.sql.SQLException
         ScheduleEntity::class,
         WorkEntity::class], version = 2
 )
-abstract class AppRoomDataBase: RoomDatabase() {
+abstract class AppRoomDataBase : RoomDatabase() {
     abstract val flowerbedDao: FlowerbedEntityDao
     abstract val plantDao: PlantEntityDao
     abstract val flowerbedPhotoDao: FlowerbedPhotoEntityDao
@@ -71,8 +71,8 @@ abstract class AppRoomDataBase: RoomDatabase() {
                         "INSERT INTO ${FlowerbedEntity.TABLE_NAME} " +
                                 "(${FlowerbedEntity.COLUMN_NAME}, " +
                                 "${FlowerbedEntity.COLUMN_DESCRIPTION}, " +
-                                "${FlowerbedEntity.COLUMN_ORDER}" +
-                                ") VALUES (" +
+                                "${FlowerbedEntity.COLUMN_ORDER} )" +
+                                " VALUES (" +
                                 "\"Flowerbed $flowerbedIndex\", " +
                                 "\"Demo flowerbed description$flowerbedIndex\", " +
                                 "\"$flowerbedIndex\"" +
@@ -86,8 +86,8 @@ abstract class AppRoomDataBase: RoomDatabase() {
                                 "${PlantEntity.COLUMN_NAME}," +
                                 "${PlantEntity.COLUMN_DESCRIPTION}," +
                                 "${PlantEntity.COLUMN_ORDER}, " +
-                                "${PlantEntity.COLUMN_COUNT}" +
-                                ") SELECT " +
+                                "${PlantEntity.COLUMN_COUNT}) " +
+                                "SELECT " +
                                 "${FlowerbedEntity.COLUMN_FLOWERBED_ID}, " +
                                 "\"Plant $plantIndex\", " +
                                 "\"Plant $plantIndex description\", " +
@@ -103,7 +103,6 @@ abstract class AppRoomDataBase: RoomDatabase() {
                 db.endTransaction()
             }
         }
-
     }
 }
 

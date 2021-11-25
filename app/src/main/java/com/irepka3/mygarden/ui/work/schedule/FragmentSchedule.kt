@@ -14,7 +14,6 @@ import com.irepka3.mygarden.databinding.FragmentScheduleBinding
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.util.Const
 
-
 /**
  * Фрагмент для расписания
  *

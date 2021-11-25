@@ -12,7 +12,6 @@ import com.irepka3.mygarden.R
 import com.irepka3.mygarden.ui.work.description.model.ScheduleUIModel
 import com.irepka3.mygarden.util.Const
 
-
 /**
  * Адаптер для работы со списком расписаний
  *

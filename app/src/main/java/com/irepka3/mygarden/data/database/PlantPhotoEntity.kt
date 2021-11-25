@@ -16,7 +16,8 @@ import androidx.room.Query
  *
  * Created by i.repkina on 04.11.2021.
  */
-@Entity(tableName = PlantPhotoEntity.TABLE_NAME,
+@Entity(
+    tableName = PlantPhotoEntity.TABLE_NAME,
     foreignKeys = arrayOf(
         ForeignKey(
             entity = PlantEntity::class,
@@ -27,28 +28,28 @@ import androidx.room.Query
     ),
     indices = arrayOf(Index(PlantPhotoEntity.COLUMN_PLANT_ID))
 )
-class PlantPhotoEntity {
+data class PlantPhotoEntity(
     // Идентификатор фото растения
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
-    var plantPhotoId: Long = 0
+    var plantPhotoId: Long = 0,
 
     // Идентификатор растения
     @ColumnInfo(name = COLUMN_PLANT_ID)
-    var plantId: Long = 0
+    var plantId: Long = 0,
 
     // Uri фото растения
     @ColumnInfo(name = COLUMN_URI)
-    var uri: String = ""
+    var uri: String = "",
 
     @ColumnInfo(name = COLUMN_SELECTED)
     //фото по умолчанию
-    var selected: Boolean = false
+    var selected: Boolean = false,
 
     //порядок отображения в списке
     @ColumnInfo(name = COLUMN_ORDER)
     var order: Int? = null
-
+) {
     companion object {
         const val TABLE_NAME = "plant_photo"
         const val COLUMN_ID = "plantPhotoId"
@@ -63,7 +64,7 @@ class PlantPhotoEntity {
  * Интерфейс для доступа к таблице Фотографии растений
  */
 @Dao
-interface PlantPhotoEntityDao{
+interface PlantPhotoEntityDao {
     // Получить список всех фото растения
     @Query("SELECT * FROM ${PlantPhotoEntity.TABLE_NAME} WHERE ${PlantPhotoEntity.COLUMN_PLANT_ID} = :plantId")
     fun getAllByPlantId(plantId: Long): List<PlantPhotoEntity>?
@@ -77,10 +78,12 @@ interface PlantPhotoEntityDao{
     fun delete(photo: List<PlantPhotoEntity>)
 
     // Установить фото по умолчанию для растения
-    @Query("UPDATE  ${PlantPhotoEntity.TABLE_NAME} " +
-            "SET selected = case when ${PlantPhotoEntity.COLUMN_ID} = :plantPhotoId then " +
-            "case when ${PlantPhotoEntity.COLUMN_SELECTED} = 1 then 0 else 1 end else 0 end " +
-            "WHERE ${PlantPhotoEntity.COLUMN_PLANT_ID} = :plantId ")
+    @Query(
+        "UPDATE  ${PlantPhotoEntity.TABLE_NAME} " +
+                "SET selected = case when ${PlantPhotoEntity.COLUMN_ID} = :plantPhotoId then " +
+                "case when ${PlantPhotoEntity.COLUMN_SELECTED} = 1 then 0 else 1 end else 0 end " +
+                "WHERE ${PlantPhotoEntity.COLUMN_PLANT_ID} = :plantId "
+    )
     fun updateSelectedPhoto(plantId: Long, plantPhotoId: Long)
 }
 

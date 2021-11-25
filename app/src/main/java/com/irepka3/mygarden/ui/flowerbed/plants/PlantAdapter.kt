@@ -30,6 +30,7 @@ class PlantAdapter(
     }
 
     fun setPlantId(plantId: Long?) {
+        Log.d(TAG, "setPlantId() called with: plantId = $plantId, this.plantId = ${this.plantId}")
         if (this.plantId != plantId) {
             this.plantId = plantId
             pageCount = if (plantId != null) PAGE_COUNT else 1

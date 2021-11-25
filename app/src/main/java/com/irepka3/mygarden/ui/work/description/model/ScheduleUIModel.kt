@@ -3,7 +3,6 @@ package com.irepka3.mygarden.ui.work.description.model
 import com.irepka3.mygarden.domain.model.Schedule
 import java.io.Serializable
 
-
 /**
  * Модель для вью настройки расписания
  * @property schedule расписание [Schedule]

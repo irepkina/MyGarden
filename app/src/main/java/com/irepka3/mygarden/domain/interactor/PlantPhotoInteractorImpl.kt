@@ -17,7 +17,7 @@ class PlantPhotoInteractorImpl @Inject constructor(
 ) : PlantPhotoInteractor {
 
     override fun getAllByPlantId(plantId: Long): List<PlantPhoto>? {
-        return plantPhotoRepository.getAllByPlantId(plantId)?.sortedBy { it.order; it.plantPhotoId }
+        return plantPhotoRepository.getAllByPlantId(plantId)?.sortedBy { it.plantPhotoId }
     }
 
     override fun insertPlantPhoto(plantPhoto: PlantPhoto) {

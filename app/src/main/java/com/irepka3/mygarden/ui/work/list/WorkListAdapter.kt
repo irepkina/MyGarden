@@ -41,7 +41,6 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
     // получить элемент по индексу
     fun getItem(index: Int): Work = listDiffer.currentList[index]
 
-
     /**
      * Обновление списка работ в адаптере
      * @param workList новый список работ
@@ -49,7 +48,6 @@ class WorkListAdapter(val callback: WorkListAdapterCallback) :
     fun updateItems(workList: List<Work>) {
         listDiffer.submitList(workList)
     }
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
