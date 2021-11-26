@@ -153,6 +153,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
         android:backgroundTint="?attr/colorPrimary"
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/save_button_text"

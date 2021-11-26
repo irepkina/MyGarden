@@ -324,13 +324,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
         android:backgroundTint="?attr/colorPrimary"
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/save_button_text"
         android:textColor="?attr/colorOnPrimary"
         android:visibility="gone"
         android:layout_gravity="bottom|start"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/clearStatusButton"
@@ -338,8 +341,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/clear_status_button_text"
+        tools:visibility="visible"
         android:textColor="?attr/colorOnPrimary"
         android:layout_gravity="bottom|end"
         tools:ignore="ContentDescription" />
@@ -350,11 +356,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="@dimen/default_margin"
+        android:paddingStart="12dp"
+        android:paddingEnd="10dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/done_button_text"
         android:textColor="?attr/colorOnPrimary"
         android:layout_gravity="bottom|end"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancel_button"
@@ -370,7 +379,8 @@
         android:textColor="?attr/colorOnPrimary"
         app:fabSize="normal"
         android:layout_gravity="bottom|end"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

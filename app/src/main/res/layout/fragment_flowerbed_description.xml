@@ -88,13 +88,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/floatting_button_bottom_margin"
         android:layout_marginStart="@dimen/default_margin"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
         android:backgroundTint="?attr/colorPrimary"
         android:foreground="?android:attr/selectableItemBackground"
         android:text="@string/save_button_text"
         android:textColor="?attr/colorOnPrimary"
         android:layout_gravity="bottom|start"
         android:visibility="gone"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

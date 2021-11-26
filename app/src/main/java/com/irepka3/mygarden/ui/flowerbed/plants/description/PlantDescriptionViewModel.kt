@@ -87,7 +87,7 @@ class PlantDescriptionViewModel(
                 .subscribe(
                     { plant ->
                         _plantLiveData.value = plant
-                        _isDataChangedLiveData.value = true
+                        _isDataChangedLiveData.value = false
                     },
                     { error -> _errorsLiveData.value = error }
                 )
