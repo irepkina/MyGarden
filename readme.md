@@ -11,17 +11,17 @@
 
 Экран для заполнения данных клумбы
 
-![Карточка клумбы](https://user-images.githubusercontent.com/91030616/143548555-99e0a7b0-ac78-4ad7-a5eb-fe58e14a546c.jpg)
+![Карточка клумбы](https://user-images.githubusercontent.com/91030616/143549097-0a80cf90-9b0d-4391-95cb-f8e755943247.jpg)
 
 
 Список растений клумбы:
 
-![Список растений клумбы](https://user-images.githubusercontent.com/91030616/143548606-236f3bf3-75ea-4394-916f-4ee971acf36e.jpg)
+![Список растений клумбы](https://user-images.githubusercontent.com/91030616/143549142-11f344a7-9ba5-41b2-b71c-57fe56fdf5b7.jpg)
 
 
 Экран для заполнения данных растения
 
-![Экран растения](https://user-images.githubusercontent.com/91030616/143548636-4a0b096b-d373-427e-ba5c-c121f7ff2096.jpg)
+![Экран растения](https://user-images.githubusercontent.com/91030616/143549195-6d8185b6-6d7e-43a4-8293-89614e410324.jpg)
 
 
 Экран со списком фотографий
@@ -36,17 +36,17 @@
 
 Экран повторяющейся работы:
 
-![Повторяющаяся работа](https://user-images.githubusercontent.com/91030616/143500586-795d449b-fab7-4a59-b516-4bf9a932861f.jpg)
+![Повторяющаяся работа](https://user-images.githubusercontent.com/91030616/143549237-cc2ea14a-d343-4790-8830-9c623af69f62.jpg)
 
 
 Экран для задания расписания повторяющейся работы
 
-![Расписание для повторяющейся работы](https://user-images.githubusercontent.com/91030616/143548764-44c40215-1f0c-4bda-9450-21d0bc40fad8.jpg)
+![Расписание для повторяющейся работы](https://user-images.githubusercontent.com/91030616/143549267-d9d4f0b5-e3ad-43c2-9b65-7315cef095d2.jpg)
 
 
 Экран для отметки выполнения работы или отмены
 
-![Повторяющаяся работа](https://user-images.githubusercontent.com/91030616/143548813-66628e0c-aac4-4f15-a423-10d0a8414e41.jpg)
+![Выполнение_Отмена работы](https://user-images.githubusercontent.com/91030616/143549306-76768598-a0bf-4032-956d-bf9fc9f827b7.jpg)
 
 
 
