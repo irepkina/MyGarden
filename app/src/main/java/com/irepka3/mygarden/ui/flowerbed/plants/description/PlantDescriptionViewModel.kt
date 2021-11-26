@@ -83,6 +83,7 @@ class PlantDescriptionViewModel(
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     { plant ->
