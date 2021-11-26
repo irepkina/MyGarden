@@ -46,7 +46,7 @@
 
 Экран для отметки выполнения работы или отмены
 
-![Выполнение_Отмена работы](https://user-images.githubusercontent.com/91030616/143549306-76768598-a0bf-4032-956d-bf9fc9f827b7.jpg)
+![Выполнение_Отмена работы](https://user-images.githubusercontent.com/91030616/143549445-c17e73b6-5546-4508-9ef7-e077accdcdad.jpg)
 
 
 
