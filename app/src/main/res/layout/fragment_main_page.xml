@@ -19,7 +19,7 @@
             app:expandedTitleGravity="top"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways"
             app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded">
 
             <androidx.appcompat.widget.Toolbar
