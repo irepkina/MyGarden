@@ -13,7 +13,19 @@
         android:layout_height="@dimen/image_size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/favoritePhoto"
+        android:layout_width="@dimen/image_favorite_height"
+        android:layout_height="@dimen/image_favorite_width"
+        app:layout_constraintEnd_toEndOf="@id/imageViewPhoto"
+        app:layout_constraintTop_toTopOf="@id/imageViewPhoto"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/space_8"
+        android:src="@drawable/ic_favorite_photo"
+        app:tint="?attr/colorSecondary"
+        tools:ignore="ContentDescription" />
 
     <CheckBox
         android:id="@+id/photoCheckBox"

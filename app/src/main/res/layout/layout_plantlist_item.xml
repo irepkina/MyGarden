@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:src="@drawable/ic_plant_unknown"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             tools:ignore="ContentDescription"/>
 
         <TextView

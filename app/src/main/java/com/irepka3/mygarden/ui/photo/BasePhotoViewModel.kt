@@ -49,6 +49,13 @@ abstract class BasePhotoViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     /**
+     * Обновление данных во view-модель при создании вью
+     */
+    fun onCreateView() {
+        loadData()
+    }
+
+    /**
      * Загрузка данных во view-модель
      */
     protected fun loadData() {

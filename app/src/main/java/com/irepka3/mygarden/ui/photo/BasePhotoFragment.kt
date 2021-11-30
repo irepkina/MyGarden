@@ -49,6 +49,8 @@ abstract class BasePhotoFragment : Fragment(), BasePhotoAdapter.BasePhotoAdapter
 
         readArguments()
 
+        viewModel.onCreateView()
+
         // подписка на life-data view-модели
         viewModel.photoListLiveData.observe(viewLifecycleOwner) { photoList ->
             val isFirstLoad = adapter.itemCount == 0

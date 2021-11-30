@@ -23,13 +23,6 @@ class FlowerbedPhotoListViewModel(
     private val flowerbedPhotoInteractor: FlowerbedPhotoInteractor
 ) : BasePhotoViewModel(fileInteractor) {
 
-    /**
-     * Загрузка данных во view-модель при создании
-     */
-    init {
-        loadData()
-    }
-
     override fun doLoadData(): List<Photo> {
         return flowerbedPhotoInteractor.getAllByFlowerbedId(flowerbedId)
             ?.map { Photo(photoId = it.flowerbedPhotoId, uri = it.uri, selected = it.selected) }

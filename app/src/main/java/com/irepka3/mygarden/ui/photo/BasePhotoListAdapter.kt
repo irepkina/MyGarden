@@ -37,11 +37,12 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
     }
 
     private val listDiffer = AsyncListDiffer(this, diffUtilCallback)
+
     var adapterMode = EditMode.Default
         set(value) {
             if (field != value) {
                 for (position in listDiffer.currentList.indices) {
-                    listDiffer.currentList[position].selected = false
+                    listDiffer.currentList[position].deleted = false
                     notifyItemChanged(position, PAYLOAD_ADAPTER_MODE)
                 }
                 field = value
@@ -65,9 +66,9 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
         val listToDeleteRes = mutableListOf<Photo>()
         val newList = listDiffer.currentList
         for (photo in newList) {
-            if (photo.selected) {
+            if (photo.deleted) {
                 listToDeleteRes.add(photo)
-                photo.selected = false
+                photo.deleted = false
             }
         }
         listDiffer.submitList(newList)
@@ -113,7 +114,9 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
 
     inner class BasePhotoListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val photoImageView = itemView.findViewById<ImageView>(R.id.imageViewPhoto)
-        val checkBox = itemView.findViewById<CheckBox>(R.id.photoCheckBox)
+        private val checkBox = itemView.findViewById<CheckBox>(R.id.photoCheckBox)
+        private val favoritePhoto = itemView.findViewById<ImageView>(R.id.favoritePhoto)
+
 
         fun bind(item: Photo) {
             Glide.with(itemView.context)
@@ -124,10 +127,11 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
                 .into(photoImageView)
 
             checkBox.isVisible = adapterMode == EditMode.DeleteMode
-            checkBox.isChecked = item.selected
+            checkBox.isChecked = item.deleted
+            favoritePhoto.isVisible = item.selected
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->
-                item.selected = isChecked
+                item.deleted = isChecked
             }
 
             photoImageView.setOnClickListener {
@@ -158,7 +162,9 @@ class BasePhotoListAdapter(val callback: BasePhotoListAdapterCallback) :
         fun bindPayload(item: Photo) {
             Log.d(TAG, "bind() called with: item.uri = ${item.uri}")
             checkBox.isVisible = adapterMode == EditMode.DeleteMode
-            checkBox.isChecked = item.selected
+            checkBox.isChecked = item.deleted
+            favoritePhoto.isVisible = item.selected
+
         }
     }
 

@@ -26,13 +26,6 @@ class PlantPhotoListViewModel(
     private val plantPhotoInteractor: PlantPhotoInteractor
 ): BasePhotoViewModel(fileInteractor) {
 
-    /**
-     * Загрузка данных во view-модель при создании
-     */
-    init {
-        loadData()
-    }
-
     override fun doLoadData(): List<Photo> {
         return plantPhotoInteractor.getAllByPlantId(plantId)
         ?.map { Photo(photoId = it.plantPhotoId, uri = it.uri, selected = it.selected) } ?: emptyList()
