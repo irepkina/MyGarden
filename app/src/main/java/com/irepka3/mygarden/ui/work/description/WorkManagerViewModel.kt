@@ -211,6 +211,9 @@ class WorkManagerViewModel(
                 .doFinally { _progressLiveData.value = false }
                 .subscribe(
                     {
+
+                        _workLiveData.value = work.toUIModel()
+                        _workUIStateLiveData.value = work.toWorkUIState()
                         _commandLiveData.value = Command.CLOSE_VIEW
                         _isDataChangedLiveData.value = false
                     },
@@ -285,7 +288,7 @@ class WorkManagerViewModel(
                 notificationHour = workData.notificationHour,
                 notificationMinute = workData.notificationMinute,
                 noNotification = workData.noNotification,
-                status = WorkStatus.Plan,
+                status = if (workData.repeatWorkId == workData.workId) workData.status else WorkStatus.Plan,
                 schedules = _scheduleLiveData.value?.map { it.schedule } ?: emptyList()
             )
         } else null

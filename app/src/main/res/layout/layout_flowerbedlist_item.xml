@@ -30,9 +30,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
+            android:layout_marginEnd="@dimen/default_margin"
             android:maxLines="2"
             app:layout_constraintStart_toEndOf="@id/imageViewDefaultFlowerbed"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             tools:text="flowerbed name" />
 
@@ -42,9 +44,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
             android:layout_marginStart="@dimen/space_16"
+            android:layout_marginEnd="@dimen/default_margin"
             android:maxLines="6"
             app:layout_constraintStart_toEndOf="@id/imageViewDefaultFlowerbed"
             app:layout_constraintTop_toBottomOf="@id/textViewFlowerbedName"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             tools:text="flowerbed description" />
 

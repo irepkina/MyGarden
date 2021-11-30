@@ -31,7 +31,7 @@
     <dimen name="expanded_tool_bar_height">200dp</dimen>
 
     <dimen name="floatting_button_bottom_margin">108dp</dimen>
-    <dimen name="card_height">64dp</dimen>
+    <dimen name="card_height">72dp</dimen>
     <dimen name="calendar_card_size">56dp</dimen>
 
 </resources>

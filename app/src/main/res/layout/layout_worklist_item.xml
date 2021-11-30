@@ -21,6 +21,7 @@
             android:layout_margin="@dimen/space_4"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="ContentDescription"
             android:background="@drawable/bg_calendar_card" />
 
@@ -45,6 +46,8 @@
             app:layout_constraintTop_toBottomOf="@id/textViewDay"
             app:layout_constraintEnd_toEndOf="@id/viewDate"
             app:layout_constraintStart_toStartOf="@id/viewDate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/default_margin"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?attr/colorAccentText"
@@ -60,6 +63,7 @@
             android:maxLines="2"
             app:layout_constraintStart_toEndOf="@id/viewDate"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageViewStatus"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             tools:text="Наименование работы" />
 
@@ -72,6 +76,7 @@
             android:maxLines="6"
             app:layout_constraintStart_toEndOf="@id/viewDate"
             app:layout_constraintTop_toBottomOf="@id/textViewWorkName"
+            app:layout_constraintEnd_toStartOf="@id/imageViewStatus"
             tools:text="Описание работы"
             android:textColor="?android:textColorSecondary" />
 
@@ -80,9 +85,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/status_selector"
+            android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
             tools:ignore="ContentDescription" />
 
