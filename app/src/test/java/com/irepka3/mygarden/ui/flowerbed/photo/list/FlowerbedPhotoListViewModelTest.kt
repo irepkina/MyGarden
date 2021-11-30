@@ -51,11 +51,12 @@ class FlowerbedPhotoListViewModelTest {
         every { flowerbedPhotoInteractor.getAllByFlowerbedId(flowerbedId) } returns flowerbedPhoto
         underTest =
             FlowerbedPhotoListViewModel(flowerbedId, fileInteractor, flowerbedPhotoInteractor)
+        underTest.onCreateView()
     }
 
 
     @Test
-    fun loadData() {
+    fun onCreateView() {
         // check
         assertEquals(null, underTest.errorsLiveData.value)
         assertEquals(photoList, underTest.photoListLiveData.value)

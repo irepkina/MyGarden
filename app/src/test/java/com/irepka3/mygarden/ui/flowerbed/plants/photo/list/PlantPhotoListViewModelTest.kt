@@ -50,11 +50,12 @@ class PlantPhotoListViewModelTest {
         every { plantPhotoInteractor.getAllByPlantId(plantId) } returns plantPhoto
         underTest =
             PlantPhotoListViewModel(flowerbedId, plantId, fileInteractor, plantPhotoInteractor)
+        underTest.onCreateView()
     }
 
 
     @Test
-    fun loadData() {
+    fun onCreateView() {
         // check
         Assert.assertEquals(null, underTest.errorsLiveData.value)
         Assert.assertEquals(photoList, underTest.photoListLiveData.value)
